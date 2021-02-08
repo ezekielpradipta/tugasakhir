@@ -14,5 +14,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
+});
+Route::group(['middleware' => ['guest']], function () {  
+    Route::namespace('Auth')->group(function(){  
+	Route::get('login', 'LoginController@login')->name('login');
+	Route::post('login', 'LoginController@ceklogin')->name('login');
+	Route::get('register', 'RegisterController@register')->name('register');
+	Route::post('register', 'RegisterController@daftar')->name('register');
+    });
 });
