@@ -4,20 +4,15 @@ namespace App\Http\Controllers\Auth;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
-use App\User;
-use App\Prodi;
-use App\Dosen;
-use App\Mahasiswa;
+use App\Models\User;
 use Illuminate\Support\Str;
 use App\Angkatan;
 use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\Controller;
 class LoginController extends Controller
 {
     public function login(){
-        $prodis = Prodi::orderBy('nama', 'ASC')->get();
-        $dosens = Dosen::orderBy('nama', 'ASC')->get();
-        $angkatans = Angkatan::orderBy('tahun', 'ASC')->get();
-        return view('auth.login',compact('prodis','angkatans','dosens'));
+        return view('auth.login');
     }
        public function ceklogin(Request $request){
     	$this->validate($request,[
