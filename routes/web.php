@@ -16,12 +16,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('auth.login');
 });
+
 Route::group(['middleware' => ['guest']], function () {  
     Route::namespace('Auth')->group(function(){  
 		Route::get('login', 'LoginController@login')->name('login');
 		Route::post('login', 'LoginController@ceklogin')->name('login');
-		Route::get('register', 'RegisterController@register')->name('register');
-		Route::post('register', 'RegisterController@daftar')->name('register');
+		
     });
 });
 
@@ -34,6 +34,14 @@ Route::group(['middleware' => ['auth']], function () {
 		Route::namespace('Admin')->group(function(){
 			Route::prefix('admin')->group(function(){
 				Route::get('/', 'DashboardController@dashboard')->name('admin.dashboard.index');
+
+				Route::prefix('data')->group(function(){
+					Route::resource('dosen','DosenController',['as'=>'admin'])->except('show');
+					Route::post('dosen/update', 'DosenController@updateDong')->name('admin.dosen.updateDong');
+					Route::post('dosen/cekemail', 'DosenController@cekEmail')->name('admin.dosen.cekEmail');
+					Route::post('dosen/cekusername', 'DosenController@cekUsername')->name('admin.dosen.cekUsername');
+					Route::post('dosen/cekNIDN', 'DosenController@cekNIDN')->name('admin.dosen.cekNIDN');
+				});
 			});
 		});
 	});

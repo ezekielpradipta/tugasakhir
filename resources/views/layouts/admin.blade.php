@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>Dashboard| Aplikasi TAK </title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -23,6 +24,7 @@
   <!-- Google Font: Source Sans Pro -->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.css">
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -95,7 +97,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="" class="nav-link">
+            <a href="{{ route('admin.dosen.index') }}" class="nav-link">
               <i class="nav-icon fas fa-user"></i>
               <p>
                 Data Dosen
@@ -218,15 +220,11 @@
 <!-- jQuery UI 1.11.4 -->
 <script src="{{ asset('adminlte/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-<script>
-  $.widget.bridge('uibutton', $.ui.button)
-</script>
 <!-- Bootstrap 4 -->
 <script src="{{ asset('adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 <!-- ChartJS -->
 <script src="{{ asset('adminlte/plugins/chart.js/Chart.min.js')}}"></script>
-<!-- Sparkline -->
-<script src="{{ asset('adminlte/plugins/sparklines/sparkline.js')}}"></script>
+
 <!-- JQVMap -->
 <script src="{{ asset('adminlte/plugins/jqvmap/jquery.vmap.min.js')}}"></script>
 <script src="{{ asset('adminlte/plugins/jqvmap/maps/jquery.vmap.usa.js')}}"></script>
@@ -241,12 +239,15 @@
 <!-- AdminLTE App -->
 <script src="{{ asset('adminlte/dist/js/adminlte.js')}}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="{{ asset('adminlte/dist/js/pages/dashboard.js')}}"></script>
+
 <!-- AdminLTE for demo purposes -->
 <script src="{{ asset('adminlte/dist/js/demo.js')}}"></script>
 <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.js"></script>
+@include('sweet::alert')
 </body>
 </html>
 @stack('scripts')
