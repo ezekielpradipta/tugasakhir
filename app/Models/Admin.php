@@ -11,17 +11,14 @@ class Admin extends Model
     const USER_PHOTO_URL = '/img';
 	const USER_PHOTO_DEFAULT ='user.png';
 	protected $primaryKey = 'id';
-	protected $fillable =['nidn','user_id','image','namaAdmin','slugImage'];
+	protected $fillable =['nidn','user_id','image','namaAdmin'];
 
 
 	public function getimageURLAttribute()
     {
         return asset($this::USER_PHOTO_URL).'/'.$this->image;
     }
-    public function setSlugAttribute($value)
-    {
-        $this->attributes['slugImage'] = Str::slug($value); 
-    }
+    
     public function user(){
     	return $this->belongsTo(User::class);
     }

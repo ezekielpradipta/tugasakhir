@@ -46,7 +46,7 @@ class DosenController extends Controller
     public function cekNIDN(Request $request){
     	if($request->get('nidn')){
     		$nidn = $request->get('nidn');
-    		$data =DB::table("dosens")->where('nidn',$username)->count();
+    		$data =DB::table("dosens")->where('nidn',$nidn)->count();
     			if($data >0){
     				echo "not_unique";
     			} else {
@@ -110,7 +110,7 @@ class DosenController extends Controller
           $data['username']= $request->username;
           $data['namaDosen']= $request->namaDosen;
           $data['nidn']=$request->nidn;
-          $data['slugImageDosen']=$request->namaDosen;
+          
 
           if ($request->file('imageDosen')) {
               

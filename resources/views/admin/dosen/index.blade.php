@@ -211,7 +211,7 @@
             });
             $('#nidn').blur(function(){
                 var error_uname = '';
-                var username = $('#nidn').val();
+                var nidn = $('#nidn').val();
                 var _token = $('input[name="_token"]').val();
                 
                 $.ajax({
