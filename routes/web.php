@@ -42,6 +42,12 @@ Route::group(['middleware' => ['auth']], function () {
 					Route::post('dosen/cekusername', 'DosenController@cekUsername')->name('admin.dosen.cekUsername');
 					Route::post('dosen/cekNIDN', 'DosenController@cekNIDN')->name('admin.dosen.cekNIDN');
 				});
+				Route::prefix('config')->group(function(){
+					Route::resource('prodi','ProdiController',['as'=>'admin'])->except('show');
+					Route::post('prodi/cekNamaProdi', 'ProdiController@cekNamaProdi')->name('admin.prodi.cekNamaProdi');
+					Route::resource('angkatan','AngkatanController',['as'=>'admin'])->except('show');
+					
+				});
 			});
 		});
 	});

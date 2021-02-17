@@ -165,13 +165,13 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="" class="nav-link">
+                <a href="{{ route('admin.prodi.index') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Daftar Prodi</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="" class="nav-link">
+                <a href="{{ route('admin.angkatan.index') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Daftar Angkatan</p>
                 </a>

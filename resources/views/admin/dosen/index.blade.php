@@ -25,7 +25,7 @@
 				</table>
 			</div>
 		</div>
-    <!-- Modal -->
+<!-- Modal -->
     <div class="modal" id="modal-default">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -87,7 +87,7 @@
                     <img src="" class="gambar" id="gambar" width="60px" height="">
                     <label class="text-danger" id="imageDosenError"></label>
                    <input type="file" name="imageDosen" class="form-control" id="imageDosen">
-                   <input type="hidden" name="hidden_image" id="hidden_image">
+                   
                 </div>
               </form>
             </div>
@@ -107,7 +107,7 @@
 	<script>
         $(document).ready( function () {
             
-            var SITEURL = '{{URL::to('')}}';
+            
             $('#cekemail').hide();
             $('#emailtersedia').hide();
             $('#emailtidaktersedia').hide();
@@ -315,8 +315,6 @@
                         $('#email').val(data[0].email);
                         $('#nidn').val(data[0].nidn);
                         $("#gambar").attr('src', '../' + '../' + 'img/' + data[0].imageDosen );
-                            $('#hidden_image').attr('src', '../' + '../' + 'img/' + data[0].imageDosen );
-                        
                         
                      }
                   });          
@@ -368,18 +366,23 @@
                         url: "{{ route('admin.dosen.store') }}"+'/'+dosen_id,
                         success: function (data) {
                             table.draw();
+                            swal(
+                                'Terhapus!',
+                                'Data Berhasil Dihapus',
+                                'success'
+                            );
                         },
                         error: function (data) {
                             console.log('Error:', data);
-                            
+                            swal(
+                                'Kesalahan!',
+                                'Data Gagal Dihapus',
+                                'warning'
+                            );
                         }
 
                     });
-                swal(
-                    'Deleted!',
-                    'Your file has been deleted.',
-                    'success'
-                );
+                
                 })
             });
             
