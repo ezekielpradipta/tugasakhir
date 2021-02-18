@@ -11,12 +11,12 @@ class Dosen extends Model
     const USER_PHOTO_URL = '/img';
 	const USER_PHOTO_DEFAULT ='user.png';
 	protected $primaryKey = 'id';
-	protected $fillable =['nidn','user_id','imageDosen','namaDosen'];
+	protected $fillable =['nidn','user_id','dosen_image','dosen_nama'];
 
 
 	public function getimageURLAttribute()
     {
-        return asset($this::USER_PHOTO_URL).'/'.$this->imageDosen;
+        return asset($this::USER_PHOTO_URL).'/'.$this->dosen_image;
     }
     
     public function user(){

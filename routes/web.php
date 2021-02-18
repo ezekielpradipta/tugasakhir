@@ -41,6 +41,15 @@ Route::group(['middleware' => ['auth']], function () {
 					Route::post('dosen/cekemail', 'DosenController@cekEmail')->name('admin.dosen.cekEmail');
 					Route::post('dosen/cekusername', 'DosenController@cekUsername')->name('admin.dosen.cekUsername');
 					Route::post('dosen/cekNIDN', 'DosenController@cekNIDN')->name('admin.dosen.cekNIDN');
+
+					Route::resource('tak','TAKController',['as'=>'admin'])->except('show');
+
+
+					Route::post('tak/kategoritak/tambah', 'TAKController@tambahKategoriTak')->name('admin.tak.kategoritak.tambah');
+					Route::get('tak/kategoritak/cek', 'TAKController@cekKategoriTak')->name('admin.tak.kategoritak.cek');
+					Route::get('tak/kategoritak','TAKController@tableKategoriTak')->name('admin.tak.kategoritak');
+					Route::get('tak/kategoritak/{id}/edit','TAKController@editKategoriTak')->name('admin.tak.kategoritak.edit');
+					Route::delete('tak/kategoritak/tambah/{id}','TAKController@destroyKategoriTak')->name('admin.tak.kategoritak.destroy');
 				});
 				Route::prefix('config')->group(function(){
 					Route::resource('prodi','ProdiController',['as'=>'admin'])->except('show');

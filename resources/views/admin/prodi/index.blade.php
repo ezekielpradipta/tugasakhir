@@ -39,8 +39,8 @@
                       <div class="alert alert-danger" style="display:none"></div>
                       <input type="hidden" name="prodi_id" id="prodi_id">
                        <div class="form-group">
-                           <label for="inputemail">Nama Prodi</label>
-                           <input type="text" name="namaProdi" class="form-control" id="namaProdi" placeholder="Nama Prodi">
+                           <label for="inputNamaProdi">Nama Prodi</label>
+                           <input type="text" name="prodi_nama" class="form-control" id="prodi_nama" placeholder="Nama Prodi">
                            <label id="proditersedia" class=" text-success ">Prodi Tersedia</label>
                            <label id="proditidaktersedia" class="text-danger">Prodi Sudah Digunakan</label>
                        </div>
@@ -72,19 +72,19 @@
                 ajax: "{{ route('admin.prodi.index') }}",
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                    { data: 'namaProdi',  name: 'namaProdi' },
+                    { data: 'prodi_nama',  name: 'prodi_nama' },
                     { data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
 
             });
-            $('#namaProdi').blur(function(){
-                var namaProdi = $('#namaProdi').val();
+            $('#prodi_nama').blur(function(){
+                var prodi_nama = $('#prodi_nama').val();
                 var _token = $('input[name="_token"]').val();
                 
                 $.ajax({
                     url:"{{ route('admin.prodi.cekNamaProdi') }}",
                     method:"POST",
-                    data:{namaProdi:namaProdi, _token:_token},
+                    data:{prodi_nama:prodi_nama, _token:_token},
                     success:function(result)
                     {
                     if(result == 'unique')
@@ -158,7 +158,7 @@
                         $('#modal-default').modal('show');
                         $('#prodi_id').val(prodi_id);
                         
-                        $('#namaProdi').val(data.namaProdi);
+                        $('#prodi_nama').val(data.prodi_nama);
                         
                      }
                   });          

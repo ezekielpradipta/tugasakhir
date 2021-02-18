@@ -40,7 +40,7 @@
                       <input type="hidden" name="angkatan_id" id="angkatan_id">
                        <div class="form-group">
                            <label for="inputemail">Tahun Angkatan</label>
-                           <input type="text" name="tahunAngkatan" class="form-control" id="tahunAngkatan" placeholder="Tahun Angkatan">
+                           <input type="text" name="angkatan_tahun" class="form-control" id="angkatan_tahun" placeholder="Tahun Angkatan">
                            <label class="text-danger" id="tahunError"></label>
                        </div>
                     </form>
@@ -69,7 +69,7 @@
                 ajax: "{{ route('admin.angkatan.index') }}",
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                    { data: 'tahunAngkatan',  name: 'tahunAngkatan' },
+                    { data: 'angkatan_tahun',  name: 'angkatan_tahun' },
                     { data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
 
@@ -103,7 +103,7 @@
                         error: function (data) {
                             console.log(data);
                             Command: swal("Gagal", "Gagal menambahkan Data Angkatan", "error");
-                            $('#tahunError').text(data.responseJSON.errors.tahunAngkatan);
+                            $('#tahunError').text(data.responseJSON.errors.angkatan_tahun);
                             $('#saveBtn').html('Save Changes');
                         }
                     });
@@ -125,7 +125,7 @@
                         $('#modal-default').modal('show');
                         $('#angkatan_id').val(angkatan_id);
                         
-                        $('#tahunAngkatan').val(data.tahunAngkatan);
+                        $('#angkatan_tahun').val(data.angkatan_tahun);
                         
                      }
                   });          

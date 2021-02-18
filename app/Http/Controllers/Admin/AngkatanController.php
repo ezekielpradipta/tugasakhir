@@ -51,10 +51,10 @@ class AngkatanController extends Controller
     public function store(Request $request)
     {
         $this->validate($request,[
-            'tahunAngkatan' => ['required', 'numeric', 'digits:4','unique:angkatans,tahunAngkatan']
+            'angkatan_tahun' => ['required', 'numeric', 'digits:4','unique:angkatans,angkatan_tahun']
         ]);
         $angkatan =Angkatan::updateOrCreate(['id' => $request->angkatan_id],
-                ['tahunAngkatan' => $request->tahunAngkatan]);        
+                ['angkatan_tahun' => $request->angkatan_tahun]);        
 
         return response()->json();
     }

@@ -17,9 +17,9 @@ class CreateAdminsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('nidn');
-            $table->string('namaAdmin');
+            $table->string('admin_nama');
             $table->timestamps();
-            $table->string('image')->default(Admin::USER_PHOTO_DEFAULT);
+            $table->string('admin_image')->default(Admin::USER_PHOTO_DEFAULT);
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
         });
     }

@@ -31,9 +31,9 @@ class ProdiController extends Controller
         return view('admin.prodi.index');
     }
     public function cekNamaProdi(Request $request){
-    	if($request->get('namaProdi')){
-    		$namaProdi = $request->get('namaProdi');
-    		$data =DB::table("prodis")->where('namaProdi',$namaProdi)->count();
+    	if($request->get('prodi_nama')){
+    		$namaProdi = $request->get('prodi_nama');
+    		$data =DB::table("prodis")->where('prodi_nama',$prodi_nama)->count();
     			if($data >0){
     				echo "not_unique";
     			} else {
@@ -60,7 +60,7 @@ class ProdiController extends Controller
     public function store(Request $request)
     {
         $prodi =Prodi::updateOrCreate(['id' => $request->prodi_id],
-                ['namaProdi' => $request->namaProdi]);        
+                ['prodi_nama' => $request->prodi_nama]);        
 
         return response()->json($prodi);
     }

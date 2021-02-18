@@ -62,7 +62,7 @@
                 </div>
                 <div class="form-group">
                     <label for="inputNamaDosen">Nama</label>
-                    <input type="text" name="namaDosen" class="form-control" id="namaDosen" placeholder="Nama">
+                    <input type="text" name="dosen_nama" class="form-control" id="dosen_nama" placeholder="Nama">
                     <label class="text-danger" id="nameDosenError"></label>
                 </div>
                 <div class="form-group">
@@ -85,8 +85,8 @@
                 <div class="form-group">
                     <label for="inputImageDosen" id="fotoDosen">Upload Foto Dosen</label>
                     <img src="" class="gambar" id="gambar" width="60px" height="">
-                    <label class="text-danger" id="imageDosenError"></label>
-                   <input type="file" name="imageDosen" class="form-control" id="imageDosen">
+                    <label class="text-danger" id="dosen_imageError"></label>
+                   <input type="file" name="dosen_image" class="form-control" id="dosen_image">
                    
                 </div>
               </form>
@@ -276,9 +276,9 @@
                             console.log(data);
                             Command: swal("Gagal", "Gagal menambahkan Data Dosen", "error");
                             
-                            $('#nameDosenError').text(data.responseJSON.errors.namaDosen);
+                            $('#nameDosenError').text(data.responseJSON.errors.dosen_nama);
                             $('#passwordError').text(data.responseJSON.errors.password);
-                            $('#imageDosenError').text(data.responseJSON.errors.imageDosen);
+                            $('#dosen_imageError').text(data.responseJSON.errors.dosen_image);
                             $('#saveBtn').html('Save Changes');
                         }
                     });
@@ -309,12 +309,12 @@
                         $('#modal-default').modal('show');
                         $('#dosen_id').val(dosen_id);
                         $('#user_id').val(data[0].user_id);
-                        $('#namaDosen').val(data[0].namaDosen);
+                        $('#dosen_nama').val(data[0].dosen_nama);
                         $('#username').val(data[0].username);
                         $('#password').val(data[0].password_text);
                         $('#email').val(data[0].email);
                         $('#nidn').val(data[0].nidn);
-                        $("#gambar").attr('src', '../' + '../' + 'img/' + data[0].imageDosen );
+                        $("#gambar").attr('src', '../' + '../' + 'img/' + data[0].dosen_image );
                         
                      }
                   });          
@@ -342,9 +342,9 @@
                         error: function (data) {
                             console.log(data);
                             Command: swal("Gagal", "Gagal menambahkan Data Dosen", "error");
-                            $('#nameDosenError').text(data.responseJSON.errors.namaDosen);
+                            $('#nameDosenError').text(data.responseJSON.errors.dosen_nama);
                             $('#passwordError').text(data.responseJSON.errors.password);
-                            $('#imageDosenError').text(data.responseJSON.errors.imageDosen);
+                            $('#dosen_imageError').text(data.responseJSON.errors.dosen_image);
                             $('#saveBtn').html('Save Changes');
                         }
                     });

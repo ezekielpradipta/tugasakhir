@@ -15,7 +15,7 @@ class CreateAngkatansTable extends Migration
     {
         Schema::create('angkatans', function (Blueprint $table) {
             $table->id();
-            $table->string('tahunAngkatan');
+            $table->string('angkatan_tahun');
             $table->timestamps();
         });
     }

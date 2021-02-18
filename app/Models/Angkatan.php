@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Angkatan extends Model
 {
     protected $primaryKey = 'id';
-     protected $fillable = ['tahunAngkatan'];
+     protected $fillable = ['angkatan_tahun'];
 }

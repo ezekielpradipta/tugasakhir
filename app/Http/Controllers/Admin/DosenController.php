@@ -67,7 +67,7 @@ class DosenController extends Controller
                     })
                     ->editColumn('nama',function($dosen){
                         return '<img style="height: 50px; width: 80px; margin-right: 10px;" src="'.$dosen->image_url.'" />'
-                                .$dosen->namaDosen;
+                                .$dosen->dosen_nama;
                     })
                     ->rawColumns(['action','nama'])
                     ->make(true);
@@ -97,9 +97,9 @@ class DosenController extends Controller
     {
         
         $this->validate($request,[
-            'namaDosen'=>['required','min:3'],
+            'dosen_nama'=>['required','min:3'],
             'password' => ['required', 'string', 'min:8','same:password_confirmation'],
-            'imageDosen'=>['nullable','image','max:2048'],
+            'dosen_image'=>['nullable','image','max:2048'],
         ]);
           $data = request()->except(['_token']);
           $data['dosen_id']= $request->dosen_id;
@@ -108,19 +108,19 @@ class DosenController extends Controller
           $data['password'] = bcrypt($request->password);
           $data['password_text'] = $request->password;
           $data['username']= $request->username;
-          $data['namaDosen']= $request->namaDosen;
+          $data['dosen_nama']= $request->dosen_nama;
           $data['nidn']=$request->nidn;
           
 
-          if ($request->file('imageDosen')) {
+          if ($request->file('dosen_image')) {
               
               
-              $imagePath = $request->file('imageDosen');
+              $imagePath = $request->file('dosen_image');
               $imageName = date('YmdHis').'.' . $imagePath->getClientOriginalName();
-              $path = $request->file('imageDosen')->storeAs('dosen', $imageName, 'images');
-              $data['imageDosen']=$path;
+              $path = $request->file('dosen_image')->storeAs('dosen', $imageName, 'images');
+              $data['dosen_image']=$path;
           } else{
-            $data['imageDosen']=Dosen::USER_PHOTO_DEFAULT;
+            $data['dosen_image']=Dosen::USER_PHOTO_DEFAULT;
           }
         
           $user = User::create($data);
@@ -166,20 +166,20 @@ class DosenController extends Controller
     public function updateDong(Request $request, Dosen $dosen)
     {
         $this->validate($request,[
-            'namaDosen'=>['required','min:3'],
+            'dosen_nama'=>['required','min:3'],
             'password' => ['required', 'string', 'min:8','same:password_confirmation'],
-            'imageDosen'=>['nullable','image','max:2048'],
+            'dosen_image'=>['nullable','image','max:2048'],
         ]);
         $dosen = Dosen::where('id',$request->dosen_id)->first();
         $user = User::where('id',$request->user_id)->first();
-                    $item = request()->except(['_token','imageDosen','email','password','password_text','namaDosen','username']);
-                    if ($request->file('imageDosen')) {
+                    $item = request()->except(['_token','dosen_image','email','password','nidn','password_text','dosen_nama','username']);
+                    if ($request->file('dosen_image')) {
                         
                             $dosen->deleteImage();
-                            $imagePath = $request->file('imageDosen');
+                            $imagePath = $request->file('dosen_image');
                             $imageName = date('YmdH') . '.' . $imagePath->getClientOriginalName();
-                            $path = $request->file('imageDosen')->storeAs('dosen', $imageName, 'images');
-                            $item['imageDosen']=$path;
+                            $path = $request->file('dosen_image')->storeAs('dosen', $imageName, 'images');
+                            $item['dosen_image']=$path;
                     }
                     if($request->password)
                     {
@@ -187,10 +187,14 @@ class DosenController extends Controller
                         $item['password_text'] = $request->password;
                     }
             
-                    $item['namaDosen']= $request->namaDosen;
-                    $item['nidn']=$request->nidn;
+                    $item['dosen_nama']= $request->dosen_nama;
                     if($request->username){
                         $datauser['username']=$request->username;
+                        $user->update($datauser);
+                        $user->save();
+                    }
+                    if($request->nidn){
+                        $datauser['nidn']=$request->nidn;
                         $user->update($datauser);
                         $user->save();
                     }
@@ -213,8 +217,8 @@ class DosenController extends Controller
     public function destroy(Dosen $dosen)
     {
         
-        //$data = Dosen::where('id',$id)->first(['imageDosen']);
-        //\File::delete('public/img/'.$data->imageDosen);
+        //$data = Dosen::where('id',$id)->first(['dosen_image']);
+        //\File::delete('public/img/'.$data->dosen_image);
         $dosen->deleteImage();
         $dosen->user()->delete();
         return response()->json($dosen);
