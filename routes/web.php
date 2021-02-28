@@ -43,13 +43,38 @@ Route::group(['middleware' => ['auth']], function () {
 					Route::post('dosen/cekNIDN', 'DosenController@cekNIDN')->name('admin.dosen.cekNIDN');
 
 					Route::resource('tak','TAKController',['as'=>'admin'])->except('show');
+					
+					Route::get('tak/adapilar/{id?}','TAKController@adaPilar')->name('admin.tak.adapilar');
+					Route::get('tak/adakegiatan/{id?}','TAKController@adaKegiatan')->name('admin.tak.adakegiatan');
+					Route::get('tak/adapartisipasi/{id?}','TAKController@adaPartisipasi')->name('admin.tak.adapartisipasi');
+					
+					Route::get('tak/pilartak/cek', 'TAKController@cekPilar')->name('admin.tak.pilartak.cek');
+					Route::get('tak/kategoritak/cek', 'TAKController@cekKategori')->name('admin.tak.kategoritak.cek');
+					Route::get('tak/kegiatantak/cek', 'TAKController@cekKegiatan')->name('admin.tak.kegiatantak.cek');
+					Route::get('tak/partisipasitak/cek', 'TAKController@cekPartisipasi')->name('admin.tak.partisipasitak.cek');
+					
 
+					Route::post('tak/kategoritak/tambah', 'TAKController@tambahKategori')->name('admin.tak.kategoritak.tambah');
+					Route::get('tak/kategoritak','TAKController@tbKategori')->name('admin.tak.kategoritak');
+					Route::get('tak/kategoritak/{id}/edit','TAKController@editKategori')->name('admin.tak.kategoritak.edit');
+					Route::delete('tak/kategoritak/tambah/{id}','TAKController@deleteKategori')->name('admin.tak.kategoritak.destroy');
 
-					Route::post('tak/kategoritak/tambah', 'TAKController@tambahKategoriTak')->name('admin.tak.kategoritak.tambah');
-					Route::get('tak/kategoritak/cek', 'TAKController@cekKategoriTak')->name('admin.tak.kategoritak.cek');
-					Route::get('tak/kategoritak','TAKController@tableKategoriTak')->name('admin.tak.kategoritak');
-					Route::get('tak/kategoritak/{id}/edit','TAKController@editKategoriTak')->name('admin.tak.kategoritak.edit');
-					Route::delete('tak/kategoritak/tambah/{id}','TAKController@destroyKategoriTak')->name('admin.tak.kategoritak.destroy');
+					
+					Route::post('tak/pilartak/tambah', 'TAKController@tambahPilar')->name('admin.tak.pilartak.tambah');
+					Route::get('tak/pilartak','TAKController@tbPilar')->name('admin.tak.pilartak');
+					Route::get('tak/pilartak/{id}/edit','TAKController@editPilar')->name('admin.tak.pilartak.edit');
+					Route::delete('tak/pilartak/tambah/{id}','TAKController@deletePilar')->name('admin.tak.pilartak.destroy');
+
+					Route::post('tak/kegiatantak/tambah', 'TAKController@tambahKegiatan')->name('admin.tak.kegiatantak.tambah');
+					Route::get('tak/kegiatantak','TAKController@tbKegiatan')->name('admin.tak.kegiatantak');
+					Route::get('tak/kegiatantak/{id}/edit','TAKController@editKegiatan')->name('admin.tak.kegiatantak.edit');
+					Route::delete('tak/kegiatantak/tambah/{id}','TAKController@deleteKegiatan')->name('admin.tak.kegiatantak.destroy');
+					
+				
+					Route::post('tak/partisipasitak/tambah', 'TAKController@tambahPartisipasi')->name('admin.tak.partisipasitak.tambah');
+					Route::get('tak/partisipasitak','TAKController@tbPartisipasi')->name('admin.tak.partisipasitak');
+					Route::get('tak/partisipasitak/{id}/edit','TAKController@editPartisipasi')->name('admin.tak.partisipasitak.edit');
+					Route::delete('tak/partisipasitak/tambah/{id}','TAKController@deletePartisipasi')->name('admin.tak.partisipasitak.destroy');
 				});
 				Route::prefix('config')->group(function(){
 					Route::resource('prodi','ProdiController',['as'=>'admin'])->except('show');
