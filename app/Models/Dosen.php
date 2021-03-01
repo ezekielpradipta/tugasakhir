@@ -22,12 +22,11 @@ class Dosen extends Model
     public function user(){
     	return $this->belongsTo(User::class);
     }
-   
     public function deleteImage()
     {
-        if($this->imageDosen!=$this::USER_PHOTO_DEFAULT)
+        if($this->dosen_image!=$this::USER_PHOTO_DEFAULT)
         {
-            return Storage::disk('images')->delete($this->imageDosen);
+            return Storage::disk('images')->delete($this->dosen_image);
         }
         return TRUE;
     }

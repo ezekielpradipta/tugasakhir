@@ -42,6 +42,14 @@ Route::group(['middleware' => ['auth']], function () {
 					Route::post('dosen/cekusername', 'DosenController@cekUsername')->name('admin.dosen.cekUsername');
 					Route::post('dosen/cekNIDN', 'DosenController@cekNIDN')->name('admin.dosen.cekNIDN');
 
+					Route::resource('mahasiswa','MahasiswaController',['as'=>'admin'])->except('show');
+					Route::post('mahasiswa/cekemail', 'MahasiswaController@cekEmail')->name('admin.mahasiswa.cekEmail');
+					Route::post('mahasiswa/cekusername', 'MahasiswaController@cekUsername')->name('admin.mahasiswa.cekUsername');
+					Route::get('mahasiswa/cekDosen', 'MahasiswaController@cekDosen')->name('admin.mahasiswa.cekDosen');
+					Route::get('mahasiswa/cekAngkatan', 'MahasiswaController@cekAngkatan')->name('admin.mahasiswa.cekAngkatan');
+					Route::get('mahasiswa/cekProdi', 'MahasiswaController@cekProdi')->name('admin.mahasiswa.cekProdi');
+
+
 					Route::resource('tak','TAKController',['as'=>'admin'])->except('show');
 					
 					Route::get('tak/adapilar/{id?}','TAKController@adaPilar')->name('admin.tak.adapilar');
