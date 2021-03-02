@@ -101,32 +101,53 @@ class DosenController extends Controller
             'password' => ['required', 'string', 'min:8','same:password_confirmation'],
             'dosen_image'=>['nullable','image','max:2048'],
         ]);
-          $data = request()->except(['_token']);
-          $data['dosen_id']= $request->dosen_id;
-          $data['role']= User::USER_ROLE_DOSEN;
-          $data['status']= User::USER_IS_ACTIVE;
-          $data['password'] = bcrypt($request->password);
-          $data['password_text'] = $request->password;
-          $data['username']= $request->username;
-          $data['dosen_nama']= $request->dosen_nama;
-          $data['nidn']=$request->nidn;
-          
+        $user =User::updateOrCreate(['id' => $request->user_id],
+        [
+            'email' => $request->email,
+            'username' => $request->username,
+            'role'=> User::USER_ROLE_MHS,
+            'status'=>User::USER_IS_ACTIVE,
+            'password'=>bcrypt($request->password),
+            'password_text'=>$request->password,
+        ]
+        );
+        if($request->dosen_id){
+            if ($request->file('dosen_image')) {
+                if($request->hidden_image!=Dosen::USER_PHOTO_DEFAULT){
+                    Storage::disk('images')->delete($request->hidden_image);
+                }
+                $imagePath = $request->file('dosen_image');
+                $imageName = date('YmdHis').'-'.Str::slug($request->dosen_nama).'-' . $imagePath->getClientOriginalName();
+                $path = $request->file('dosen_image')->storeAs('dosen', $imageName, 'images');
+                $dosen_image=$path;
+            }
+            else{
+                $dosen_image= $request->hidden_image;
+            }
+        } else{
+            if ($request->file('dosen_image')) {
 
-          if ($request->file('dosen_image')) {
-              
-              
-              $imagePath = $request->file('dosen_image');
-              $imageName = date('YmdHis').'.' . $imagePath->getClientOriginalName();
-              $path = $request->file('dosen_image')->storeAs('dosen', $imageName, 'images');
-              $data['dosen_image']=$path;
-          } else{
-            $data['dosen_image']=Dosen::USER_PHOTO_DEFAULT;
-          }
+                $imagePath = $request->file('dosen_image');
+                $imageName = date('YmdHis').'-'.Str::slug($request->dosen_nama).'-' . $imagePath->getClientOriginalName();
+                $path = $request->file('dosen_image')->storeAs('dosen', $imageName, 'images');
+                $dosen_image=$path;
+            }
+            else{
+                $dosen_image= Dosen::USER_PHOTO_DEFAULT;
+            }
+        }
+         
+       
         
-          $user = User::create($data);
-          $user->dosen()->create($data);
-          $user->dosen->save();
-          return response()->json();
+        $user->dosen()->updateOrCreate(['user_id' => $user->id], 
+        [
+            'dosen_nama' =>$request->dosen_nama,
+            'nidn' =>$request->nidn,
+            'dosen_image' =>$dosen_image,
+
+        ]);
+
+        return response()->json();
         
     }
 
@@ -150,8 +171,7 @@ class DosenController extends Controller
     public function edit($id)
     {
 
-        $dosen = DB::table("dosens")->join ('users','users.id','=','dosens.user_id')
-        ->where('dosens.id',$id)->get();
+        $dosen = Dosen::with('user')->find($id);
         return response()->json($dosen);
 
     }
@@ -163,50 +183,7 @@ class DosenController extends Controller
      * @param  \App\Models\Dosen  $dosen
      * @return \Illuminate\Http\Response
      */
-    public function updateDong(Request $request, Dosen $dosen)
-    {
-        $this->validate($request,[
-            'dosen_nama'=>['required','min:3'],
-            'password' => ['required', 'string', 'min:8','same:password_confirmation'],
-            'dosen_image'=>['nullable','image','max:2048'],
-        ]);
-        $dosen = Dosen::where('id',$request->dosen_id)->first();
-        $user = User::where('id',$request->user_id)->first();
-                    $item = request()->except(['_token','dosen_image','email','password','nidn','password_text','dosen_nama','username']);
-                    if ($request->file('dosen_image')) {
-                        
-                            $dosen->deleteImage();
-                            $imagePath = $request->file('dosen_image');
-                            $imageName = date('YmdH') . '.' . $imagePath->getClientOriginalName();
-                            $path = $request->file('dosen_image')->storeAs('dosen', $imageName, 'images');
-                            $item['dosen_image']=$path;
-                    }
-                    if($request->password)
-                    {
-                        $item['password'] = bcrypt($request->password);
-                        $item['password_text'] = $request->password;
-                    }
-            
-                    $item['dosen_nama']= $request->dosen_nama;
-                    if($request->username){
-                        $datauser['username']=$request->username;
-                        $user->update($datauser);
-                        $user->save();
-                    }
-                    if($request->nidn){
-                        $datauser['nidn']=$request->nidn;
-                        $user->update($datauser);
-                        $user->save();
-                    }
-                    if($request->email){
-                        $datauser['email']=$request->email;
-                        $user->update($datauser);
-                        $user->save();
-                    }
-                    $dosen->update($item);    
-                    $dosen->save();
-                    return response()->json([$dosen,$user]);
-    }
+    
 
     /**
      * Remove the specified resource from storage.

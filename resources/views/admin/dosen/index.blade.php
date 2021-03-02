@@ -41,24 +41,25 @@
                 <div class="alert alert-danger" style="display:none"></div>
                 <input type="hidden" name="dosen_id" id="dosen_id">
                 <input type="hidden" name="user_id" id="user_id">
+                <input type="hidden" name="hidden_image" id="hidden_image">
                  <div class="form-group">
                      <label for="inputemail">Email</label>
                      <input type="email" name="email" class="form-control" id="email" placeholder="Email">
-                     <label id="cekemail" class="text-danger">Bukan Email Institusi</label>
-                     <label id="emailtersedia" class=" text-success ">Email Tersedia</label>
-                     <label id="emailtidaktersedia" class="text-danger">Email Sudah Digunakan</label>
+                     <label id="cekemail" class="text-danger" style="display:none;">Bukan Email Institusi</label>
+                     <label id="email_ok" class=" text-success " style="display:none;">Email Tersedia</label>
+                     <label id="email_used" class="text-danger" style="display:none;">Email Sudah Digunakan</label>
                  </div>
                  <div class="form-group">
                     <label for="inputUsername">Username</label>
                     <input type="text" name="username" class="form-control" id="username" placeholder="Username">                   
-                     <label id="usertersedia" class=" text-success ">Username Tersedia</label>
-                     <label id="usertidaktersedia" class="text-danger">Username Sudah Digunakan</label>
+                     <label id="user_ok" class=" text-success " style="display:none;">Username Tersedia</label>
+                     <label id="user_used" class="text-danger" style="display:none;">Username Sudah Digunakan</label>
                 </div>
                 <div class="form-group">
                     <label for="inputNIDN">NIDN</label>
                     <input type="text" name="nidn" class="form-control" id="nidn" placeholder="NIDM">
-                    <label id="nidntersedia" class=" text-success ">NIDN Tersedia</label>
-                    <label id="nidntidaktersedia" class="text-danger">NIDN Sudah Digunakan</label>
+                    <label id="nidn_ok" class=" text-success " style="display:none;">NIDN Tersedia</label>
+                    <label id="nidn_used" class="text-danger" style="display:none;">NIDN Sudah Digunakan</label>
                 </div>
                 <div class="form-group">
                     <label for="inputNamaDosen">Nama</label>
@@ -94,8 +95,7 @@
             <div class="modal-footer justify-content-between">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
               <button type="button" class="btn btn-primary" value="tambah" id="btn-save">Save data</button>
-              <button type="button" class="btn btn-primary" value="update" id="btn-update">Update data</button>
-            </div>
+              </div>
           </div>
           <!-- /.modal-content -->
         </div>
@@ -106,15 +106,6 @@
 @push('scripts')
 	<script>
         $(document).ready( function () {
-            
-            
-            $('#cekemail').hide();
-            $('#emailtersedia').hide();
-            $('#emailtidaktersedia').hide();
-            $('#usertersedia').hide();
-            $('#usertidaktersedia').hide();
-            $('#nidntersedia').hide();
-            $('#nidntidaktersedia').hide();
             $.ajaxSetup({
             headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -148,8 +139,8 @@
                 if(!filter.test(email))
                 {
                 $('#cekemail').show();
-                $('#emailtersedia').hide();
-                $('#emailtidaktersedia').hide();
+                $('#email_ok').hide();
+                $('#email_used').hide();
                 $('#btn-save').attr('disabled', 'disabled');
                 }
                 else
@@ -163,18 +154,18 @@
                 if(result == 'unique')
                 {
                     $('#cekemail').hide();
-                    $('#emailtersedia').show();
-                    $('#emailtidaktersedia').hide();
+                    $('#email_ok').show();
+                    $('#email_used').hide();
                     $('#btn-save').attr('disabled', false);
-                    $('#btn-update').attr('disabled', false);
+                  
                 }
                 else
                 {
                     $('#cekemail').hide();
-                    $('#emailtersedia').hide();
-                    $('#emailtidaktersedia').show();
+                    $('#email_ok').hide();
+                    $('#email_used').show();
                     $('#btn-save').attr('disabled', 'disabled');
-                    $('#btn-update').attr('disabled', 'disabled');
+                   
                 }
                 }
                 })
@@ -194,17 +185,17 @@
                     {
                     if(result == 'unique')
                     {
-                    $('#usertersedia').show();
-                    $('#usertidaktersedia').hide();
-                    $('#btn-update').attr('disabled', false);
+                    $('#user_ok').show();
+                    $('#user_used').hide();
+                    
                     $('#btn-save').attr('disabled', false);
                     }
                     else
                     {
-                    $('#usertersedia').hide();
-                    $('#usertidaktersedia').show();
+                    $('#user_ok').hide();
+                    $('#user_used').show();
                     $('#btn-save').attr('disabled', 'disabled');
-                    $('#btn-update').attr('disabled', 'disabled');
+                   
                     }
                     }
                 })
@@ -222,17 +213,17 @@
                     {
                     if(result == 'unique')
                     {
-                    $('#nidntersedia').show();
-                    $('#nidntidaktersedia').hide();
-                    $('#btn-update').attr('disabled', false);
+                    $('#nidn_ok').show();
+                    $('#nidn_used').hide();
+                  
                     $('#btn-save').attr('disabled', false);
                     }
                     else
                     {
-                    $('#nidntersedia').hide();
-                    $('#nidntidaktersedia').show();
+                    $('#nidn_ok').hide();
+                    $('#nidn_used').show();
                     $('#btn-save').attr('disabled', 'disabled');
-                    $('#btn-update').attr('disabled', 'disabled');
+                  
                     }
                     }
                 })
@@ -240,18 +231,19 @@
             $('#tambah').click(function () {
                 $('#btn-save').val("tambah-data-dosen");
                 $('#dosen_id').val('');
+                $('#user_id').val('');
                 $('#formDosen').trigger("reset");
                 $('.modal-title').html("Tambah Data Dosen");
-                $('#btn-update').hide();
+                
                 $('#btn-save').show();
                 $('.gambar').removeAttr('src');
                 $('#cekemail').hide();
-                $('#emailtersedia').hide();
-                $('#emailtidaktersedia').hide();
-                $('#usertersedia').hide();
-                $('#usertidaktersedia').hide();
-                $('#nidntersedia').hide();
-                $('#nidntidaktersedia').hide();
+                $('#email_ok').hide();
+                $('#email_used').hide();
+                $('#user_ok').hide();
+                $('#user_used').hide();
+                $('#nidn_ok').hide();
+                $('#nidn_used').hide();
                 $('#modal-default').modal('show');
             });
             $('#btn-save').click(function (e) {
@@ -296,58 +288,27 @@
                      {
                         console.log(data);  
                         $('.modal-title').html("Edit Data Dosen");
-                        $('#btn-update').show();
-                        $('#btn-save').hide();
                         $('#cekemail').hide();
-                        $('#emailtersedia').hide();
-                        $('#emailtidaktersedia').hide();
-                        $('#usertersedia').hide();
-                        $('#usertidaktersedia').hide();
+                        $('#email_ok').hide();
+                        $('#email_used').hide();
+                        $('#user_ok').hide();
+                        $('#user_used').hide();
                         $('#btn-save').val("edit-dosen");
-                        $('#nidntersedia').hide();
-                        $('#nidntidaktersedia').hide();
+                        $('#nidn_ok').hide();
+                        $('#nidn_used').hide();
                         $('#modal-default').modal('show');
                         $('#dosen_id').val(dosen_id);
-                        $('#user_id').val(data[0].user_id);
-                        $('#dosen_nama').val(data[0].dosen_nama);
-                        $('#username').val(data[0].username);
-                        $('#password').val(data[0].password_text);
-                        $('#email').val(data[0].email);
-                        $('#nidn').val(data[0].nidn);
-                        $("#gambar").attr('src', '../' + '../' + 'img/' + data[0].dosen_image );
+                        $('#user_id').val(data.user_id);
+                        $('#dosen_nama').val(data.dosen_nama);
+                        $('#username').val(data.user.username);
+                        $('#password').val(data.user.password_text);
+                        $('#email').val(data.user.email);
+                        $('#nidn').val(data.nidn);
+                        $('#hidden_image').val(data.dosen_image);
+                        $("#gambar").attr('src', '../' + '../' + 'img/' + data.dosen_image );
                         
                      }
                   });          
-            });
-            $('#btn-update').click(function (e) {
-                e.preventDefault();
-                var myForm = $("#formDosen")[0];
-                var dosen_id = $('#dosen_id').val();
-                var urlUpdate ="{{route('admin.dosen.updateDong')}}";
-                console.log(urlUpdate);
-                $.ajax({
-                        data: new FormData(myForm),
-                        url: urlUpdate,
-                        type: "POST",
-                        
-                        contentType: false,
-                        processData: false,
-                        success: function (data) {
-                            console.log(data);
-                            $('#formDosen').trigger("reset");
-                            $('#modal-default').modal('hide');
-                            Command: swal("Sukses", "Berhasil menambahkan Data Dosen", "success");
-                            table.draw();
-                        },
-                        error: function (data) {
-                            console.log(data);
-                            Command: swal("Gagal", "Gagal menambahkan Data Dosen", "error");
-                            $('#nameDosenError').text(data.responseJSON.errors.dosen_nama);
-                            $('#passwordError').text(data.responseJSON.errors.password);
-                            $('#dosen_imageError').text(data.responseJSON.errors.dosen_image);
-                            $('#saveBtn').html('Save Changes');
-                        }
-                    });
             });
             $('body').on('click', '.deleteItem', function () {
                 var dosen_id = $(this).data('id');

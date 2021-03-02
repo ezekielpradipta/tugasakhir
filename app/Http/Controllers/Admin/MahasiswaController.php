@@ -15,8 +15,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use Response;
-use File;
-use Storage;
+use Illuminate\Support\Facades\File; 
+use Illuminate\Support\Facades\Storage;
 class MahasiswaController extends Controller
 {
     /**
@@ -114,14 +114,33 @@ class MahasiswaController extends Controller
                     'password_text'=>$request->password,
                 ]
         );
-        $mahasiswa= Mahasiswa::where('user_id','=',$request->user_id)->firstorFail();
-        if ($request->file('mahasiswa_image')) {
-            $mahasiswa->deleteImage();
-            $imagePath = $request->file('mahasiswa_image');
-            $imageName = date('YmdHis').'.' . $imagePath->getClientOriginalName();
-            $path = $request->file('mahasiswa_image')->storeAs('mahasiswa', $imageName, 'images');
-            $mahasiswa_image=$path;
-        } 
+        
+        if ($request->mahasiswa_id){
+            if ($request->file('mahasiswa_image')) {
+                if($request->hidden_image!=Mahasiswa::USER_PHOTO_DEFAULT){
+                    Storage::disk('images')->delete($request->hidden_image);
+                }
+                $imagePath = $request->file('mahasiswa_image');
+                $imageName = date('YmdHis').'-'.Str::slug($request->mahasiswa_nama).'-' . $imagePath->getClientOriginalName();
+                $path = $request->file('mahasiswa_image')->storeAs('mahasiswa', $imageName, 'images');
+                $mahasiswa_image=$path;
+            }
+            else{
+                $mahasiswa_image= $request->hidden_image;
+            }
+        }
+        else{
+            if ($request->file('mahasiswa_image')) {
+                $imagePath = $request->file('mahasiswa_image');
+                $imageName = date('YmdHis').'-'.Str::slug($request->mahasiswa_nama).'-' . $imagePath->getClientOriginalName();
+                $path = $request->file('mahasiswa_image')->storeAs('mahasiswa', $imageName, 'images');
+                $mahasiswa_image=$path;
+            }
+            else {
+                $mahasiswa_image= Mahasiswa::USER_PHOTO_DEFAULT;
+            }
+        }
+         
         $email=$request->email;
         $mahasiswa_nim= Str::substr($email, 0,8);
         
@@ -179,6 +198,8 @@ class MahasiswaController extends Controller
      */
     public function destroy(Mahasiswa $mahasiswa)
     {
-        //
+        $mahasiswa->deleteImage();
+        $mahasiswa->user()->delete();
+        return response()->json($mahasiswa);
     }
 }

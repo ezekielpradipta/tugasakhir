@@ -44,6 +44,7 @@
                 <input type="hidden" name="dosen_val" id="dosen_val">
                 <input type="hidden" name="prodi_val" id="prodi_val">
                 <input type="hidden" name="angkatan_val" id="angkatan_val">
+                <input type="hidden" name="hidden_image" id="hidden_image">
                  <div class="form-group">
                      <label for="inputemail">Email</label>
                      <input type="email" name="email" class="form-control" id="email" placeholder="Email">
@@ -336,6 +337,7 @@
                         $('#user_used').hide();
                         $('#btn-save').val("edit-mahasiswa");
                         $('#modal-default').modal('show');
+                        $('#mahasiswa_id').val(data.id);
                         $('#dosen_id').val(data.dosen_id);
                         $('#dosen_val').val(data.dosen_id);
                         $('#angkatan_id').val(data.angkatan_id);
@@ -347,11 +349,47 @@
                         $('#username').val(data.user.username);
                         $('#password').val(data.user.password_text);
                         $('#email').val(data.user.email);
-                        
+                        $('#hidden_image').val(data.mahasiswa_image);
                         $("#gambar").attr('src', '../' + '../' + 'img/' + data.mahasiswa_image );
                         
                      }
                   });          
-            });
+        });
+        $('body').on('click', '.deleteItem', function () {
+                var mahasiswa_id = $(this).data('id');
+                swal({
+                title: 'Apakah anda yakin?',
+                text: "Data akan dihapus!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Lanjut',
+                cancelButtonText: 'Batal'
+                }).then(function() {
+                    $.ajax({
+                        type: "DELETE",
+                        url: "{{ route('admin.mahasiswa.store') }}"+'/'+mahasiswa_id,
+                        success: function (data) {
+                            table.draw();
+                            swal(
+                                'Terhapus!',
+                                'Data Berhasil Dihapus',
+                                'success'
+                            );
+                        },
+                        error: function (data) {
+                            console.log('Error:', data);
+                            swal(
+                                'Kesalahan!',
+                                'Data Gagal Dihapus',
+                                'warning'
+                            );
+                        }
+
+                    });
+                
+                })
+        });
     </script>
 @endpush
