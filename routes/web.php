@@ -21,7 +21,13 @@ Route::group(['middleware' => ['guest']], function () {
     Route::namespace('Auth')->group(function(){  
 		Route::get('login', 'LoginController@login')->name('login');
 		Route::post('login', 'LoginController@ceklogin')->name('login');
-		
+		Route::post('login/daftar', 'LoginController@daftar')->name('daftar');
+		Route::post('login/cekEmail', 'LoginController@cekEmail')->name('login.cekEmail');
+		Route::post('login/cekUsername', 'LoginController@cekUsername')->name('login.cekUsername');
+		Route::get('login/cekDosen', 'LoginController@cekDosen')->name('login.cekDosen');
+		Route::get('login/cekAngkatan', 'LoginController@cekAngkatan')->name('login.cekAngkatan');
+		Route::get('login/cekProdi', 'LoginController@cekProdi')->name('login.cekProdi');
+
     });
 });
 
@@ -90,6 +96,28 @@ Route::group(['middleware' => ['auth']], function () {
 					Route::resource('angkatan','AngkatanController',['as'=>'admin'])->except('show');
 					
 				});
+			});
+		});
+	});
+	Route::group(['middleware'=>['mahasiswa']],function(){
+		Route::namespace('Mahasiswa')->group(function(){
+			Route::prefix('mahasiswa')->group(function(){
+				Route::get('/','DashboardController@index')->name('mahasiswa.index');
+				Route::resource('inputtak','InputtakController',['as'=>'mahasiswa'])->only(['index','store']);
+				Route::get('tak/cekKegiatan/{id?}','InputtakController@cekKegiatan')->name('mahasiswa.tak.cekKegiatan');
+				Route::get('tak/cekPilar/{id?}','InputtakController@cekPilar')->name('mahasiswa.tak.cekPilar');
+				Route::get('tak/cekPartisipasi/{id?}','InputtakController@cekPartisipasi')->name('mahasiswa.tak.cekPartisipasi');
+				
+				Route::resource('daftartak','DaftartakController',['as'=>'mahasiswa'])->except('show');
+				Route::get('daftartak/pilartak/cek', 'DaftartakController@cekPilar')->name('mahasiswa.daftartak.pilartak.cek');
+				Route::get('daftartak/kategoritak/cek', 'DaftartakController@cekKategori')->name('mahasiswa.daftartak.kategoritak.cek');
+				Route::get('daftartak/kegiatantak/cek', 'DaftartakController@cekKegiatan')->name('mahasiswa.daftartak.kegiatantak.cek');
+				Route::get('daftartak/partisipasitak/cek', 'DaftartakController@cekPartisipasi')->name('mahasiswa.daftartak.partisipasitak.cek');
+			
+				Route::get('daftartak/adapilar/{id?}','DaftartakController@adaPilar')->name('mahasiswa.daftartak.adapilar');
+				Route::get('daftartak/adakegiatan/{id?}','DaftartakController@adaKegiatan')->name('mahasiswa.daftartak.adakegiatan');
+				Route::get('daftartak/adapartisipasi/{id?}','DaftartakController@adaPartisipasi')->name('mahasiswa.daftartak.adapartisipasi');
+				
 			});
 		});
 	});

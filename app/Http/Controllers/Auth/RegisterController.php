@@ -11,12 +11,13 @@ use Illuminate\Support\Str;
 use App\Models\Angkatan;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 class RegisterController extends Controller
 {
     public function register(){
-        $prodis = Prodi::orderBy('nama', 'ASC')->get();
-        $dosens = Dosen::orderBy('nama', 'ASC')->get();
-        $angkatans = Angkatan::orderBy('tahun', 'ASC')->get();
+        $prodis = Prodi::orderBy('prodi_nama', 'ASC')->get();
+        $dosens = Dosen::orderBy('dosen_nama', 'ASC')->get();
+        $angkatans = Angkatan::orderBy('angkatan_tahun', 'ASC')->get();
     	return view('auth.register',compact('prodis','angkatans','dosens'));
     }
     public function daftar(Request $request){
@@ -29,7 +30,7 @@ class RegisterController extends Controller
             'prodi_id'=>['required'],
             'dosen_id'=>['required'],
         ]);
-        $email = $request->email;
+            $email = $request->email;
             $data =$request->all();
             $data['nim']= Str::substr($email, 0,8);
             $data['role']= User::USER_ROLE_MHS;

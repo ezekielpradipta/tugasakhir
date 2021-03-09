@@ -125,7 +125,7 @@
                                               <option value="">- Pilih Angkatan -</option>
                                               @foreach($angkatans as $angkatan)
                                                   <option value="{{ $angkatan->id }}">
-                                                  {{ $angkatan->tahun }}</option>
+                                                  {{ $angkatan->angkatan_tahun }}</option>
                                               @endforeach
                                           </select>
                                         </div>
@@ -135,7 +135,7 @@
                                               <option value="">- Pilih Prodi -</option>
                                               @foreach($prodis as $prodi)
                                                   <option value="{{ $prodi->id }}">
-                                                  {{ $prodi->nama }}</option>
+                                                  {{ $prodi->prodi_nama }}</option>
                                               @endforeach
                                           </select>
                                         </div>
@@ -147,7 +147,7 @@
                                                 <option></option>
                                                 @foreach($dosens as $d)
                                                   <option value="{{ $d->id }}">
-                                                  {{ $d->nama }}</option>
+                                                  {{ $d->dosen_nama }}</option>
                                               @endforeach
                                             </select>
                                         </div>
@@ -267,7 +267,7 @@
         });
         $('#pilihdosen').select2({
         placeholder: 'Pilih Dosen Wail',
-        theme: "classic"
+        
       });
     });
     function validate(){

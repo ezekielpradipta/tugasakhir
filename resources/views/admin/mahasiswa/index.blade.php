@@ -118,7 +118,7 @@
           <!-- /.modal-content -->
         </div>
         <!-- /.modal-dialog -->
-      </div>
+    </div>
 </section>
 @endsection
 @push('scripts')
@@ -141,7 +141,7 @@
                 var error_email = '';
                 var email = $('#email').val();
                 var _token = $('input[name="_token"]').val();
-                var filter = /^([a-zA-Z0-9_\.\-])+\@(st3telkom\.ac\.id|ittelkom-pwt\.ac\.id)+$/;
+                var filter = /^([0-9]{8})+\@(st3telkom\.ac\.id|ittelkom-pwt\.ac\.id)+$/;
                 if(!filter.test(email))
                 {
                 $('#cekemail').show();

@@ -24,4 +24,7 @@ class Tak extends Model
     {
         return $this->belongsTo(Partisipasitak::class);
     }
+    public function inputtak(){
+        return $this->hasMany(Inputtak::class);
+    }
 }

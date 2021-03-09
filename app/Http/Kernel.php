@@ -37,6 +37,7 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \UxWeb\SweetAlert\ConvertMessagesIntoSweetAlert::class,
         ],
 
         'api' => [
@@ -64,5 +65,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'admin' => \App\Http\Middleware\IniAdmin::class,
         'mahasiswa' => \App\Http\Middleware\IniMahasiswa::class,
+        'sweetalert' => \UxWeb\SweetAlert\ConvertMessagesIntoSweetAlert::class,
     ];
 }
