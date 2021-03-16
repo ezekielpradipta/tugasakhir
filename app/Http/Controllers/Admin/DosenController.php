@@ -105,7 +105,7 @@ class DosenController extends Controller
         [
             'email' => $request->email,
             'username' => $request->username,
-            'role'=> User::USER_ROLE_MHS,
+            'role'=> User::USER_ROLE_DOSEN,
             'status'=>User::USER_IS_ACTIVE,
             'password'=>bcrypt($request->password),
             'password_text'=>$request->password,

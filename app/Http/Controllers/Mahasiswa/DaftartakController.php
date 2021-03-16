@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Str;
+use Madzipper;
 class DaftartakController extends Controller
 {
     public function adaPilar($id){
@@ -78,7 +80,7 @@ class DaftartakController extends Controller
                     }
             })
             ->addColumn('bukti', function($inputtaks){
-                $btn_bukti = ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$inputtaks->id.'" data-original-title="Show" class="btn btn-success btn-sm openBukti"><span class="fa fa-image"></a>';
+                $btn_bukti = ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$inputtaks->id.'" data-original-title="Show" class="btn btn-success btn-sm show-Bukti"><span class="fa fa-image"></a>';
                 return $btn_bukti;
                
            })
@@ -90,6 +92,28 @@ class DaftartakController extends Controller
             ->make(true);
         }
         return view('mahasiswa.daftartak');
+    }
+    public function getBukti($id){
+        $inputtaks = Inputtak::with('tak.kegiatantak')
+        ->with('tak.kategoritak')
+        ->with('tak.partisipasitak')
+        ->with('tak.kegiatantak')
+        ->with('tak.pilartak')
+        ->find($id);
+        $images =json_decode($inputtaks->inputtak_bukti);
+        $status = $inputtaks->inputtak_status;
+        if($images){
+            if($status ==Inputtak::TAK_BLUM_DIACC){
+                return response()->json(['inputtaks'=>$inputtaks,'images'=>$images,'status'=>'false','gambar'=>'ada']);
+            }
+            else{
+                return response()->json(['inputtaks'=>$inputtaks,'images'=>$images,'status'=>'true','gambar'=>'ada']);
+            }
+        }
+        else{
+            return response()->json(['inputtaks'=>$inputtaks,'gambar'=>'null']);
+        }
+       
     }
     public function edit($id){
         $inputtaks = Inputtak::with('tak.kegiatantak')
@@ -130,7 +154,7 @@ class DaftartakController extends Controller
             'inputtak_penyelenggara'=>$request->penyelenggara,
             'inputtak_tanggalawal'=>$request->tanggalawal,
             'inputtak_tanggalakhir'=>$request->tanggalakhir,
-            'inputtak_namaindo'=>$request->namaindo,
+            'inputtak_namaindo'=>"$request->namaindo",
             'inputtak_namainggris'=>$request->namainggris,
             'inputtak_deskripsi'=>$request->deskripsi,
             'inputtak_tahunajaran'=>$request->tahunajaran,
@@ -141,10 +165,60 @@ class DaftartakController extends Controller
         $inputtaks = Inputtak::find($id);
         //$images = explode(",", $inputtaks->inputtak_bukti);
         $images =json_decode($inputtaks->inputtak_bukti);
-        foreach ($images as $image) {
-           Storage::disk('images')->delete("bukti/{$image}");
+        if($images){
+            foreach ($images as $image) {
+                Storage::disk('images')->delete("bukti/{$image}");
+             }
         }
         $inputtaks->delete();
         return response()->json([$inputtaks,$images]);
     }
+    public function cetakBukti($fileId){
+        $inputtak = Inputtak::with('mahasiswa')->findOrFail($fileId);
+        $images =json_decode($inputtak->inputtak_bukti);
+        $nim= $inputtak->mahasiswa->mahasiswa_nim;
+        Storage::disk('images')->delete("Bukti-TAK-{$nim}.zip");
+        $files = glob(public_path('img/contoh3.png'));
+        $zipper = Madzipper::make(public_path("/img/Bukti-TAK-{$nim}.zip"));
+        foreach ($images as $file) {
+            $zipper->add(public_path("/img/bukti/{$file}")); // update it by your path
+        }
+        $zipper->close();
+       // Madzipper::make(public_path("/img/Bukti-TAK-{$nim}.zip"))->add([public_path('img/contoh.png')])->close();
+        return response()->download(public_path("img/Bukti-TAK-{$nim}.zip"));    
+    }
+    public function editBukti($id){
+        $inputtak = Inputtak::with('mahasiswa')->find($id);
+        return response()->json($inputtak);
+    }
+    public function tambahBukti(Request $request)
+    {
+        $gambar = Inputtak::where('id',$request->input_id2)->first();
+        $images =json_decode($gambar->inputtak_bukti);
+        foreach ($images as $image) {
+           Storage::disk('images')->delete("bukti/{$image}");
+        }
+        $nim = Auth::user()->mahasiswa->mahasiswa_nim;
+        if($request->hasfile('bukti'))
+      {
+
+         foreach($request->file('bukti') as $bukti)
+         {
+             $filename = date('YmdHis').'-'.Str::slug($nim) . '-'.$bukti->getClientOriginalName();
+             $bukti->storeAs('bukti',$filename,'images');
+             $data[] = $filename;  
+         }
+         $sudah_array= json_encode($data);
+      } else{
+          $sudah_array="";
+      }
+      
+      $inputak= Inputtak::where('id',$request->input_id2)->update(
+        [  
+            'inputtak_bukti'=>$sudah_array,
+        ]);
+        
+      return response()->json();
+    }
+
 }

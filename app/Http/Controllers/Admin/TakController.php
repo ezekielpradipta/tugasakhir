@@ -263,8 +263,26 @@ class TakController extends Controller
      */
     public function edit($id)
     {
-        $taks = Tak::with('kegiatantak','partisipasitak')->find($id);
-        return response()->json($taks);
+        $taks = Tak::with('kegiatantak','partisipasitak','pilartak','kategoritak')->find($id);
+        $kategoritak_id = $taks->kategoritak_id;
+        $pilartak_id = $taks->pilartak_id;
+        $kegiatantak_id = $taks->kegiatantak_id;
+        $pilartaks = DB::table('pilartaks')
+        ->join('kategoritaks','kategoritaks.id','=','pilartaks.kategoritak_id')
+        ->where('kategoritaks.id',$kategoritak_id)
+        ->pluck('pilartaks.pilartak_nama','pilartaks.id')
+        ;
+        $kegiatantaks = DB::table('kegiatantaks')
+        ->join('pilartaks','pilartaks.id','=','kegiatantaks.pilartak_id')
+        ->where('pilartaks.id',$pilartak_id)
+        ->pluck('kegiatantaks.kegiatantak_nama','kegiatantaks.id')
+        ;
+        $partisipasitaks = DB::table('partisipasitaks')
+        ->join('kegiatantaks','kegiatantaks.id','=','partisipasitaks.kegiatantak_id')
+        ->where('kegiatantaks.id',$kegiatantak_id)
+        ->pluck('partisipasitaks.partisipasitak_nama','partisipasitaks.id')
+        ;
+        return response()->json(['taks'=>$taks,'pilartaks'=>$pilartaks,'kegiatantaks'=>$kegiatantaks,'partisipasitaks'=>$partisipasitaks]);
     }
 
     /**

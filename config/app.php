@@ -162,7 +162,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Yajra\Datatables\DatatablesServiceProvider::class,
-        
+        Madnest\Madzipper\MadzipperServiceProvider::class,
         UxWeb\SweetAlert\SweetAlertServiceProvider::class,
         /*
          * Package Service Providers...
@@ -176,6 +176,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        
 
     ],
 
@@ -230,7 +231,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Datatables' => Yajra\Datatables\Facades\Datatables::class,
         'Alert' => UxWeb\SweetAlert\SweetAlert::class,
-
+        'Madzipper' => Madnest\Madzipper\Madzipper::class,
     ],
 
 ];

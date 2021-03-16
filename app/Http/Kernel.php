@@ -65,6 +65,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'admin' => \App\Http\Middleware\IniAdmin::class,
         'mahasiswa' => \App\Http\Middleware\IniMahasiswa::class,
+        'dosen' => \App\Http\Middleware\iniDosen::class,
         'sweetalert' => \UxWeb\SweetAlert\ConvertMessagesIntoSweetAlert::class,
     ];
 }

@@ -118,6 +118,17 @@ Route::group(['middleware' => ['auth']], function () {
 				Route::get('daftartak/adakegiatan/{id?}','DaftartakController@adaKegiatan')->name('mahasiswa.daftartak.adakegiatan');
 				Route::get('daftartak/adapartisipasi/{id?}','DaftartakController@adaPartisipasi')->name('mahasiswa.daftartak.adapartisipasi');
 				
+				Route::get('daftartak/{id}/bukti','DaftartakController@getBukti')->name('mahasiswa.bukti');
+				Route::get('daftartak/{fileId}/cetakBukti','DaftartakController@cetakBukti')->name('mahasiswa.cetakBukti');
+				Route::get('daftartak/{id}/editBukti','DaftartakController@editBukti')->name('mahasiswa.editBukti');
+				Route::post('daftartak/tambahBukti','DaftartakController@tambahBukti')->name('mahasiswa.tambahBukti');
+			});
+		});
+	});
+	Route::group(['middleware'=>['dosen']],function(){
+		Route::namespace('Dosen')->group(function(){
+			Route::prefix('dosen')->group(function(){
+				Route::get('/', 'DashboardController@dashboard')->name('dosen.dashboard.index');
 			});
 		});
 	});

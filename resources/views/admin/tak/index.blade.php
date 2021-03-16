@@ -433,26 +433,7 @@
                 
 
             });
-            var kategoritak=true;
-            $('#kategoritak').click(function(){
-                if(kategoritak){
-                    $.ajax({
-                        url: "{{ route('admin.tak.kategoritak.cek') }}",
-                        type: "GET",
-                        dataType : "json",
-                        
-                        success: function (data) {
-                            console.log(data);
-                            $('select[name="kategoritak"]').empty();
-                            $('select[name="kategoritak"]').append('<option selected disabled value="">--Pilih Kategori TAK--</option>');
-                            $.each(data, function(id,kategoritak_nama){
-                                $('select[name="kategoritak"]').append('<option value="'+ id +'">'+ kategoritak_nama +'</option>');
-                            }); 
-                        }
-                    });
-                    kategoritak= false;
-                }
-            });
+            
             $('#kategoritak').ready(function(){
                     $.ajax({
                         url: "{{ route('admin.tak.kategoritak.cek') }}",
@@ -467,48 +448,7 @@
                         }
                     });
             });
-            $('#pilartak').ready(function(){
-                    $.ajax({
-                        url: "{{ route('admin.tak.pilartak.cek') }}",
-                        type: "GET",
-                        dataType : "json",
-                        
-                        success: function (data) {
-                            
-                            $.each(data, function(id,pilartak_nama){
-                                $('select[name="pilartak"]').append('<option value="'+ id +'">'+ pilartak_nama +'</option>');
-                            }); 
-                        }
-                    });
-            });
-            $('#kegiatantak').ready(function(){
-                    $.ajax({
-                        url: "{{ route('admin.tak.kegiatantak.cek') }}",
-                        type: "GET",
-                        dataType : "json",
-                        
-                        success: function (data) {
-                            
-                            $.each(data, function(id,kegiatantak_nama){
-                                $('select[name="kegiatantak"]').append('<option value="'+ id +'">'+ kegiatantak_nama +'</option>');
-                            }); 
-                        }
-                    });
-            });
-            $('#partisipasitak').ready(function(){
-                    $.ajax({
-                        url: "{{ route('admin.tak.partisipasitak.cek') }}",
-                        type: "GET",
-                        dataType : "json",
-                        
-                        success: function (data) {
-                            
-                            $.each(data, function(id,partisipasitak_nama){
-                                $('select[name="partisipasitak"]').append('<option value="'+ id +'">'+ partisipasitak_nama +'</option>');
-                            }); 
-                        }
-                    });
-            });
+            
             $('#kategoritak').change(function(){
                 var kategori_val = $(this).children("option:selected").val();
                 $('#kategori_val').val(kategori_val);
@@ -595,7 +535,7 @@
                             $('#modal-default').modal('hide');
                             Command: swal("Sukses", "Berhasil menambahkan Data TAK", "success");
                             pilar_kategori=true;
-                            kategoritak=true;
+                            
                             kegiatan_kategori = true;
                             kegiatan_pilar= true;
                             tbTak.draw();
@@ -623,16 +563,39 @@
                         $('#save-tak').val("Update-Kategori");
                         
                         $('#modal-default').modal('show');
-                        $('#tak_id').val(data.id);
-                        $('#kategoritak').val(data.kategoritak_id); 
-                        $('#kategori_val').val(data.kategoritak_id);
-                        $('#pilartak').val(data.pilartak_id);  
-                        $('#pilar_val').val(data.pilartak_id); 
-                        $('#kegiatan_val').val(data.kegiatantak_id); 
-                        $('#kegiatantak').val(data.kegiatantak_id); 
-                        $('#partisipasi_val').val(data.partisipasitak_id);
-                        $('#partisipasitak').val(data.partisipasitak_id);  
-                        $('#tak_score').val(data.tak_score);   
+                        $('#tak_id').val(data.taks.id);
+                        $('#kategoritak').val(data.taks.kategoritak_id); 
+                        $('#kategori_val').val(data.taks.kategoritak_id);
+
+                        $('#pilartak').html('');
+                        $.each(data.pilartaks, function(id, pilartak_nama) {
+                            $('#pilartak').append($('<option>', {
+                                value: id,
+                                text: pilartak_nama,
+                                selected: id == data.taks.pilartak_id
+                            }));
+                        });
+                        $('#pilar_val').val(data.taks.pilartak_id); 
+                        $('#kegiatantak').html('');
+                        $.each(data.kegiatantaks, function(id, kegiatantak_nama) {
+                            $('#kegiatantak').append($('<option>', {
+                                value: id,
+                                text: kegiatantak_nama,
+                                selected: id == data.taks.kegiatantak_id
+                            }));
+                        });
+                        $('#kegiatan_val').val(data.taks.kegiatantak_id); 
+                        $('#partisipasitak').html('');
+                        $.each(data.partisipasitaks, function(id, partisipasitak_nama) {
+                            $('#partisipasitak').append($('<option>', {
+                                value: id,
+                                text: partisipasitak_nama,
+                                selected: id == data.taks.partisipasitak_id
+                            }));
+                        });
+                        $('#partisipasi_val').val(data.taks.partisipasitak_id);
+                        
+                        $('#tak_score').val(data.taks.tak_score);   
                      }
                   });          
             });
@@ -666,7 +629,7 @@
                             $('#modal-kategori-tambah').modal('hide');
                             Command: swal("Sukses", "Berhasil menambahkan Data Kategori TAK", "success");
                             pilar_kategori=true;
-                            kategoritak=true;
+                            
                             kegiatan_kategori = true;
                             kegiatan_pilar= true;
                             tbKategori.draw();
@@ -730,7 +693,7 @@
                             tbKategori.draw();
                             tbPilar.draw();
                             pilar_kategori=true;
-                            kategoritak=true;
+                            
                             kegiatan_kategori = true;
                             kegiatan_pilar= true;
                             swal(
@@ -823,7 +786,7 @@
                             $('#modal-pilar-tambah').modal('hide');
                             Command: swal("Sukses", "Berhasil menambahkan Data Pilar TAK", "success");
                             pilar_kategori=true;
-                            kategoritak=true;
+                            
                             kegiatan_kategori = true;
                             kegiatan_pilar= true;
                             tbPilar.draw();
@@ -889,7 +852,7 @@
                         success: function (data) {
                             tbPilar.draw();
                             pilar_kategori=true;
-                            kategoritak=true;
+                            
                             kegiatan_kategori = true;
                             kegiatan_pilar= true;
                             swal(
@@ -1052,7 +1015,7 @@
                             $('#modal-kegiatan-tambah').modal('hide');
                             Command: swal("Sukses", "Berhasil menambahkan Data Kegiatan TAK", "success");
                             pilar_kategori=true;
-                            kategoritak=true;
+                            
                             kegiatan_kategori = true;
                             kegiatan_pilar= true;
                             tbKegiatan.draw();
@@ -1110,7 +1073,7 @@
                         success: function (data) {
                             tbKegiatan.draw();
                             pilar_kategori=true;
-                            kategoritak=true;
+                            
                             kegiatan_kategori = true;
                             kegiatan_pilar= true;
                             
@@ -1216,7 +1179,7 @@
                             $('#modal-partisipasi-tambah').modal('hide');
                             Command: swal("Sukses", "Berhasil menambahkan Data Partisipasi TAK", "success");
                             pilar_kategori=true;
-                            kategoritak=true;
+                            
                             kegiatan_kategori = true;
                             kegiatan_pilar= true;
                             partisipasi_kegiatan=true;
@@ -1275,7 +1238,7 @@
                         url: "{{ route('admin.tak.partisipasitak.tambah') }}"+'/'+partisipasitak_id,
                         success: function (data) {
                             pilar_kategori=true;
-                            kategoritak=true;
+                            
                             kegiatan_kategori = true;
                             kegiatan_pilar= true;
                             partisipasi_kegiatan=true;
