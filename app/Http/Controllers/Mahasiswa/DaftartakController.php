@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Str;
 use Madzipper;
+use App\Events\TakMasuk;
 class DaftartakController extends Controller
 {
     public function adaPilar($id){

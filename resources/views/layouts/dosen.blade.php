@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -20,146 +21,207 @@
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/overlayScrollbars/css/OverlayScrollbars.min.css')}}">
   <!-- Daterange picker -->
   <link rel="stylesheet" href="{{ asset('adminlte/plugins/daterangepicker/daterangepicker.css')}}">
- <link href="{{ asset('css/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
+  <link href="{{ asset('css/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
   <!-- Google Font: Source Sans Pro -->
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.css">
 </head>
+
 <body class="hold-transition sidebar-mini layout-fixed">
-<div class="wrapper">
+  <div class="wrapper">
 
-  <!-- Navbar -->
-  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-    <!-- Left navbar links -->
-    <ul class="navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-      </li>
-    </ul>
+    <!-- Navbar -->
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+      <!-- Left navbar links -->
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+          <a href="javascript:void(0)" class="btn btn-danger" id="btn-coba">test</a>
+        </li>
+      </ul>
 
-    <!-- Right navbar links -->
-    <ul class="navbar-nav ml-auto">
-      <!-- Notifications Dropdown Menu -->
-      <li class="nav-item dropdown">
-        <a class="nav-link" data-toggle="dropdown" href="#">
-          <i class="far fa-bell"></i>
-          <span class="badge badge-warning navbar-badge">15</span>
-        </a>
-        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-          <span class="dropdown-item dropdown-header">15 Notifications</span>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item">
-            <i class="fas fa-envelope mr-2"></i> 4 new messages
-            <span class="float-right text-muted text-sm">3 mins</span>
+      <!-- Right navbar links -->
+      <ul class="navbar-nav ml-auto">
+        <!-- Notifications Dropdown Menu -->
+        <li class="nav-item dropdown dropdown-notif">
+          <a class="nav-link" data-toggle="dropdown" href="#">
+            <i data-count="0" class="far fa-bell"></i>
+            <span class="badge badge-danger navbar-badge notif-count">0</span>
           </a>
-          <div class="dropdown-divider"></div>
-          <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
-        </div>
-      </li>
-    </ul>
-  </nav>
-  <!-- /.navbar -->
+          <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+            
+            <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
+          </div>
+        </li>
+      </ul>
+    </nav>
+    <!-- /.navbar -->
 
-  <!-- Main Sidebar Container -->
-  <aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <!-- Brand Logo -->
-    <!-- Sidebar -->
-    <div class="sidebar">
-      <!-- Sidebar user panel (optional) -->
-      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-        <div class="image">
-          <img src="{{Auth ::user()->dosen->image_url}}" class="img-circle elevation-2" alt="User Image">
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+      <!-- Brand Logo -->
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <!-- Sidebar user panel (optional) -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+          <div class="image">
+            <img src="{{Auth ::user()->dosen->image_url}}" class="img-circle elevation-2" alt="User Image">
+          </div>
+          <div class="info">
+            <a href="#" class="d-block">{{ Auth::user()->dosen->dosen_nama }}</a>
+          </div>
         </div>
-        <div class="info">
-          <a href="#" class="d-block">{{ Auth::user()->dosen->dosen_nama }}</a>
-        </div>
+
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+          <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <li class="nav-item">
+              <a href="{{route('dosen.dashboard.index')}}" class="nav-link">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>
+                  Dashboard
+                </p>
+              </a>
+            </li>
+            <li class="nav-header">DATA-DATA</li>
+            <li class="nav-item">
+              <a href="{{route('dosen.daftarmahasiswa.index')}}" class="nav-link">
+                <i class="nav-icon fas fa-user"></i>
+                <p>
+                  Daftar Mahasiswa
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{route('dosen.takmasuk.index')}}" class="nav-link">
+                <i class="nav-icon fas fa-book"></i>
+                <p>
+                  Daftar TAK
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{route('logout')}}" class="nav-link">
+                <i class="nav-icon fas fa-power-off"></i>
+                <p>
+                  LogOut
+                </p>
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
       </div>
+      <!-- /.sidebar -->
+    </aside>
 
-      <!-- Sidebar Menu -->
-      <nav class="mt-2">
-        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-          <li class="nav-item">
-            <a href="{{route('dosen.dashboard.index')}}" class="nav-link">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
-              <p>
-                Dashboard
-              </p>
-            </a>
-          </li>
-        <li class="nav-header">DATA-DATA</li>
-          <li class="nav-item">
-            <a href="" class="nav-link">
-              <i class="nav-icon fas fa-user"></i>
-              <p>
-                Data Mahasiswa
-              </p>
-            </a>
-          </li>
-       
-          <li class="nav-item">
-            <a href="{{route('logout')}}" class="nav-link">
-              <i class="nav-icon fas fa-power-off"></i>
-              <p>
-                LogOut
-              </p>
-            </a>
-          </li>
-        </ul>
-      </nav>
-      <!-- /.sidebar-menu -->
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+      @yield('content')
     </div>
-    <!-- /.sidebar -->
-  </aside>
-
-  <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    @yield('content')
+    <!-- /.content-wrapper -->
+    <footer class="main-footer">
+      <strong>Copyright &copy; 2014-2019 <a href="http://adminlte.io">AdminLTE.io</a>.</strong>
+      All rights reserved.
+      <div class="float-right d-none d-sm-inline-block">
+        <b>Version</b> 3.0.4
+      </div>
+    </footer>
   </div>
-  <!-- /.content-wrapper -->
-  <footer class="main-footer">
-    <strong>Copyright &copy; 2014-2019 <a href="http://adminlte.io">AdminLTE.io</a>.</strong>
-    All rights reserved.
-    <div class="float-right d-none d-sm-inline-block">
-      <b>Version</b> 3.0.4
-    </div>
-  </footer>
-</div>
-<!-- ./wrapper -->
+  <!-- ./wrapper -->
 
-<script src="{{ asset('adminlte/plugins/jquery/jquery.min.js')}}"></script>
-<!-- jQuery UI 1.11.4 -->
-<script src="{{ asset('adminlte/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
-<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-<!-- Bootstrap 4 -->
-<script src="{{ asset('adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-<!-- ChartJS -->
-<script src="{{ asset('adminlte/plugins/chart.js/Chart.min.js')}}"></script>
+  <script src="{{ asset('adminlte/plugins/jquery/jquery.min.js')}}"></script>
+  <!-- jQuery UI 1.11.4 -->
+  <script src="{{ asset('adminlte/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
+  <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+  <!-- Bootstrap 4 -->
+  <script src="{{ asset('adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+  <!-- ChartJS -->
+  <script src="{{ asset('adminlte/plugins/chart.js/Chart.min.js')}}"></script>
 
-<!-- JQVMap -->
-<script src="{{ asset('adminlte/plugins/jqvmap/jquery.vmap.min.js')}}"></script>
-<script src="{{ asset('adminlte/plugins/jqvmap/maps/jquery.vmap.usa.js')}}"></script>
-<!-- jQuery Knob Chart -->
-<script src="{{ asset('adminlte/plugins/jquery-knob/jquery.knob.min.js')}}"></script>
-<!-- daterangepicker -->
-<script src="{{ asset('adminlte/plugins/moment/moment.min.js')}}"></script>
-<script src="{{ asset('adminlte/plugins/daterangepicker/daterangepicker.js')}}"></script>
+  <!-- JQVMap -->
+  <script src="{{ asset('adminlte/plugins/jqvmap/jquery.vmap.min.js')}}"></script>
+  <script src="{{ asset('adminlte/plugins/jqvmap/maps/jquery.vmap.usa.js')}}"></script>
+  <!-- jQuery Knob Chart -->
+  <script src="{{ asset('adminlte/plugins/jquery-knob/jquery.knob.min.js')}}"></script>
+  <!-- daterangepicker -->
+  <script src="{{ asset('adminlte/plugins/moment/moment.min.js')}}"></script>
+  <script src="{{ asset('adminlte/plugins/daterangepicker/daterangepicker.js')}}"></script>
 
-<!-- overlayScrollbars -->
-<script src="{{ asset('adminlte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')}}"></script>
-<!-- AdminLTE App -->
-<script src="{{ asset('adminlte/dist/js/adminlte.js')}}"></script>
-<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+  <!-- overlayScrollbars -->
+  <script src="{{ asset('adminlte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')}}"></script>
+  <!-- AdminLTE App -->
+  <script src="{{ asset('adminlte/dist/js/adminlte.js')}}"></script>
+  <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 
-<!-- AdminLTE for demo purposes -->
-<script src="{{ asset('adminlte/dist/js/demo.js')}}"></script>
-<script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
-<script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
-<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
- <script src="https://cdn.datatables.net/plug-ins/1.10.22/dataRender/ellipsis.js"></script>
+  <!-- AdminLTE for demo purposes -->
+  <script src="{{ asset('adminlte/dist/js/demo.js')}}"></script>
+  <script src="{{ asset('js/jquery.dataTables.min.js') }}"></script>
+  <script src="{{ asset('js/dataTables.bootstrap4.min.js') }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
+  <script src="https://cdn.datatables.net/plug-ins/1.10.22/dataRender/ellipsis.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.js"></script>
-@include('sweet::alert')
+  <script src="//js.pusher.com/3.1/pusher.min.js"></script>
+  @include('sweet::alert')
+  <script type="text/javascript">
+    $(document).ready(function(){
+    var notif = $('.dropdown-notif');
+   var notif_Toggle =notif.find('a[data-toggle]');
+   var notif_Count_Element = notif_Toggle.find('i[data-count]');
+   var notificationsCount = parseInt(notif_Count_Element.data('count'));
+   var notifications = notif.find('div.dropdown-menu');
+   if (notificationsCount <= 0) {
+    notif.hide();
+  }
+  var pusher = new Pusher('9b0938eee923c6556e88', {
+        cluster: 'ap1',
+        encrypted: true
+      });
+
+      // Subscribe to the channel we specified in our Laravel Event
+      var channel = pusher.subscribe('status-liked');
+      channel.bind('App\\Events\\TakMasuk', function(data) {
+        var existingNotifications = notifications.html();
+       
+        var newNotificationHtml = `
+        <a href="#" class="dropdown-item">
+              <!-- Message Start -->
+              <div class="media">
+                <img src="../../dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
+                <div class="media-body">
+                  <h3 class="dropdown-item-title">
+                    Brad Diesel
+                    <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
+                  </h3>
+                  <p class="text-sm">`+data.message+`</p>
+                  <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
+                </div>
+              </div>
+              <!-- Message End -->
+            </a>
+            <div class="dropdown-divider"></div>
+        `;
+        notifications.html(newNotificationHtml + existingNotifications);
+
+        notificationsCount += 1;
+        notif_Count_Element.attr('data-count', notificationsCount);
+        notif.find('.notif-count').text(notificationsCount);
+        notif.show();
+      });
+      $('body').on('click', '#btn-coba', function () {
+        notificationsCount += 1;
+        notif_Count_Element.attr('data-count', notificationsCount);
+        notif.find('.notif-count').text(notificationsCount);
+        notif.show();
+
+      });
+  });
+  
+  </script>
 </body>
+
 </html>
 @stack('scripts')
 @stack('scripts2')

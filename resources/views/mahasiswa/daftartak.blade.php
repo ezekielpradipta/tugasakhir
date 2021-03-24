@@ -93,8 +93,8 @@
             </div>
           </div>
           </div>
-      </div>
-  </div>
+    </div>
+  
   <!--Modal Bukti -->
   <div class="modal hide fade" id="modal_edit_bukti">
     <div class="modal-dialog">

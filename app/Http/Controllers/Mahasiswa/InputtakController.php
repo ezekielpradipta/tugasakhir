@@ -15,7 +15,7 @@ use Illuminate\Support\Str;
 
 use App\Models\Partisipasitak;
 use Illuminate\Http\Request;
-
+use App\Events\TakMasuk;
 class InputtakController extends Controller
 {
     /**
@@ -95,10 +95,11 @@ class InputtakController extends Controller
              $bukti->storeAs('bukti',$filename,'images');
              $data[] = $filename;  
          }
+         $takmahasiswa->inputtak_bukti=json_encode($data);
       }
-      $takmahasiswa->inputtak_bukti=json_encode($data);
-      $takmahasiswa->save();
      
+      $takmahasiswa->save();
+      event(new TakMasuk($takmahasiswa));
       return redirect()->back()->with('success', 'TAK Berhasil Disubmit!');
     }
 

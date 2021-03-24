@@ -18,7 +18,9 @@ class Dosen extends Model
     {
         return asset($this::USER_PHOTO_URL).'/'.$this->dosen_image;
     }
-    
+    public function mahasiswa(){
+        return $this->hasMany(Mahasiswa::class);
+    }
     public function user(){
     	return $this->belongsTo(User::class);
     }

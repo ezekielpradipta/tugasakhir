@@ -15,6 +15,7 @@
         "laravel/framework": "^8.12",
         "laravel/tinker": "^2.5",
         "madnest/madzipper": "^1.1",
+        "pusher/pusher-php-server": "4.1",
         "uxweb/sweet-alert": "^2.0",
         "yajra/laravel-datatables-oracle": "^9.15"
     },

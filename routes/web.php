@@ -16,7 +16,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('auth.login');
 });
-
+Route::get('test', function () {
+	event(new App\Events\TakMasuk('Someone'));
+	return "Event has been sent!";
+});
 Route::group(['middleware' => ['guest']], function () {  
     Route::namespace('Auth')->group(function(){  
 		Route::get('login', 'LoginController@login')->name('login');
@@ -129,6 +132,24 @@ Route::group(['middleware' => ['auth']], function () {
 		Route::namespace('Dosen')->group(function(){
 			Route::prefix('dosen')->group(function(){
 				Route::get('/', 'DashboardController@dashboard')->name('dosen.dashboard.index');
+				
+				Route::resource('daftarmahasiswa','DaftarMahasiswaController',['as'=>'dosen'])->except('show');
+				Route::get('daftarmahasiswa/tak','DaftarMahasiswaController@tbTak')->name('dosen.daftarmahasiswa.tak');
+				Route::get('daftarmahasiswa/{id}/tak','DaftarMahasiswaController@editTak')->name('dosen.daftarmahasiswa.tak.id');
+				Route::get('daftarmahasiswa/{id}/bukti','DaftarMahasiswaController@getBukti')->name('dosen.daftarmahasiswa.tak.bukti');
+				Route::get('daftarmahasiswa/{fileId}/cetakBukti','DaftarMahasiswaController@cetakBukti')->name('dosen.daftarmahasiswa.tak.cetakBukti');
+				Route::get('daftarmahasiswa/{id}/status','DaftarMahasiswaController@gantiStatus')->name('dosen.daftarmahasiswa.tak.status');
+				
+				Route::resource('takmasuk','TakMasukController',['as'=>'dosen'])->except('show');
+				Route::get('takmasuk/{id}/bukti','TakMasukController@getBukti')->name('dosen.takmasuk.bukti');
+				Route::get('takmasuk/{fileId}/cetakBukti','TakMasukController@cetakBukti')->name('dosen.takmasuk.cetakBukti');
+				Route::get('takmasuk/{id}/status','TakMasukController@gantiStatus')->name('dosen.takmasuk.status');
+				Route::get('takmasuk/adapilar/{id?}','TakMasukController@adaPilar')->name('dosen.takmasuk.adapilar');
+				Route::get('takmasuk/adakegiatan/{id?}','TakMasukController@adaKegiatan')->name('dosen.takmasuk.adakegiatan');
+				Route::get('takmasuk/adapartisipasi/{id?}','TakMasukController@adaPartisipasi')->name('dosen.takmasuk.adapartisipasi');
+				Route::get('daftartak/kategoritak/cek', 'TakMasukController@cekKategori')->name('dosen.takmasuk.kategoritak.cek');
+				
+				
 			});
 		});
 	});

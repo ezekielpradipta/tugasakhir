@@ -346,9 +346,11 @@
                 <table id="tbPartisipasi" class="table table-bordered table-striped" style="width: 100%">
                     
                     <thead>
-                        <th>No.</th>
-                        <th>Kegiatan TAK</th>
-                        <th>Partisipasi TAK</th>
+                        <th>No</th>
+                        <th>Kegiatan</th>
+                        <th>Point</th>
+                        <th>Deskripsi</th>
+                        <th>Bukti</th>
                         <th>Aksi</th>
                     </thead>
                 </table>
