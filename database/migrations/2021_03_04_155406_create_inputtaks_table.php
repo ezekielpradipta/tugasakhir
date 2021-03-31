@@ -17,7 +17,7 @@ class CreateInputtaksTable extends Migration
             $table->id();
             $table->unsignedBigInteger('tak_id');
             $table->unsignedBigInteger('mahasiswa_id');
-            $table->string('inputtak_bukti');
+            $table->string('inputtak_bukti')->nullable();
             $table->date('inputtak_tanggalawal');
             $table->string('inputtak_tahunajaran');
             $table->string('inputtak_penyelenggara');

@@ -27,6 +27,9 @@ class Mahasiswa extends Model
     public function inputtak(){
         return $this->hasMany(Inputtak::class);
     }
+    public function notiftakmasuk(){
+        return $this->hasMany(NotifTakMasuk::class);
+    }
     public function getimageURLAttribute()
     {
         return asset($this::USER_PHOTO_URL).'/'.$this->mahasiswa_image;

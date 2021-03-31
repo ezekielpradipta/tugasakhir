@@ -31,7 +31,7 @@
 
 <body class="hold-transition sidebar-mini layout-fixed">
   <div class="wrapper">
-
+    <input type="hidden" name="dosen_id" id="dosen_id" value="{{ Auth::user()->dosen->id }}">
     <!-- Navbar -->
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
       <!-- Left navbar links -->
@@ -52,7 +52,7 @@
           </a>
           <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
             
-            <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
+            <a href="{{route('dosen.takmasuk.index')}}" class="dropdown-item dropdown-footer">See All Messages</a>
           </div>
         </li>
       </ul>
@@ -172,50 +172,76 @@
    var notif_Count_Element = notif_Toggle.find('i[data-count]');
    var notificationsCount = parseInt(notif_Count_Element.data('count'));
    var notifications = notif.find('div.dropdown-menu');
-   if (notificationsCount <= 0) {
-    notif.hide();
-  }
+   
   var pusher = new Pusher('9b0938eee923c6556e88', {
         cluster: 'ap1',
         encrypted: true
       });
 
       // Subscribe to the channel we specified in our Laravel Event
-      var channel = pusher.subscribe('status-liked');
+      var channel = pusher.subscribe('takmasuk'+$('#dosen_id').val());
       channel.bind('App\\Events\\TakMasuk', function(data) {
         var existingNotifications = notifications.html();
-       
+       var url ="{{route('dosen.takmasuk.index')}}";
         var newNotificationHtml = `
-        <a href="#" class="dropdown-item">
+        <a href="`+url+`" class="dropdown-item">
               <!-- Message Start -->
               <div class="media">
-                <img src="../../dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
+                <img src="../../img/`+data.mahasiswa_image+`" alt="User Avatar" class="img-size-50 mr-3 img-circle">
                 <div class="media-body">
                   <h3 class="dropdown-item-title">
-                    Brad Diesel
+                    `+data.user+`
                     <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
                   </h3>
-                  <p class="text-sm">`+data.message+`</p>
-                  <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
+                  <p class="text-sm">Telah `+data.compare+` TAK</p>
+                  <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> Just Now</p>
                 </div>
               </div>
               <!-- Message End -->
             </a>
             <div class="dropdown-divider"></div>
         `;
-        notifications.html(newNotificationHtml + existingNotifications);
+        $('div.dropdown-menu').append(newNotificationHtml);
 
         notificationsCount += 1;
         notif_Count_Element.attr('data-count', notificationsCount);
         notif.find('.notif-count').text(notificationsCount);
         notif.show();
-      });
-      $('body').on('click', '#btn-coba', function () {
-        notificationsCount += 1;
-        notif_Count_Element.attr('data-count', notificationsCount);
-        notif.find('.notif-count').text(notificationsCount);
-        notif.show();
-
+      }); 
+      notif.ready(function(){
+        var urlcoba = "{{route('dosen.takmasuk.index')}}";
+        $.ajax({
+                url: "{{ route('dosen.notif') }}",
+                type: "GET",
+                dataType : "json",            
+                success: function (data) {
+                console.log(data);
+                
+                notif_Count_Element.attr('data-count', data.jumlah);
+                notif.find('.notif-count').text(data.jumlah);
+                for (var i = 0; i < data.jumlah; i++) {
+                  if(data.inputtak[i].updated_at == data.inputtak[i].created_at){
+                    var compare = 'Mengupload';
+                  } else{
+                    var compare = 'Mengupdate';
+                  }
+                  var newNotificationHtml =  '<a href="'+urlcoba+' " class="dropdown-item">' +
+                  '<div class="media">' +
+                  '<img src="../../img/'+data.inputtak[i].mahasiswa_image+'" alt="User Avatar" class="img-size-50 mr-3 img-circle">' +
+                  '<div class="media-body">' +
+                  '<h3 class="dropdown-item-title">'+ data.inputtak[i].mahasiswa_nama +
+                  '<span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>'+
+                  '</h3>' +
+                  '<p class="text-sm">Telah '+compare+' TAK</p>' +
+                  '<p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> '+  data.inputtak[i].updated_at +'</p>'+
+                  '</div>' +
+                  '</div>' +
+                  '</a>' +
+                  '<div class="dropdown-divider"></div>';
+                  $('div.dropdown-menu').append(newNotificationHtml);
+                  }
+                }
+              });
       });
   });
   

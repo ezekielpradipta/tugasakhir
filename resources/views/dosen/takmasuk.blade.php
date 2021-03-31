@@ -234,6 +234,7 @@ $judul = 'Daftar Tak'
             });
 			$('body').on('click','.btn-status',function(){
               var inputtak_id = $(this).data('id');
+              
               var url = "{{route('dosen.takmasuk.index')}}".concat("/" + inputtak_id +"/status");
               console.log(url);
               swal({
@@ -257,6 +258,7 @@ $judul = 'Daftar Tak'
                                 'TAK Berhasil diACC',
                                 'success'
                             );
+                            location.reload();
                         },
                         error: function (data) {
                             console.log('Error:', data);

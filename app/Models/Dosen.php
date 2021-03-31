@@ -11,7 +11,7 @@ class Dosen extends Model
     const USER_PHOTO_URL = '/img';
 	const USER_PHOTO_DEFAULT ='user.png';
 	protected $primaryKey = 'id';
-	protected $fillable =['nidn','user_id','dosen_image','dosen_nama'];
+	protected $fillable =['nidn','user_id','dosen_image','dosen_status','dosen_nama'];
 
 
 	public function getimageURLAttribute()
@@ -23,6 +23,9 @@ class Dosen extends Model
     }
     public function user(){
     	return $this->belongsTo(User::class);
+    }
+    public function notiftakmasuk(){
+        return $this->hasMany(NotifTakMasuk::class);
     }
     public function deleteImage()
     {

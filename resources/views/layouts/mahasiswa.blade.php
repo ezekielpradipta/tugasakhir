@@ -30,11 +30,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
   </head>
 <body class="hold-transition layout-top-nav">
- 
+  <input type="hidden" name="mahasiswa_id" id="mahasiswa_id" value="{{ Auth::user()->mahasiswa->id }}">
 <div class="wrapper">
 
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
+    <input type="hidden" id="tak_score">
     <div class="container">
       <a href="../../index3.html" class="navbar-brand">
         <img src="../../dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
@@ -51,95 +52,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
       <!-- Right navbar links -->
       <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
-        <!-- Messages Dropdown Menu -->
-        <li class="nav-item dropdown">
-          <a class="nav-link" data-toggle="dropdown" href="#">
-            <i class="fas fa-comments"></i>
-            <span class="badge badge-danger navbar-badge">3</span>
-          </a>
-          <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-            <a href="#" class="dropdown-item">
-              <!-- Message Start -->
-              <div class="media">
-                <img src="../../dist/img/user1-128x128.jpg" alt="User Avatar" class="img-size-50 mr-3 img-circle">
-                <div class="media-body">
-                  <h3 class="dropdown-item-title">
-                    Brad Diesel
-                    <span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>
-                  </h3>
-                  <p class="text-sm">Call me whenever you can...</p>
-                  <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-                </div>
-              </div>
-              <!-- Message End -->
-            </a>
-            <div class="dropdown-divider"></div>
-            <a href="#" class="dropdown-item">
-              <!-- Message Start -->
-              <div class="media">
-                <img src="../../dist/img/user8-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
-                <div class="media-body">
-                  <h3 class="dropdown-item-title">
-                    John Pierce
-                    <span class="float-right text-sm text-muted"><i class="fas fa-star"></i></span>
-                  </h3>
-                  <p class="text-sm">I got your message bro</p>
-                  <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-                </div>
-              </div>
-              <!-- Message End -->
-            </a>
-            <div class="dropdown-divider"></div>
-            <a href="#" class="dropdown-item">
-              <!-- Message Start -->
-              <div class="media">
-                <img src="../../dist/img/user3-128x128.jpg" alt="User Avatar" class="img-size-50 img-circle mr-3">
-                <div class="media-body">
-                  <h3 class="dropdown-item-title">
-                    Nora Silvester
-                    <span class="float-right text-sm text-warning"><i class="fas fa-star"></i></span>
-                  </h3>
-                  <p class="text-sm">The subject goes here</p>
-                  <p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> 4 Hours Ago</p>
-                </div>
-              </div>
-              <!-- Message End -->
-            </a>
-            <div class="dropdown-divider"></div>
-            <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
-          </div>
-        </li>
+       
         <!-- Notifications Dropdown Menu -->
-        <li class="nav-item dropdown">
+        <li class="nav-item dropdown dropdown-notif">
           <a class="nav-link" data-toggle="dropdown" href="#">
-            <i class="far fa-bell"></i>
-            <span class="badge badge-warning navbar-badge">15</span>
+            <i data-count="0" class="far fa-bell"></i>
+            <span class="badge badge-danger navbar-badge notif-count">0</span>
           </a>
           <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-            <span class="dropdown-header">15 Notifications</span>
-            <div class="dropdown-divider"></div>
-            <a href="#" class="dropdown-item">
-              <i class="fas fa-envelope mr-2"></i> 4 new messages
-              <span class="float-right text-muted text-sm">3 mins</span>
-            </a>
-            <div class="dropdown-divider"></div>
-            <a href="#" class="dropdown-item">
-              <i class="fas fa-users mr-2"></i> 8 friend requests
-              <span class="float-right text-muted text-sm">12 hours</span>
-            </a>
-            <div class="dropdown-divider"></div>
-            <a href="#" class="dropdown-item">
-              <i class="fas fa-file mr-2"></i> 3 new reports
-              <span class="float-right text-muted text-sm">2 days</span>
-            </a>
-            <div class="dropdown-divider"></div>
-            <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+            
+            <a href="" class="dropdown-item dropdown-footer">See All Messages</a>
           </div>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#" role="button"><i
-              class="fas fa-th-large"></i></a>
-        </li>
+        
       </ul>
     </div>
   </nav>
@@ -172,7 +97,24 @@ scratch. This page gets rid of all links and provides the needed markup only.
   </footer>
 </div>
 <!-- ./wrapper -->
-
+<div class="modal hide fade" id="modal-sukses">
+	<div class="modal-dialog text-center">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+        <input type="hidden" id="notif_val">
+        <img src="https://i.pinimg.com/originals/c1/1d/05/c11d05415f5ff082abf5155fa6d98e1f.gif" style="width: 70%">
+				<h4>SELAMAT!</h4>
+        <p id="notif_text"></p>
+        <button type="button" class="btn btn-primary" value="tambah" id="btn-read">Lanjutkan</button>    
+			</div>
+		</div>
+	</div>
+</div>
 <!-- REQUIRED SCRIPTS -->
 
 
@@ -206,8 +148,113 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.js"></script>
+<script src="//js.pusher.com/3.1/pusher.min.js"></script>
+@include('sweet::alert') 
+<script type="text/javascript">
+  $(document).ready(function(){
+    var notif = $('.dropdown-notif');
+   var notif_Toggle =notif.find('a[data-toggle]');
+   var notif_Count_Element = notif_Toggle.find('i[data-count]');
+   var notificationsCount = parseInt(notif_Count_Element.data('count'));
+   var notifications = notif.find('div.dropdown-menu');
 
-@include('sweet::alert')  
+   var pusher = new Pusher('9b0938eee923c6556e88', {
+        cluster: 'ap1',
+        encrypted: true
+      });
+      var channel = pusher.subscribe('takkonfirmasi'+$('#mahasiswa_id').val());
+      channel.bind('App\\Events\\TakKonfirmasi', function(data) {
+        var existingNotifications = notifications.html();
+        var newNotificationHtml =  '<a href="javascript:void(0)" data-id="'+data.notif_id+'" class="dropdown-item btn-modal">' +
+                  '<div class="media">' +
+                  '<img src="../../img/'+data.dosen_image+'" alt="User Avatar" class="img-size-50 mr-3 img-circle">' +
+                  '<div class="media-body">' +
+                  '<h3 class="dropdown-item-title">'+ data.dosen_nama +
+                  '<span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>'+
+                  '</h3>' +
+                  '<p class="text-sm">Telah MengACC TAK</p>' +
+                  '<p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> Just Now</p>'+
+                  '</div>' +
+                  '</div>' +
+                  '</a>' +
+                  '<div class="dropdown-divider"></div>';
+                  $('div.dropdown-menu').append(newNotificationHtml);
+        
+                  notificationsCount += 1;
+                  notif_Count_Element.attr('data-count', notificationsCount);
+                  notif.find('.notif-count').text(notificationsCount);
+                  notif.show();
+      });
+   notif.ready(function(){
+    var urlcoba = "{{route('mahasiswa.daftartak.index')}}";
+        $.ajax({
+                url: "{{ route('mahasiswa.notif') }}",
+                type: "GET",
+                dataType : "json",            
+                success: function (data) {
+
+                console.log(data);
+                $('#tak_score').val(data.score);
+                notif_Count_Element.attr('data-count', data.jumlah);
+                notif.find('.notif-count').text(data.jumlah);
+                for (var i = 0; i < data.jumlah; i++) {
+                  var newNotificationHtml =  '<a href="javascript:void(0)" data-id="'+data.notif[i].id+'" class="dropdown-item btn-modal">' +
+                  '<div class="media">' +
+                  '<img src="../../img/'+data.notif[i].dosen_image+'" alt="User Avatar" class="img-size-50 mr-3 img-circle">' +
+                  '<div class="media-body">' +
+                  '<h3 class="dropdown-item-title">'+ data.notif[i].dosen_nama +
+                  '<span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>'+
+                  '</h3>' +
+                  '<p class="text-sm">Telah MengACC TAK</p>' +
+                  '<p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> '+  data.notif[i].updated_at +'</p>'+
+                  '</div>' +
+                  '</div>' +
+                  '</a>' +
+                  '<div class="dropdown-divider"></div>';
+                  $('div.dropdown-menu').append(newNotificationHtml);
+                  }
+                }
+              });
+      });
+      $('body').on('click','.btn-modal',function(){
+        var notif_id = $(this).data('id');
+        $('#notif_val').val(notif_id);
+        var url = "{{route('mahasiswa.notif')}}".concat("/" + notif_id +"/detail");
+        console.log(url);
+             $.ajax({
+                      url: url,
+                      type: 'GET',
+                      dataType : "json",
+                      success: function(data){
+                        console.log(data);
+                        $('#modal-sukses').modal('show');
+                        var text = 'TAK '+data.kegiatantak+' ('+data.partisipasitak+ ') '+
+                        ' Berhasil Terkonfirmasi, Mendapatkan ' +data.skor+ ' Point' ;
+                        $('#notif_text').html(text);
+                      }
+                    });
+        
+      });
+      $('body').on('click','#btn-read',function(){
+        var notif_id =  $('#notif_val').val();
+        var url = "{{route('mahasiswa.notif')}}".concat("/" + notif_id +"/read");
+        console.log(url);
+                 $.ajax({
+                      url: url,
+                      type: 'GET',
+                      dataType : "json",
+                      success: function(data){
+                        $('#modal-sukses').modal('hide');
+                        location.reload();
+                      }
+                    });
+      });
+
+
+
+
+  });
+  </script> 
 </body>
 </html>
 @stack('scripts')

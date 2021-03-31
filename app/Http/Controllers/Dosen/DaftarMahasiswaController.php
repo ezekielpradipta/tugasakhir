@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Dosen;
 use App\Models\User;
+use App\Models\NotifTakMasuk;
 use App\Models\Mahasiswa;
 use App\Models\Inputtak;
 use Illuminate\Support\Facades\DB;
@@ -157,6 +158,7 @@ class DaftarMahasiswaController extends Controller
         $inputtak = Inputtak::with('mahasiswa')->findOrFail($id);
         $inputtak->inputtak_status = '0';
         $inputtak->save();
+        $notif = NotifTakMasuk::where('inputtak_id',$id)->delete();
         return response()->json();
     }
    

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Dosen;
 use App\Models\User;
+use App\Models\NotifTakMasuk;
 use App\Models\Mahasiswa;
 use App\Models\Inputtak;
 use App\Models\Kategoritak;
@@ -20,7 +21,7 @@ use Illuminate\Support\Facades\Storage;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Str;
 use Madzipper;
-
+use App\Events\TakKonfirmasi;
 class TakMasukController extends Controller
 {
     public function index(Request $request)
@@ -34,9 +35,10 @@ class TakMasukController extends Controller
             ->join('taks', 'inputtaks.tak_id', '=', 'taks.id') 
             ->join('kegiatantaks', 'taks.kegiatantak_id', '=', 'kegiatantaks.id')
             ->join('partisipasitaks','partisipasitaks.id','=','taks.partisipasitak_id') 
-            ->select('inputtaks.id','mahasiswas.mahasiswa_nim','mahasiswas.mahasiswa_nama','kegiatantaks.kegiatantak_nama','partisipasitaks.partisipasitak_nama','taks.tak_score','inputtaks.inputtak_deskripsi')
+            ->select('inputtaks.id','mahasiswas.mahasiswa_nim','mahasiswas.mahasiswa_nama','kegiatantaks.kegiatantak_nama','partisipasitaks.partisipasitak_nama','taks.tak_score','inputtaks.inputtak_deskripsi','inputtaks.created_at')
             ->where('dosens.id',$dosen)
             ->where('inputtaks.inputtak_status','0')
+            ->orderBy('inputtaks.created_at','desc')
             ->get();
             return Datatables::of($inputtak)
                     ->addIndexColumn()
@@ -59,6 +61,7 @@ class TakMasukController extends Controller
             
 
         }
+        
         return view('dosen.takmasuk');
     }
     public function getBukti($id){
@@ -100,7 +103,15 @@ class TakMasukController extends Controller
     public function gantiStatus($id){
         $inputtak = Inputtak::with('mahasiswa')->findOrFail($id);
         $inputtak->inputtak_status = '1';
+        $mahasiswa = $inputtak->mahasiswa_id;
+        $dosen = Auth::user()->dosen->id;
         $inputtak->save();
+        $notif = NotifTakMasuk::create([
+            'inputtak_id'=> $id,
+            'mahasiswa_id'=>$mahasiswa,
+            'dosen_id'=>$dosen,
+        ]);
+        event(new TakKonfirmasi($notif, $mahasiswa));
         return response()->json();
     }
     public function edit($id){

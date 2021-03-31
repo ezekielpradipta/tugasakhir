@@ -47,7 +47,7 @@ class MahasiswaController extends Controller
     	}
     }
     public function cekDosen(){
-        $dosen =Dosen::pluck('dosen_nama','id');
+        $dosen =Dosen::where('dosen_status','dosenwali')->pluck('dosen_nama','id');
         return json_encode($dosen);
     }
     public function cekAngkatan(){

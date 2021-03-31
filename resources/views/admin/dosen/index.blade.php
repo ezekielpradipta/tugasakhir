@@ -20,6 +20,7 @@
 						<th>Nama</th>
 						<th>Email</th>
 						<th>NIDN</th>
+                        <th>Status</th>
 						<th>Aksi</th>
 					</thead>
 				</table>
@@ -84,6 +85,13 @@
                     <input type="password" name="password_confirmation" class="form-control" id="password_confirmation" placeholder="Konfirmasi Password" autocomplete="new-password">
                 </div>
                 <div class="form-group">
+                    <label for="">Status</label>                         
+                          <select name="dosen_status" id="dosen_status" class="form-control" required>
+                            <option value="dosenwali">Dosen Wali</option>
+                            <option value="kemahasiswaan">Kemahasiswaan</option>
+                          </select>
+                </div>
+                <div class="form-group">
                     <label for="inputImageDosen" id="fotoDosen">Upload Foto Dosen</label>
                     <img src="" class="gambar" id="gambar" width="60px" height="">
                     <label class="text-danger" id="dosen_imageError"></label>
@@ -127,6 +135,7 @@
                     { data: 'nama',  name: 'nama' },
                     { data: 'user.email', name: 'user.email' },
                     { data: 'nidn', name: 'nidn' },
+                    { data: 'dosen', name: 'dosen' },
                     { data: 'action', name: 'action', orderable: false, searchable: false},
                 ]
 
@@ -301,6 +310,7 @@
                         $('#user_id').val(data.user_id);
                         $('#dosen_nama').val(data.dosen_nama);
                         $('#username').val(data.user.username);
+                        $('#dosen_status').val(data.dosen_status);
                         $('#password').val(data.user.password_text);
                         $('#email').val(data.user.email);
                         $('#nidn').val(data.nidn);

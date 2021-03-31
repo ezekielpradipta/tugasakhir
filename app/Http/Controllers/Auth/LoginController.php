@@ -48,13 +48,13 @@ class LoginController extends Controller
     public function cekRole(){
         if (Auth::user()->role==User::USER_ROLE_ADMIN){
             return redirect()->route('admin.dashboard.index');
-        } else if (Auth::user()->role==User::USER_ROLE_DOSEN) {
-            return redirect()->route('dosen.dashboard.index');
-        }else if (Auth::user()->role==User::USER_ROLE_MHS) {
+        } else if (Auth::user()->role==User::USER_ROLE_MHS) {
             return redirect()->route('mahasiswa.index');
+        }else if (Auth::user()->dosen->dosen_status=='dosenwali') {
+            return redirect()->route('dosen.dashboard.index');
         }
         else{
-            return redirect()->route('home');
+            abort(404, 'not found');
         }
     }
     public function cekEmail(Request $request){
@@ -80,7 +80,7 @@ class LoginController extends Controller
     	}
     }
     public function cekDosen(){
-        $dosen =Dosen::pluck('dosen_nama','id');
+        $dosen =Dosen::where('dosen_status','dosenwali')->pluck('dosen_nama','id');
         return json_encode($dosen);
     }
     public function cekAngkatan(){

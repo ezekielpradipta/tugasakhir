@@ -9,6 +9,7 @@ use App\Models\Kategoritak;
 use App\Models\Pilartak;
 use App\Models\Kegiatantak;
 use App\Models\Tak;
+use App\Models\Mahasiswa;
 use App\Models\Partisipasitak;
 use UxWeb\SweetAlert\SweetAlert;
 use Illuminate\Support\Facades\DB;
@@ -160,6 +161,7 @@ class DaftartakController extends Controller
             'inputtak_deskripsi'=>$request->deskripsi,
             'inputtak_tahunajaran'=>$request->tahunajaran,
         ]);
+       
         return response()->json();
     }
     public function destroy($id){

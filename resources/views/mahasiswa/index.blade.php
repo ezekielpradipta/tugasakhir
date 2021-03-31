@@ -29,7 +29,7 @@
                     <h5 class="card-title m-0"> {{ Auth::user()->mahasiswa->nama }}</h5>
                 </div>
                 <div class="col-sm-2">
-                <h5 class="card-title m-0">Total TAK : </h5>
+                <h5 class="card-title m-0">Total TAK : {{ $score }}</h5>
                 </div>
             </div>
             </div>

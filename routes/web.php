@@ -106,6 +106,11 @@ Route::group(['middleware' => ['auth']], function () {
 		Route::namespace('Mahasiswa')->group(function(){
 			Route::prefix('mahasiswa')->group(function(){
 				Route::get('/','DashboardController@index')->name('mahasiswa.index');
+				Route::get('notif', 'DashboardController@notif')->name('mahasiswa.notif');
+				Route::get('notif/{id}/detail', 'DashboardController@DetailNotif')->name('mahasiswa.notif.detail');
+				Route::get('notif/{id}/read', 'DashboardController@ReadNotif')->name('mahasiswa.notif.read');
+
+				
 				Route::resource('inputtak','InputtakController',['as'=>'mahasiswa'])->only(['index','store']);
 				Route::get('tak/cekKegiatan/{id?}','InputtakController@cekKegiatan')->name('mahasiswa.tak.cekKegiatan');
 				Route::get('tak/cekPilar/{id?}','InputtakController@cekPilar')->name('mahasiswa.tak.cekPilar');
@@ -132,7 +137,7 @@ Route::group(['middleware' => ['auth']], function () {
 		Route::namespace('Dosen')->group(function(){
 			Route::prefix('dosen')->group(function(){
 				Route::get('/', 'DashboardController@dashboard')->name('dosen.dashboard.index');
-				
+				Route::get('notif', 'DashboardController@notif')->name('dosen.notif');
 				Route::resource('daftarmahasiswa','DaftarMahasiswaController',['as'=>'dosen'])->except('show');
 				Route::get('daftarmahasiswa/tak','DaftarMahasiswaController@tbTak')->name('dosen.daftarmahasiswa.tak');
 				Route::get('daftarmahasiswa/{id}/tak','DaftarMahasiswaController@editTak')->name('dosen.daftarmahasiswa.tak.id');

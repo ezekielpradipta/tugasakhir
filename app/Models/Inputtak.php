@@ -17,5 +17,7 @@ class Inputtak extends Model
     public function tak(){
     	return $this->belongsTo(Tak::class);
     }
-    
+    public function notiftakmasuk(){
+        return $this->hasMany(NotifTakMasuk::class);
+    }
 }

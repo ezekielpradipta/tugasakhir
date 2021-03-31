@@ -1,9 +1,7 @@
 <?php
 
 namespace App\Events;
-use App\Models\Inputtak;
-use App\Models\Dosen;
-use App\Models\Mahasiswa;
+
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -11,28 +9,29 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-
-class TakMasuk implements ShouldBroadcast
+use App\Models\NotifTakMasuk;
+use App\Models\Dosen;
+use App\Models\Mahasiswa;
+class TakKonfirmasi implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-  
-
-    public $inputtak;
-    public $user;
-    public $dosen;
-    public $mahasiswa_image;
+    public $notif;
+    public $dosen_nama;
+    public $mahasiswa;
+    public $dosen_image;
+    public $notif_id;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(Inputtak $inputtak,$dosen)
+    public function __construct(NotifTakMasuk $notif, $mahasiswa)
     {
-        $this->inputtak = $inputtak;
-        $this->user = $inputtak->mahasiswa->mahasiswa_nama;
-        $this->mahasiswa_image = $inputtak->mahasiswa->mahasiswa_image;
-        $this->dosen = $dosen;
-    
+        $this->notif = $notif;
+        $this->notif_id = $notif->id;
+        $this->dosen_image = $notif->dosen->dosen_image;
+        $this->dosen_nama = $notif->dosen->dosen_nama;
+        $this->mahasiswa = $mahasiswa;
     }
 
     /**
@@ -42,7 +41,6 @@ class TakMasuk implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return ['takmasuk'.$this->dosen];
-     
+        return ['takkonfirmasi'.$this->mahasiswa];
     }
 }

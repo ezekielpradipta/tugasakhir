@@ -65,11 +65,18 @@ class DosenController extends Controller
                             $btn = $btn.' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$row->id.'" data-original-title="Delete" class="btn btn-danger btn-sm deleteItem"><span class="fa fa-trash"></a>';
                             return $btn;
                     })
+                    ->editColumn('dosen',function($dosen){
+                        if($dosen->dosen_status=="dosenwali"){
+                            return 'Dosen Wali';
+                        } else{
+                            return 'Kemahasiswaan';
+                        }
+                    })
                     ->editColumn('nama',function($dosen){
                         return '<img style="height: 50px; width: 80px; margin-right: 10px;" src="'.$dosen->image_url.'" />'
                                 .$dosen->dosen_nama;
                     })
-                    ->rawColumns(['action','nama'])
+                    ->rawColumns(['action','nama','dosen'])
                     ->make(true);
 
         }
@@ -143,6 +150,7 @@ class DosenController extends Controller
         [
             'dosen_nama' =>$request->dosen_nama,
             'nidn' =>$request->nidn,
+            'dosen_status' =>$request->dosen_status,
             'dosen_image' =>$dosen_image,
 
         ]);

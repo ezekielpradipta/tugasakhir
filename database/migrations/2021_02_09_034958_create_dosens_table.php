@@ -17,7 +17,7 @@ class CreateDosensTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->string('nidn');
-           
+            $table->string('dosen_status');
             $table->string('dosen_nama');
             $table->timestamps();
             $table->string('dosen_image')->default(Dosen::USER_PHOTO_DEFAULT);
