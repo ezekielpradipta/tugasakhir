@@ -76,6 +76,7 @@
                
                 <input type="hidden" name="input_id" id="input_id">
                 <p class=" judul-kegiatan"></p>
+                
                 <table id="tBukti" class="table table-bordered table-striped">
                   <thead>
                     <th>No.</th>

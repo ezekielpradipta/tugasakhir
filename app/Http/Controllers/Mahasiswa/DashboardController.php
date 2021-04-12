@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\NotifTakMasuk;
 use App\Models\Mahasiswa;
 use App\Models\Dosen;
+use App\Models\Tutorial;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 class DashboardController extends Controller
@@ -24,7 +25,6 @@ class DashboardController extends Controller
     }
     public function notif(){
         $mahasiswa = Auth::user()->mahasiswa->id;
-        
         //$notif =NotifTakMasuk::with('dosen')->where('mahasiswa_id', '=', $mahasiswa)->get();
         $notif= DB::table('notif_tak_masuks')
             ->join('mahasiswas','mahasiswas.id','=','notif_tak_masuks.mahasiswa_id')
@@ -42,7 +42,27 @@ class DashboardController extends Controller
         ->where('mahasiswas.id',$mahasiswa)
         ->where('notif_tak_masuks.notif_tak_read','1')
         ->sum('taks.tak_score');
-        return response()->json(['notif'=>$notif,'jumlah'=>$jumlah,'score'=>$score]);
+        $mhs = Mahasiswa::find($mahasiswa);
+        $tutorial_status = $mhs->mahasiswa_tutorial_status;
+        $tutorial = DB::table('tutorials')->where('mahasiswa_id',$mahasiswa)
+        ->where('tutorial_status','0')
+        ->first();
+       if($tutorial){
+        return response()->json(['notif'=>$notif,'jumlah'=>$jumlah,'score'=>$score,'tutorial'=>$tutorial,'tutorial_status'=>$tutorial_status,'jumlah_tutorial'=>1]);
+       }
+         return response()->json(['notif'=>$notif,'jumlah'=>$jumlah,'score'=>$score]);
+    
+        
+    }
+    public function DaftarMenu(){
+        $mahasiswa = Auth::user()->mahasiswa->id;
+        $mhs = Mahasiswa::find($mahasiswa);
+        $tutorial_status = $mhs->mahasiswa_tutorial_status;
+        $tutorial = DB::table('tutorials')->where('mahasiswa_id',$mahasiswa)->first();
+        if($tutorial){
+            return response()->json(['mahasiswa'=>$mhs,'tutorial_status'=>$tutorial_status,'tutorial'=>'yes']);
+        }
+        return response()->json(['mahasiswa'=>$mhs,'tutorial_status'=>$tutorial_status,'tutorial'=>'no']);
     }
     public function DetailNotif($id){
         $notif = NotifTakMasuk::find($id);
@@ -52,11 +72,26 @@ class DashboardController extends Controller
         return response()->json(['notif'=>$notif,'skor'=>$skor,'partisipasitak'=>$partisipasitak,'kegiatantak'=>$kegiatantak]);
    
     }
+    public function DetailTutorial($id){
+        $tutorial = Tutorial::find($id);
+        $kegiatantak = $tutorial->tak->kegiatantak->kegiatantak_nama;
+        $partisipasitak = $tutorial->tak->partisipasitak->partisipasitak_nama;
+        $skor = $tutorial->tak->tak_score;
+        return response()->json(['tutorial'=>$tutorial,'skor'=>$skor,'partisipasitak'=>$partisipasitak,'kegiatantak'=>$kegiatantak]);
+   
+    }
     public function ReadNotif($id){
         $notif = NotifTakMasuk::findOrFail($id);
         $notif->notif_tak_read = '1';
         $notif->save();
         return response()->json();
     }
-
+    public function ReadTutorial($id){
+        $mahasiswa = Auth::user()->mahasiswa->id;
+        $mhs = Mahasiswa::find($mahasiswa);
+       
+        $mhs->mahasiswa_tutorial_status = '1';
+        $mhs->save();
+        return response()->json();
+    }
 }

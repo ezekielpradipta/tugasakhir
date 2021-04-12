@@ -198,8 +198,10 @@ class DaftartakController extends Controller
     {
         $gambar = Inputtak::where('id',$request->input_id2)->first();
         $images =json_decode($gambar->inputtak_bukti);
-        foreach ($images as $image) {
-           Storage::disk('images')->delete("bukti/{$image}");
+        if($images){
+            foreach ($images as $image) {
+                Storage::disk('images')->delete("bukti/{$image}");
+             }
         }
         $nim = Auth::user()->mahasiswa->mahasiswa_nim;
         if($request->hasfile('bukti'))

@@ -43,22 +43,7 @@ class InputtakController extends Controller
         $partisipasitaks = DB::table("partisipasitaks")->where("kegiatantak_id",$id)->pluck("partisipasitak_nama","id");
         return json_encode($partisipasitaks);
     }
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+   
     public function store(Request $request)
     {
         $this->validate($request,[
@@ -105,49 +90,5 @@ class InputtakController extends Controller
       
       return redirect()->back()->with('success', 'TAK Berhasil Disubmit!');
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Inputtak  $inputtak
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Inputtak $inputtak)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Inputtak  $inputtak
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Inputtak $inputtak)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Inputtak  $inputtak
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Inputtak $inputtak)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Inputtak  $inputtak
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Inputtak $inputtak)
-    {
-        //
-    }
+    
 }

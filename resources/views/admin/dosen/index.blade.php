@@ -243,7 +243,7 @@
                 $('#user_id').val('');
                 $('#formDosen').trigger("reset");
                 $('.modal-title').html("Tambah Data Dosen");
-                
+                $('#hidden_image').val('');
                 $('#btn-save').show();
                 $('.gambar').removeAttr('src');
                 $('#cekemail').hide();

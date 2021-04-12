@@ -98,6 +98,11 @@ Route::group(['middleware' => ['auth']], function () {
 					Route::post('prodi/cekNamaProdi', 'ProdiController@cekNamaProdi')->name('admin.prodi.cekNamaProdi');
 					Route::resource('angkatan','AngkatanController',['as'=>'admin'])->except('show');
 					
+					Route::get('slider-inputtak','SliderController@slider_inputtak',['as'=>'admin'])->name('admin.slider.inputtak');
+					Route::post('slider-inputtak/tambah','SliderController@slider_inputtak_tambah',['as'=>'admin'])->name('admin.slider.inputtak.tambah');
+					Route::get('slider-inputtak/{id}/edit','SliderController@slider_inputtak_edit',['as'=>'admin'])->name('admin.slider.inputtak.edit');
+					Route::delete('slider-inputtak/tambah/{id}','SliderController@slider_inputtak_delete',['as'=>'admin'])->name('admin.slider.inputtak.delete');
+					
 				});
 			});
 		});
@@ -109,8 +114,14 @@ Route::group(['middleware' => ['auth']], function () {
 				Route::get('notif', 'DashboardController@notif')->name('mahasiswa.notif');
 				Route::get('notif/{id}/detail', 'DashboardController@DetailNotif')->name('mahasiswa.notif.detail');
 				Route::get('notif/{id}/read', 'DashboardController@ReadNotif')->name('mahasiswa.notif.read');
-
+				Route::get('status', 'DashboardController@DaftarMenu')->name('mahasiswa.daftarmenu');
+				Route::get('notif/{id}/tutorial', 'DashboardController@DetailTutorial')->name('mahasiswa.notif.tutorial');
+				Route::get('notif/{id}/tutorial/read', 'DashboardController@ReadTutorial')->name('mahasiswa.notif.tutorial.read');
 				
+				Route::resource('tutorial','TutorialController',['as'=>'mahasiswa'])->only(['index','store']);
+				Route::get('slider', 'TutorialController@slider')->name('mahasiswa.slider');
+				
+
 				Route::resource('inputtak','InputtakController',['as'=>'mahasiswa'])->only(['index','store']);
 				Route::get('tak/cekKegiatan/{id?}','InputtakController@cekKegiatan')->name('mahasiswa.tak.cekKegiatan');
 				Route::get('tak/cekPilar/{id?}','InputtakController@cekPilar')->name('mahasiswa.tak.cekPilar');
