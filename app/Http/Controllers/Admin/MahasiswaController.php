@@ -149,6 +149,7 @@ class MahasiswaController extends Controller
             'mahasiswa_nama' =>$request->mahasiswa_nama,
             'mahasiswa_nim' =>$mahasiswa_nim,
             'mahasiswa_image' =>$mahasiswa_image,
+            'mahasiswa_tutorial_status' =>'0',
 
         ]);
 

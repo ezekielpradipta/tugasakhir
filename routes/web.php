@@ -98,12 +98,19 @@ Route::group(['middleware' => ['auth']], function () {
 					Route::post('prodi/cekNamaProdi', 'ProdiController@cekNamaProdi')->name('admin.prodi.cekNamaProdi');
 					Route::resource('angkatan','AngkatanController',['as'=>'admin'])->except('show');
 					
-					Route::get('slider-inputtak','SliderController@slider_inputtak',['as'=>'admin'])->name('admin.slider.inputtak');
-					Route::post('slider-inputtak/tambah','SliderController@slider_inputtak_tambah',['as'=>'admin'])->name('admin.slider.inputtak.tambah');
-					Route::get('slider-inputtak/{id}/edit','SliderController@slider_inputtak_edit',['as'=>'admin'])->name('admin.slider.inputtak.edit');
-					Route::delete('slider-inputtak/tambah/{id}','SliderController@slider_inputtak_delete',['as'=>'admin'])->name('admin.slider.inputtak.delete');
+					Route::resource('takkumulatif', 'TakkumulatifController',['as'=>'admin'])->except('show');
+					Route::get('takkumulatif/data', 'TakkumulatifController@getData',['as'=>'admin'])->name('admin.takkumulatif.data');
+			
+					Route::get('slider','SliderController@index',['as'=>'admin'])->name('admin.slider.index');
+					Route::post('slider/tambah','SliderController@slider_tambah',['as'=>'admin'])->name('admin.slider.inputtak.tambah');
+					Route::get('slider/{id}/edit','SliderController@slider_edit',['as'=>'admin'])->name('admin.slider.inputtak.edit');
+					Route::delete('slider/tambah/{id}','SliderController@slider_delete',['as'=>'admin'])->name('admin.slider.inputtak.delete');
+
+					Route::resource('badge', 'BadgeController',['as'=>'admin'])->except('show');
 					
 				});
+				Route::resource('profile', 'ProfileController',['as'=>'admin'])->except('show');
+				Route::get('profile/data', 'ProfileController@getData',['as'=>'admin'])->name('admin.profile.data');
 			});
 		});
 	});
@@ -117,12 +124,18 @@ Route::group(['middleware' => ['auth']], function () {
 				Route::get('status', 'DashboardController@DaftarMenu')->name('mahasiswa.daftarmenu');
 				Route::get('notif/{id}/tutorial', 'DashboardController@DetailTutorial')->name('mahasiswa.notif.tutorial');
 				Route::get('notif/{id}/tutorial/read', 'DashboardController@ReadTutorial')->name('mahasiswa.notif.tutorial.read');
-				
-				Route::resource('tutorial','TutorialController',['as'=>'mahasiswa'])->only(['index','store']);
-				Route::get('slider', 'TutorialController@slider')->name('mahasiswa.slider');
-				
+				Route::get('notif/{id}/badge', 'DashboardController@changeBadge')->name('mahasiswa.notif.badge');
+				Route::get('badge/tutorial', 'DashboardController@badgeTutorial')->name('mahasiswa.badge.tutorial');
+				Route::get('badge', 'DashboardController@getBadge')->name('mahasiswa.badge');
 
-				Route::resource('inputtak','InputtakController',['as'=>'mahasiswa'])->only(['index','store']);
+				Route::resource('tutorial','TutorialController',['as'=>'mahasiswa'])->only(['index','store'])->middleware('tutorial');
+				
+				Route::get('slider', 'TutorialController@slider')->name('mahasiswa.slider');
+				Route::resource('validasi','ValidasiController',['as'=>'mahasiswa'])->only(['index','store']);
+				
+				Route::resource('leaderboard', 'LeaderboardController',['as'=>'mahasiswa'])->only(['index']);
+
+				Route::resource('inputtak','InputtakController',['as'=>'mahasiswa'])->only(['index','store'])->middleware('badge');
 				Route::get('tak/cekKegiatan/{id?}','InputtakController@cekKegiatan')->name('mahasiswa.tak.cekKegiatan');
 				Route::get('tak/cekPilar/{id?}','InputtakController@cekPilar')->name('mahasiswa.tak.cekPilar');
 				Route::get('tak/cekPartisipasi/{id?}','InputtakController@cekPartisipasi')->name('mahasiswa.tak.cekPartisipasi');
@@ -155,6 +168,9 @@ Route::group(['middleware' => ['auth']], function () {
 				Route::get('daftarmahasiswa/{id}/bukti','DaftarMahasiswaController@getBukti')->name('dosen.daftarmahasiswa.tak.bukti');
 				Route::get('daftarmahasiswa/{fileId}/cetakBukti','DaftarMahasiswaController@cetakBukti')->name('dosen.daftarmahasiswa.tak.cetakBukti');
 				Route::get('daftarmahasiswa/{id}/status','DaftarMahasiswaController@gantiStatus')->name('dosen.daftarmahasiswa.tak.status');
+				
+				Route::resource('profile', 'ProfileController',['as'=>'dosen'])->except('show');
+				Route::get('profile/data', 'ProfileController@getData',['as'=>'admin'])->name('dosen.profile.data');
 				
 				Route::resource('takmasuk','TakMasukController',['as'=>'dosen'])->except('show');
 				Route::get('takmasuk/{id}/bukti','TakMasukController@getBukti')->name('dosen.takmasuk.bukti');

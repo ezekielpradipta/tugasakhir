@@ -62,7 +62,7 @@ class TakMasukController extends Controller
 
         }
         
-        return view('dosen.takmasuk');
+        return view('dosen.takmasuk.index');
     }
     public function getBukti($id){
         $inputtaks = Inputtak::with('tak.kegiatantak')

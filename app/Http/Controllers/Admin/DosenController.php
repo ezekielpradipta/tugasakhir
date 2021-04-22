@@ -102,7 +102,6 @@ class DosenController extends Controller
      */
     public function store(Request $request)
     {
-        
         $this->validate($request,[
             'dosen_nama'=>['required','min:3'],
             'password' => ['required', 'string', 'min:8','same:password_confirmation'],

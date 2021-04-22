@@ -9,4 +9,7 @@ class Prodi extends Model
 {
     protected $primaryKey = 'id';
      protected $fillable = ['prodi_nama'];
+     public function takkumulatif(){
+        return $this->hasMany(Takkumulatif::class);
+    }
 }

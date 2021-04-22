@@ -1,237 +1,242 @@
 @extends('layouts.mahasiswa')
 @section('content')
-  <div class="content-header">
-    <div class="container">
-      <div class="row mb-2">
-        <div class="col-sm-6">           
-        </div><!-- /.col -->
-        <div class="col-sm-6">
-          <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="{{route('mahasiswa.index')}} ">Home</a></li>
-            <li class="breadcrumb-item active">Daftar TAK</li>
-          </ol>
-        </div><!-- /.col -->
-      </div><!-- /.row -->
-    </div><!-- /.container-fluid -->
-  </div>
-  <!-- /.content-header -->
- 
-    <!-- Main content -->
-    <div class="content">
-      <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-md-10">
-            <div class="card card-primary card-outline">
-            <div class="card-header">
+<div class="content-header">
+  <div class="container">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+      </div><!-- /.col -->
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="{{route('mahasiswa.index')}} ">Home</a></li>
+          <li class="breadcrumb-item active">Daftar TAK</li>
+        </ol>
+      </div><!-- /.col -->
+    </div><!-- /.row -->
+  </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+
+<!-- Main content -->
+<div class="content">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-10">
+        <div class="card card-primary card-outline">
+          <div class="card-header">
             <div class="row">
-                <div class="col-sm-10">
-                    <h5 class="card-title m-0"> Daftar TAK</h5>
-                </div>
-            </div>
-            </div>
-            <div class="col">
-              <div class="card-body">
-                <div class="form-group">
-                    <label>Status:</label>
-                    <select id='status' class="form-control" style="width: 200px">
-                       <option value="0">Belum diACC</option>
-                            <option value="1">Sudah diACC</option>
-                        </select>
-                    </div>
-                    <table class="table table-bordered" id="dt">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Kegiatan</th>
-                                <th>Point</th>
-                                <th>Deskripsi</th>
-                                <th>Bukti</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
+              <div class="col-sm-10">
+                <h5 class="card-title m-0"> Daftar TAK</h5>
               </div>
             </div>
-            </div><!-- /.card -->
           </div>
-        </div>
-        <!-- /.row -->
-      </div><!-- /.container-fluid -->
-    </div>
-    <!--Modal LIST BUKTI-->
-    <div class="modal hide fade" id="modal_bukti">
-      <div class="modal-dialog modal-xl">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h4 class="modal-title judul-bukti-data"></h4>
-                 
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                  </button>
+          <div class="col">
+            <div class="card-body">
+              <div class="form-group">
+                <label>Status:</label>
+                <select id='status' class="form-control" style="width: 200px">
+                  <option value="0">Belum diACC</option>
+                  <option value="1">Sudah diACC</option>
+                </select>
               </div>
-              
-              <div class="modal-body">
-               
-                <input type="hidden" name="input_id" id="input_id">
-                <p class=" judul-kegiatan"></p>
-                
-                <table id="tBukti" class="table table-bordered table-striped">
-                  <thead>
-                    <th>No.</th>
-                    <th>Bukti</th> 
-                  </thead>
-                  <tbody></tbody>
-                </table>
-                <label for="error" id="buktinotfound" class="text-danger"></label>
-             </div>
-             <div class="modal-footer" id="add_btn_bukti">
-              <a href="javascript:void(0)"data-toggle="tooltip" class="btn btn-primary btn-unduh" id="btn-unduh">Unduh Bukti</a>
-              <a href="javascript:void(0)"data-toggle="tooltip" class="btn btn-primary btn-edit-bukti" id="btn-edit-bukti">Ubah Bukti</a>
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              
+              <table class="table table-bordered" id="dt">
+                <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Kegiatan</th>
+                    <th>Point</th>
+                    <th>Deskripsi</th>
+                    <th>Bukti</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
             </div>
           </div>
-          </div>
+        </div><!-- /.card -->
+      </div>
     </div>
-  
-  <!--Modal Bukti -->
-  <div class="modal hide fade" id="modal_edit_bukti">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title judul-bukti"></h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="modal-body">
-          <form  method="post" id="formBukti" name="formBukti" enctype="multipart/form-data">
+    <!-- /.row -->
+  </div><!-- /.container-fluid -->
+</div>
+<!--Modal LIST BUKTI-->
+<div class="modal hide fade" id="modal_bukti">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title judul-bukti-data"></h4>
+
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+
+        <input type="hidden" name="input_id" id="input_id">
+        <p class=" judul-kegiatan"></p>
+
+        <table id="tBukti" class="table table-bordered table-striped">
+          <thead>
+            <th>No.</th>
+            <th>Bukti</th>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <label for="error" id="buktinotfound" class="text-danger"></label>
+      </div>
+      <div class="modal-footer" id="add_btn_bukti">
+        <a href="javascript:void(0)" data-toggle="tooltip" class="btn btn-primary btn-unduh" id="btn-unduh">Unduh
+          Bukti</a>
+        <a href="javascript:void(0)" data-toggle="tooltip" class="btn btn-primary btn-edit-bukti"
+          id="btn-edit-bukti">Ubah Bukti</a>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Modal Bukti -->
+<div class="modal hide fade" id="modal_edit_bukti">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title judul-bukti"></h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" id="formBukti" name="formBukti" enctype="multipart/form-data">
           @csrf
           <p class=" text-danger">Mengubah Data Bukti Akan Menghapus Bukti Yang Sudah Ada!</p>
           <div class="form-group row">
-            <a href="javascript:void(0)" class=" btn btn-info addrow">Tambah Bukti <i class="fa fa-plus" aria-hidden="true"></i></a>
+            <a href="javascript:void(0)" class=" btn btn-info addrow">Tambah Bukti <i class="fa fa-plus"
+                aria-hidden="true"></i></a>
           </div>
           <input type="hidden" name="input_id2" id="input_id2">
           <table class="table table-borderless" id="tbEditBukti">
             <tbody>
-                <tr>
-                    <td>
-                        <div class="custom-file">
-                            <input type="file" name="bukti[]" class="form-control" >
-                              
-                          </div>
-                    </td>
-                    <td><a href="#" class=" btn btn-danger remove"><i class="fa fa-minus" aria-hidden="true"></i></a></td>
-                </tr>
+              <tr>
+                <td>
+                  <div class="custom-file">
+                    <input type="file" name="bukti[]" class="form-control">
+
+                  </div>
+                </td>
+                <td><a href="#" class=" btn btn-danger remove"><i class="fa fa-minus" aria-hidden="true"></i></a></td>
+              </tr>
             </tbody>
           </table>
-          </form>
-        </div>
-        <div class="modal-footer justify-content-between">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary" value="tambah" id="save-bukti">Save data</button> 
-        </div>
+        </form>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" value="tambah" id="save-bukti">Save data</button>
       </div>
     </div>
-
   </div>
-  <!-- Modal UTAMA -->
-    <div class="modal hide fade" id="modal-default">
-      <div class="modal-dialog ">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h4 class="modal-title judul-tak"></h4>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                  </button>
-              </div>
-              <div class="modal-body">
-                  <form method="post" id="formTak" name="formTak" enctype="multipart/form-data">
-                    @csrf
-                      <div class="alert alert-danger" style="display:none"></div>
-                      <input type="hidden" name="inputtak_id" id="inputtak_id">
-                      <input type="hidden" name="kategori_val" id="kategori_val">
-                      <input type="hidden" name="pilar_val" id="pilar_val">
-                      <input type="hidden" name="kegiatan_val" id="kegiatan_val">
-                      <input type="hidden" name="partisipasi_val" id="partisipasi_val">
-                      <div class="form-group">
-                        <label for="">Tahun Ajaran</label>                         
-                          <select name="tahunajaran" id="tahunajaran" class="form-control" required>
-                            <option value="2016/2017">2016/2017</option>
-                            <option value="2017/2018">2017/2018</option>
-                            <option value="2018/2019">2018/2019</option>
-                            <option value="2019/2020">2019/2020</option>
-                          </select>
-                    </div>
-                      <div class="form-group">
-                          <label for="inputemail">Kategori</label>                         
-                            <select name="kategoritak" id="kategoritak" class="form-control" required>
-                              <option value="">--Pilih Kategori TAK--</option>  
-                            </select>
-                      </div>
-                      <div class="form-group">
-                      <label for="inputemail">Pilar</label>
-                        <select name="pilartak" id="pilartak" class="form-control" required>
-                          <option value="">--Pilih Pilar TAK--</option>  
-                        </select>
-                      </div>
-                      <div class="form-group">
-                          <label for="inputemail">Kegiatan</label>
-                            <select name="kegiatantak" id="kegiatantak" class="form-control" required>
-                              <option value="">--Pilih Kegiatan TAK--</option>  
-                            </select>                           
-                      </div>
-                      <div class="form-group">
-                          <label for="inputemail">Partisipasi</label>
-                              <select name="partisipasitak" id="partisipasitak" class="form-control" required>
-                                <option value="">--Pilih Partisipasi TAK--</option>  
-                              </select>
-                      </div>
-                      <div class="form-group">
-                        <label for="">Tanggal Kegiatan</label>
-                        <div class="input-group">
-                            <input type="text" name="tanggalawal" placeholder="YYYY-MM-DD" id="tanggalawal" class="form-control datepicker">
-                            <div class="input-group-append"><span class="input-group-text">s/d</span></div>
-                            <input type="text" name="tanggalakhir" id="tanggalakhir" placeholder="YYYY-MM-DD" class="form-control datepicker">
-                        </div>
-                      </div> 
-                      <div class="form-group">
-                          <label for="">Nama Kegiatan</label>
-                          <input type="text" name="namaindo" class="form-control" id="namaindo" placeholder="Skor Tak">
-                          <label class="text-danger" id="tak_scoreError"></label>
-                      </div>
-                      <div class="form-group">
-                        <label for="">Nama Kegiatan (Inggris)</label>
-                        <input type="text" name="namainggris" class="form-control" id="namainggris" placeholder="Skor Tak">
-                        <label class="text-danger" id="tak_scoreError"></label>
-                      </div>
-                      <div class="form-group">
-                        <label for="">Penyelenggara</label>
-                        <input type="text" name="penyelenggara" class="form-control" id="penyelenggara" placeholder="Skor Tak">
-                        <label class="text-danger" id="tak_scoreError"></label>
-                      </div>
-                      <div class="form-group">
-                        <label for="">Deskripsi</label>
-                        <textarea name="deskripsi" id="deskripsi" class="form-control" rows="5"></textarea>
-                      </div>   
 
-                  </form>
-              </div>
-              <div class="modal-footer justify-content-between">
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary" value="tambah" id="save-tak">Save data</button>
-                 
-              </div>
+</div>
+<!-- Modal UTAMA -->
+<div class="modal hide fade" id="modal-default">
+  <div class="modal-dialog ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title judul-tak"></h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" id="formTak" name="formTak" enctype="multipart/form-data">
+          @csrf
+          <div class="alert alert-danger" style="display:none"></div>
+          <input type="hidden" name="inputtak_id" id="inputtak_id">
+          <input type="hidden" name="kategori_val" id="kategori_val">
+          <input type="hidden" name="pilar_val" id="pilar_val">
+          <input type="hidden" name="kegiatan_val" id="kegiatan_val">
+          <input type="hidden" name="partisipasi_val" id="partisipasi_val">
+          <div class="form-group">
+            <label for="">Tahun Ajaran</label>
+            <select name="tahunajaran" id="tahunajaran" class="form-control" required>
+              <option value="2016/2017">2016/2017</option>
+              <option value="2017/2018">2017/2018</option>
+              <option value="2018/2019">2018/2019</option>
+              <option value="2019/2020">2019/2020</option>
+            </select>
           </div>
+          <div class="form-group">
+            <label for="inputemail">Kategori</label>
+            <select name="kategoritak" id="kategoritak" class="form-control" required>
+              <option value="">--Pilih Kategori TAK--</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="inputemail">Pilar</label>
+            <select name="pilartak" id="pilartak" class="form-control" required>
+              <option value="">--Pilih Pilar TAK--</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="inputemail">Kegiatan</label>
+            <select name="kegiatantak" id="kegiatantak" class="form-control" required>
+              <option value="">--Pilih Kegiatan TAK--</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="inputemail">Partisipasi</label>
+            <select name="partisipasitak" id="partisipasitak" class="form-control" required>
+              <option value="">--Pilih Partisipasi TAK--</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="">Tanggal Kegiatan</label>
+            <div class="input-group">
+              <input type="text" name="tanggalawal" placeholder="YYYY-MM-DD" id="tanggalawal"
+                class="form-control datepicker">
+              <div class="input-group-append"><span class="input-group-text">s/d</span></div>
+              <input type="text" name="tanggalakhir" id="tanggalakhir" placeholder="YYYY-MM-DD"
+                class="form-control datepicker">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="">Nama Kegiatan</label>
+            <input type="text" name="namaindo" class="form-control" id="namaindo" placeholder="Skor Tak">
+            <label class="text-danger" id="tak_scoreError"></label>
+          </div>
+          <div class="form-group">
+            <label for="">Nama Kegiatan (Inggris)</label>
+            <input type="text" name="namainggris" class="form-control" id="namainggris" placeholder="Skor Tak">
+            <label class="text-danger" id="tak_scoreError"></label>
+          </div>
+          <div class="form-group">
+            <label for="">Penyelenggara</label>
+            <input type="text" name="penyelenggara" class="form-control" id="penyelenggara" placeholder="Skor Tak">
+            <label class="text-danger" id="tak_scoreError"></label>
+          </div>
+          <div class="form-group">
+            <label for="">Deskripsi</label>
+            <textarea name="deskripsi" id="deskripsi" class="form-control" rows="5"></textarea>
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer justify-content-between">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" value="tambah" id="save-tak">Save data</button>
+
       </div>
     </div>
-  <!-- END Modal UTAMA -->
+  </div>
+</div>
+<!-- END Modal UTAMA -->
 @endsection
 @push('scripts')
-	<script>
-        $(document).ready( function () {
+<script>
+  $(document).ready( function () {
              $.ajaxSetup({
             headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -664,5 +669,5 @@
                     });
             });
         });
-    </script>
+</script>
 @endpush

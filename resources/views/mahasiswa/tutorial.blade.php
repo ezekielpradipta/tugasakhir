@@ -190,197 +190,205 @@
 @endsection
 @push('scripts')
 <script>
-    $(document).ready( function () {
+    $(document).ready(function () {
         $.ajaxSetup({
             headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
-            });
-            $('.addrow').on('click',function(e){
+        });
+        $('.addrow').on('click', function (e) {
             addrow();
             e.preventDefault();
         });
-        function addrow(){
-            var tr= '<tr>'+
-            '<td>'+
-                '<div class="custom-file">'+
-                    '<input type="file" name="bukti[]" class="form-control">'+
-                      
-                  '</div>'+
-            '</td>'+
-            '<td><a href="#" class=" btn btn-danger remove"><i class="fa fa-minus" aria-hidden="true"></i></a></td>'+
-            '</tr>';
+
+        function addrow() {
+            var tr = '<tr>' +
+                '<td>' +
+                '<div class="custom-file">' +
+                '<input type="file" name="bukti[]" class="form-control">' +
+
+                '</div>' +
+                '</td>' +
+                '<td><a href="#" class=" btn btn-danger remove"><i class="fa fa-minus" aria-hidden="true"></i></a></td>' +
+                '</tr>';
             $('tbody').append(tr);
         };
-        $('tbody').on('click','.remove',function(e){
+        $('tbody').on('click', '.remove', function (e) {
             $(this).parent().parent().remove();
             e.preventDefault();
         });
         $(".datepicker").datepicker({
-         format: 'yyyy-mm-dd',
-         autoclose: true,
-         todayHighlight: true,
-         });
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            todayHighlight: true,
+        });
         $.ajax({
-                url: "{{ route('mahasiswa.slider') }}",
-                type: "GET",
-                dataType : "json",            
-                success: function (data) {
+            url: "{{ route('mahasiswa.slider') }}",
+            type: "GET",
+            dataType: "json",
+            success: function (data) {
                 console.log(data);
                 $('#myModal').modal('show');
-                var slider1 = '<div class="carousel-item active sliderBaru">'
-                + ' <img class="d-block w-100" src="../../img/'+data.slider[0].slider_image+'" class="modal-content" alt="First slide">'
-                + ' <div class="modal-body">'
-                + ' <p>'+data.slider[0].slider_caption+'</p>'
-                + '</div>'
-                + ' </div>' 
-                ;
+                var slider1 = '<div class="carousel-item active sliderBaru">' +
+                    ' <img class="d-block w-100" src="../../img/' + data.slider[0].slider_image +
+                    '" class="modal-content" alt="First slide">' +
+                    ' <div class="modal-body">' +
+                    ' <p>' + data.slider[0].slider_caption + '</p>' +
+                    '</div>' +
+                    ' </div>';
                 $('.carousel-inner').append(slider1);
                 for (var i = 1; i < data.slider.length; i++) {
-                  var slider2=  '<div class="carousel-item">'
-                + ' <img class="d-block w-100" src="../../img/'+data.slider[i].slider_image+'" class="modal-content" alt="'+[i+1]+' slide">'
-                + ' <div class="modal-body">'
-                + ' <p>'+data.slider[i].slider_caption+'</p>'
-                + '</div>'
-                + ' </div>' ;
-                $('.carousel-inner').append(slider2);
+                    var slider2 = '<div class="carousel-item">' +
+                        ' <img class="d-block w-100" src="../../img/' + data.slider[i]
+                        .slider_image + '" class="modal-content" alt="' + [i + 1] + ' slide">' +
+                        ' <div class="modal-body">' +
+                        ' <p>' + data.slider[i].slider_caption + '</p>' +
+                        '</div>' +
+                        ' </div>';
+                    $('.carousel-inner').append(slider2);
                 }
-                for(var k=0; k<data.kategoritak.length;k++){
+                for (var k = 0; k < data.kategoritak.length; k++) {
                     var kategoritak =
-                    '<option value="'+ data.kategoritak[k].id +'">'+ data.kategoritak[k].kategoritak_nama +'</option>'
-                    ;
+                        '<option value="' + data.kategoritak[k].id + '">' + data.kategoritak[k]
+                        .kategoritak_nama + '</option>';
                     $('select[name="kategoritak_id"]').append(kategoritak);
                 }
-                
-                
-                }
+
+
+            }
         });
-        jQuery('select[name="kategoritak_id"]').on('change',function(){
-               var kategoritak_id = jQuery(this).val();
-               $('#kategoritak_id').val(kategoritak_id);
-               if(kategoritak_id)
-               {
-                var url = "{{route('mahasiswa.tak.cekPilar')}}".concat("/" + kategoritak_id);   
+        jQuery('select[name="kategoritak_id"]').on('change', function () {
+            var kategoritak_id = jQuery(this).val();
+            $('#kategoritak_id').val(kategoritak_id);
+            if (kategoritak_id) {
+                var url = "{{route('mahasiswa.tak.cekPilar')}}".concat("/" + kategoritak_id);
                 console.log(url);
-                  jQuery.ajax({
-                     url :  url,
-                     type : "GET",
-                     dataType : "json",
-                     success:function(data)
-                     {
+                jQuery.ajax({
+                    url: url,
+                    type: "GET",
+                    dataType: "json",
+                    success: function (data) {
                         console.log(data);
                         jQuery('select[name="pilartak_id"]').empty();
-                        jQuery('select[name="pilartak_id"]').append('<option selected disabled value="">--Pilih Pilar--</option>');
+                        jQuery('select[name="pilartak_id"]').append(
+                            '<option selected disabled value="">--Pilih Pilar--</option>'
+                            );
                         jQuery('select[name="kegiatantak_id"]').empty();
-                        jQuery('select[name="kegiatantak_id"]').append('<option>--NA--</option>');
-                       
+                        jQuery('select[name="kegiatantak_id"]').append(
+                            '<option>--NA--</option>');
+
                         jQuery('select[name="partisipasitak_id"]').empty();
-                        jQuery('select[name="partisipasitak_id"]').append('<option>--NA--</option>');
-                        jQuery.each(data, function(id,nama){
-                           $('select[name="pilartak_id"]').append('<option value="'+ id +'">'+ nama +'</option>');
+                        jQuery('select[name="partisipasitak_id"]').append(
+                            '<option>--NA--</option>');
+                        jQuery.each(data, function (id, nama) {
+                            $('select[name="pilartak_id"]').append(
+                                '<option value="' + id + '">' + nama +
+                                '</option>');
                         });
-                     }
-                  });
-               }
-               else
-               {
-                  $('select[name="pilartak_id"]').empty();
-                  $('select[name="pilartak_id"]').append('<option>--N/A--</option>');
-                  $('select[name="kegiatantak_id"]').empty();
-                  $('select[name="kegiatantak_id"]').append('<option>--N/A--</option>');
-                  
-                  $('select[name="partisipasitak_id"]').empty();
-                  $('select[name="partisipasitak_id"]').append('<option>--N/A--</option>');
-               }
+                    }
+                });
+            } else {
+                $('select[name="pilartak_id"]').empty();
+                $('select[name="pilartak_id"]').append('<option>--N/A--</option>');
+                $('select[name="kegiatantak_id"]').empty();
+                $('select[name="kegiatantak_id"]').append('<option>--N/A--</option>');
+
+                $('select[name="partisipasitak_id"]').empty();
+                $('select[name="partisipasitak_id"]').append('<option>--N/A--</option>');
+            }
         });
-        jQuery('select[name="pilartak_id"]').on('change',function(){
-               var pilartak_id = jQuery(this).val();
-               $('#pilartak_id').val(pilartak_id);
-               if(pilartak_id)
-               {
-                var urlPilar = "{{route('mahasiswa.tak.cekKegiatan')}}".concat("/" + pilartak_id);   
+        jQuery('select[name="pilartak_id"]').on('change', function () {
+            var pilartak_id = jQuery(this).val();
+            $('#pilartak_id').val(pilartak_id);
+            if (pilartak_id) {
+                var urlPilar = "{{route('mahasiswa.tak.cekKegiatan')}}".concat("/" + pilartak_id);
                 console.log(urlPilar);
-                  jQuery.ajax({
-                     url : urlPilar,
-                     type : "GET",
-                     dataType : "json",
-                     success:function(data)
-                     {
+                jQuery.ajax({
+                    url: urlPilar,
+                    type: "GET",
+                    dataType: "json",
+                    success: function (data) {
                         console.log(data);
                         jQuery('select[name="kegiatantak_id"]').empty();
-                        jQuery('select[name="kegiatantak_id"]').append('<option selected disabled value="">--Pilih Kegiatan--</option>');
-                        
+                        jQuery('select[name="kegiatantak_id"]').append(
+                            '<option selected disabled value="">--Pilih Kegiatan--</option>'
+                            );
+
                         jQuery('select[name="partisipasitak_id"]').empty();
-                        jQuery('select[name="partisipasitak_id"]').append('<option>--NA--</option>');
-                        jQuery.each(data, function(id,nama){
-                           $('select[name="kegiatantak_id"]').append('<option value="'+ id +'">'+ nama +'</option>');
+                        jQuery('select[name="partisipasitak_id"]').append(
+                            '<option>--NA--</option>');
+                        jQuery.each(data, function (id, nama) {
+                            $('select[name="kegiatantak_id"]').append(
+                                '<option value="' + id + '">' + nama +
+                                '</option>');
                         });
-                     }
-                  });
-               }
-               else
-               {
-                  $('select[name="kegiatantak_id"]').empty();
-                  $('select[name="kegiatantak_id"]').append('<option>--N/A--</option>');
-               }
+                    }
+                });
+            } else {
+                $('select[name="kegiatantak_id"]').empty();
+                $('select[name="kegiatantak_id"]').append('<option>--N/A--</option>');
+            }
         });
-        jQuery('select[name="kegiatantak_id"]').on('change',function(){
-               var kegiatantak_id = jQuery(this).val();
-               $('#kegiatantak_id').val(kegiatantak_id);
-               if(kegiatantak_id)
-               {
-                var urlKegiatan = "{{route('mahasiswa.tak.cekPartisipasi')}}".concat("/" + kegiatantak_id);   
+        jQuery('select[name="kegiatantak_id"]').on('change', function () {
+            var kegiatantak_id = jQuery(this).val();
+            $('#kegiatantak_id').val(kegiatantak_id);
+            if (kegiatantak_id) {
+                var urlKegiatan = "{{route('mahasiswa.tak.cekPartisipasi')}}".concat("/" +
+                    kegiatantak_id);
                 console.log(urlKegiatan);
-                  jQuery.ajax({
-                     url :    urlKegiatan,
-                     type : "GET",
-                     dataType : "json",
-                     success:function(data)
-                     {
+                jQuery.ajax({
+                    url: urlKegiatan,
+                    type: "GET",
+                    dataType: "json",
+                    success: function (data) {
                         console.log(data);
-                       jQuery('select[name="partisipasitak_id"]').empty();
-                        jQuery('select[name="partisipasitak_id"]').append('<option selected disabled value="">--Pilih Partisipasi--</option>');
-                        jQuery.each(data, function(id,nama){
-                           $('select[name="partisipasitak_id"]').append('<option value="'+ id +'">'+ nama +'</option>');
+                        jQuery('select[name="partisipasitak_id"]').empty();
+                        jQuery('select[name="partisipasitak_id"]').append(
+                            '<option selected disabled value="">--Pilih Partisipasi--</option>'
+                            );
+                        jQuery.each(data, function (id, nama) {
+                            $('select[name="partisipasitak_id"]').append(
+                                '<option value="' + id + '">' + nama +
+                                '</option>');
                         });
-                     }
-                  });
-               }
-               else
-               {
-                  $('select[name="partisipasitak_id"]').empty();
-               }
+                    }
+                });
+            } else {
+                $('select[name="partisipasitak_id"]').empty();
+            }
         });
-        jQuery('select[name="partisipasitak_id"]').on('change',function(){
-                var partisipasitak_id = jQuery(this).val();
-                $('#partisipasitak_id').val(partisipasitak_id);
+        jQuery('select[name="partisipasitak_id"]').on('change', function () {
+            var partisipasitak_id = jQuery(this).val();
+            $('#partisipasitak_id').val(partisipasitak_id);
         });
         $('#btn-save').click(function (e) {
-                e.preventDefault();
-                var myForm = $("#formTak")[0];
-                $(this).html('Sending..');
-                    $.ajax({
-                        data: new FormData(myForm),
-                        url: "{{ route('mahasiswa.tutorial.store') }}",
-                        type: "POST",
-                        
-                        contentType: false,
-                        processData: false,
-                        success: function (data) {
-                            
-                            $('#formTak').trigger("reset");
-                           
-                            Command: swal("Sukses", "Berhasil", "success");
-                            
-                        },
-                        error: function (data) {
-                            
-                            Command: swal("Gagal", "Gagal ", "error");
-                            $('#btn-save').html('Save Changes');
-                        }
-                    });
+            e.preventDefault();
+            var myForm = $("#formTak")[0];
+            var urlIndex= "{{ route('mahasiswa.index') }}";
+            $(this).html('Sending..');
+            $.ajax({
+                data: new FormData(myForm),
+                url: "{{ route('mahasiswa.tutorial.store') }}",
+                
+                type: "POST",
+
+                contentType: false,
+                processData: false,
+                success: function (data) {
+
+                    $('#formTak').trigger("reset");
+                    Command: swal("Sukses", "Berhasil", "success");
+                    window.location.href = urlIndex;
+                },
+                error: function (data) {
+
+                    Command: swal("Gagal", "Gagal ", "error");
+                    $('#btn-save').html('Save Changes');
+                }
+            });
         });
-  });
+    });
+
 </script>
 
 @endpush

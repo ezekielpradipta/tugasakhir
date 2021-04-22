@@ -11,7 +11,7 @@ class Admin extends Model
     const USER_PHOTO_URL = '/img';
 	const USER_PHOTO_DEFAULT ='user.png';
 	protected $primaryKey = 'id';
-	protected $fillable =['nidn','user_id','admin_image','admin_nama'];
+	protected $fillable =['user_id','admin_image','admin_nama'];
 
 
 	public function getimageURLAttribute()

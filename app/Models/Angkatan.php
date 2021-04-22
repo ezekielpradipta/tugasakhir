@@ -9,4 +9,7 @@ class Angkatan extends Model
 {
     protected $primaryKey = 'id';
      protected $fillable = ['angkatan_tahun'];
+     public function takkumulatif(){
+        return $this->hasMany(Takkumulatif::class);
+    }
 }

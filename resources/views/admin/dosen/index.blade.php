@@ -39,7 +39,14 @@
             <div class="modal-body">
               <form method="post" id="formDosen" name="formDosen" enctype="multipart/form-data">
                 @csrf
-                <div class="alert alert-danger" style="display:none"></div>
+                <div id="error" style=" display:none; ">
+                    <div class="alert alert-danger ">
+                      <strong>Whoops!</strong> Data yang anda masukan tidak sesuai.<br><br>
+                      <ul class="list_error">
+          
+                      </ul>
+                    </div>
+                </div>
                 <input type="hidden" name="dosen_id" id="dosen_id">
                 <input type="hidden" name="user_id" id="user_id">
                 <input type="hidden" name="hidden_image" id="hidden_image">
@@ -65,12 +72,11 @@
                 <div class="form-group">
                     <label for="inputNamaDosen">Nama</label>
                     <input type="text" name="dosen_nama" class="form-control" id="dosen_nama" placeholder="Nama">
-                    <label class="text-danger" id="nameDosenError"></label>
                 </div>
                 <div class="form-group">
                     <label for="inputPassword">Password</label>
                     <input type="password" name="password" class="form-control" id="password">
-                    <label class="text-danger" id="passwordError"></label>
+                   
                 </div>
                 <div class="form-group">
                     <div class="form-check">
@@ -94,7 +100,6 @@
                 <div class="form-group">
                     <label for="inputImageDosen" id="fotoDosen">Upload Foto Dosen</label>
                     <img src="" class="gambar" id="gambar" width="60px" height="">
-                    <label class="text-danger" id="dosen_imageError"></label>
                    <input type="file" name="dosen_image" class="form-control" id="dosen_image">
                    
                 </div>
@@ -103,7 +108,7 @@
             <div class="modal-footer justify-content-between">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
               <button type="button" class="btn btn-primary" value="tambah" id="btn-save">Save data</button>
-              </div>
+            </div>
           </div>
           <!-- /.modal-content -->
         </div>
@@ -253,6 +258,7 @@
                 $('#user_used').hide();
                 $('#nidn_ok').hide();
                 $('#nidn_used').hide();
+                $("#error").hide();
                 $('#modal-default').modal('show');
             });
             $('#btn-save').click(function (e) {
@@ -274,13 +280,32 @@
                             table.draw();
                         },
                         error: function (data) {
-                            console.log(data);
-                            Command: swal("Gagal", "Gagal menambahkan Data Dosen", "error");
                             
-                            $('#nameDosenError').text(data.responseJSON.errors.dosen_nama);
-                            $('#passwordError').text(data.responseJSON.errors.password);
-                            $('#dosen_imageError').text(data.responseJSON.errors.dosen_image);
-                            $('#saveBtn').html('Save Changes');
+                            Command: swal("Gagal", "Gagal menambahkan Data Dosen", "error");
+                            $("#error").show();
+                            var error_password = data.responseJSON.errors.password;
+                            var error_nama = data.responseJSON.errors.dosen_nama;
+                            var error_image = data.responseJSON.errors.dosen_image;
+                            if(error_password){
+                              for (var i = 0; i < error_password.length; i++) {
+                                var obj = '<li>'+error_password[i]+'</li>';
+                                $('.list_error').append(obj);
+                              }
+                            }
+                            if(error_nama){
+                              for (var k = 0; k < error_nama.length; k++) {
+                                var obj2 = '<li>'+error_nama[k]+'</li>';
+                                $('.list_error').append(obj2);
+                              }
+                            }
+                            if(error_image){
+                              for (var j = 0; j < error_image.length; j++) {
+                                var obj3 = '<li>'+error_image[j]+'</li>';
+                                $('.list_error').append(obj3);
+                              }
+                            }
+                           
+                            $('#btn-save').html('Save Changes');
                         }
                     });
             });

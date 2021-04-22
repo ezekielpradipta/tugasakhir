@@ -50,7 +50,7 @@ class LoginController extends Controller
             return redirect()->route('admin.dashboard.index');
         } else if (Auth::user()->role==User::USER_ROLE_MHS) {
             return redirect()->route('mahasiswa.index');
-        }else if (Auth::user()->dosen->dosen_status=='dosenwali') {
+        }else if (Auth::user()->role==User::USER_ROLE_DOSEN) {
             return redirect()->route('dosen.dashboard.index');
         }
         else{
@@ -98,33 +98,41 @@ class LoginController extends Controller
             'mahasiswa_image'=>['nullable','image','max:2048'],
 
         ]);
-        $email = $request->email_register;
-        $data['mahasiswa_nim']= Str::substr($email, 0,8);
-        $data['email']= $request->email_register;
-        $data['role']= User::USER_ROLE_MHS;
-        $data['status']= User::USER_IS_ACTIVE;
-        $data['password'] = bcrypt($request->password_register);
-        $data['password_text'] = $request->password_register;
-        $data['username']= $request->username_register;
-        $data['mahasiswa_nama']= $request->mahasiswa_nama;
-        $data['dosen_id']= $request->dosen_val;
-        $data['angkatan_id']= $request->angkatan_val;
-        $data['prodi_id']= $request->prodi_val;
-        if ($request->file('mahasiswa_image')) {
-            $imagePath = $request->file('mahasiswa_image');
-            $imageName = date('YmdHis').'-'.Str::slug($request->mahasiswa_nama).'-' . $imagePath->getClientOriginalName();
-            $path = $request->file('mahasiswa_image')->storeAs('mahasiswa', $imageName, 'images');
-            $data['mahasiswa_image']=$path;
+        DB::beginTransaction();
+        try {
+            $email = $request->email_register;
+            $data['mahasiswa_nim']= Str::substr($email, 0,8);
+            $data['email']= $request->email_register;
+            $data['role']= User::USER_ROLE_MHS;
+            $data['status']= User::USER_IS_ACTIVE;
+            $data['password'] = bcrypt($request->password_register);
+            $data['password_text'] = $request->password_register;
+            $data['username']= $request->username_register;
+            $data['mahasiswa_nama']= $request->mahasiswa_nama;
+            $data['dosen_id']= $request->dosen_id;
+            $data['angkatan_id']= $request->angkatan_id;
+            $data['prodi_id']= $request->prodi_id;
+            if ($request->file('mahasiswa_image')) {
+                $imagePath = $request->file('mahasiswa_image');
+                $imageName = date('YmdHis').'-'.Str::slug($request->mahasiswa_nama).'-' . $imagePath->getClientOriginalName();
+                $path = $request->file('mahasiswa_image')->storeAs('mahasiswa', $imageName, 'images');
+                $data['mahasiswa_image']=$path;
+            }
+            else {
+                $data['mahasiswa_image']= Mahasiswa::USER_PHOTO_DEFAULT;
+            }
+    
+            $user = User::create($data);
+            if($user){
+                $user->mahasiswa()->create($data);
+                $user->mahasiswa->save();
+            }
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollback();
+            throw $e;
         }
-        else {
-            $data['mahasiswa_image']= Mahasiswa::USER_PHOTO_DEFAULT;
-        }
-
-        $user = User::create($data);
-        if($user){
-            $user->mahasiswa()->create($data);
-            $user->mahasiswa->save();
-        }
+        
         return response()->json();
     }
 }

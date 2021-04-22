@@ -26,10 +26,15 @@ class InputtakController extends Controller
      */
     public function index()
     {
-        $kategoritaks =Kategoritak::pluck('kategoritak_nama','id');
-        return view('mahasiswa.input',
-            ['kategoritaks' =>$kategoritaks]);
+        return view('mahasiswa.input');
 
+    }
+    public function slider(){
+        $slider = DB::table('sliders')
+        ->orderBy('slider_order','asc')
+        ->where('slider_jenis','inputtak')->get();
+        $kategoritak = DB::table('kategoritaks')->get();
+        return response()->json(['slider'=>$slider,'kategoritak'=>$kategoritak]);
     }
     public function cekPilar($id){
         $pilartaks = DB::table("pilartaks")->where("kategoritak_id",$id)->pluck("pilartak_nama","id");
@@ -53,7 +58,7 @@ class InputtakController extends Controller
             'tanggalakhir'=>['required'],
             'namaindo'=>['required'],
             'namainggris'=>['required'],
-            'bukti.*' => 'mimes:png,pdf,jpg',
+            
         ]);
         $theTAK = TAK::where("kategoritak_id",$request->kategoritak_id)
         ->where("pilartak_id",$request->pilartak_id)->where("kegiatantak_id",$request->kegiatantak_id)
@@ -61,34 +66,37 @@ class InputtakController extends Controller
       if ($theTAK === null){
         return back()->with('error', 'Data TAK tidak Tersedia');
       }
-      $inputtak = new Inputtak;
-      $inputtak->mahasiswa_id = Auth::user()->mahasiswa->id;
-      $inputtak->inputtak_penyelenggara = $request->penyelenggara;
-      $inputtak->tak_id = $theTAK->id;
-      $inputtak->inputtak_tahunajaran = $request->tahunajaran;
-      $inputtak->inputtak_deskripsi = $request->deskripsi;
-      $inputtak->inputtak_tanggalawal = $request->tanggalawal;
-      $inputtak->inputtak_namaindo = $request->namaindo;
-      $inputtak->inputtak_namainggris = $request->namainggris;
-      $inputtak->inputtak_tanggalakhir = $request->tanggalakhir;
       $nim = Auth::user()->mahasiswa->mahasiswa_nim;
+      $mahasiswa_id = Auth::user()->mahasiswa->id;
       if($request->hasfile('bukti'))
-      {
-         foreach($request->file('bukti') as $bukti)
-         {
-             $filename = date('YmdHis').'-'.Str::slug($nim) . '-'.$bukti->getClientOriginalName();
-             $bukti->storeAs('bukti',$filename,'images');
-             $data[] = $filename;  
-         }
-         $inputtak->inputtak_bukti=json_encode($data);
-      }
+          {
+             foreach($request->file('bukti') as $bukti)
+             {
+                 $filename = date('YmdHis').'-'.Str::slug($nim) . '-'.$bukti->getClientOriginalName();
+                 $bukti->storeAs('bukti',$filename,'images');
+                 $data[] = $filename;  
+             }
+             $bukti=json_encode($data);
+          }
+         $inputtak = Inputtak::create([
+            'tak_id'=>$theTAK->id,
+            'mahasiswa_id'=>$mahasiswa_id,
+            'inputtak_penyelenggara'=>$request->penyelenggara,
+            'inputtak_tanggalawal'=>$request->tanggalawal,
+            'inputtak_tanggalakhir'=>$request->tanggalakhir,
+            'inputtak_namaindo'=>"$request->namaindo",
+            'inputtak_namainggris'=>$request->namainggris,
+            'inputtak_deskripsi'=>$request->deskripsi,
+            'inputtak_tahunajaran'=>$request->tahunajaran,
+            'inputtak_bukti'=>$bukti,
+          ]);
+     
      $mahasiswa_id = Auth::user()->mahasiswa->id;
      $mahasiswa = Mahasiswa::where('id',$mahasiswa_id)->first();
      $dosen = $mahasiswa->dosen_id;
-      $inputtak->save();
       event(new TakMasuk($inputtak, $dosen));
       
-      return redirect()->back()->with('success', 'TAK Berhasil Disubmit!');
+      return response()->json();
     }
     
 }

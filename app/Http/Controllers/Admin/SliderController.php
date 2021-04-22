@@ -15,11 +15,12 @@ use File;
 use Storage;
 class SliderController extends Controller
 {
-    public function slider_inputtak(Request $request){
+    public function index(Request $request){
         if($request->ajax()){
+            $jenis = $request->jenis;
             $slider = DB::table('sliders')
             ->orderBy('slider_order','asc')
-            ->where('slider_jenis','inputtak')
+            ->where('slider_jenis',$jenis)
             ->get();
             return Datatables::of($slider)
                     ->addIndexColumn()
@@ -31,10 +32,10 @@ class SliderController extends Controller
                     ->rawColumns(['action'])
                     ->make(true);
         }
-        return view('admin.slider.inputtak');
+        return view('admin.slider.index');
     }
     
-    public function slider_inputtak_tambah(Request $request){
+    public function slider_tambah(Request $request){
         
             if ($request->file('slider_image')) {
                 Storage::disk('images')->delete($request->hidden_image);
@@ -50,18 +51,18 @@ class SliderController extends Controller
                 'slider_caption' => $request->slider_caption,
                 'slider_image' => $slider_image,
                 'slider_order' => $request->slider_order,
-                'slider_jenis'=> 'inputtak',
+                'slider_jenis'=> $request->slider_jenis,
             
             ]
             );
          
          return response()->json();
     }
-    public function slider_inputtak_edit($id){
+    public function slider_edit($id){
         $slider = Slider::find($id);
         return response()->json($slider);
     }
-    public function slider_inputtak_delete($id){
+    public function slider_delete($id){
         $slider = Slider::find($id);
         $slider_image = $slider->slider_image;
         Storage::disk('images')->delete($slider_image);

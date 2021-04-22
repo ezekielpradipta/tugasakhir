@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 class Mahasiswa extends Model
 {
     protected $primaryKey = 'id';
-    protected $fillable=['user_id','dosen_id','prodi_id','angkatan_id','mahasiswa_nama','mahasiswa_nim','mahasiswa_image'];
+    protected $fillable=['user_id','dosen_id','prodi_id','angkatan_id','mahasiswa_nama','mahasiswa_nim','mahasiswa_image','badge_id','mahasiswa_tutorial_status'];
     const USER_PHOTO_URL = '/img';
 	const USER_PHOTO_DEFAULT ='user.png';
     public function dosen(){
@@ -29,6 +29,9 @@ class Mahasiswa extends Model
     }
     public function notiftakmasuk(){
         return $this->hasMany(NotifTakMasuk::class);
+    }
+    public function badge(){
+        return $this->hasOne(Badge::class);
     }
     public function getimageURLAttribute()
     {

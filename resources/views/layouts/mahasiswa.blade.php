@@ -111,7 +111,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
         Anything you want
       </div>
       <!-- Default to the left -->
-      <strong>Copyright &copy; 2014-2019 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+      <strong>Copyright &copy; 2014-2019 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights
+      reserved.
     </footer>
   </div>
   <!-- ./wrapper -->
@@ -161,11 +162,28 @@ scratch. This page gets rid of all links and provides the needed markup only.
           </button>
         </div>
         <div class="modal-body">
-
-          <img src="../img/badge/badge-1.png" style="width: 70%">
+          <img src=" " style="width: 70%" class="tutorial_image">
           <h4>SELAMAT!</h4>
           <p>Mendapatkan Badge "Menyelesaikan Tutorial"</p>
           <button type="button" class="btn btn-primary" value="tambah" id="btn-read-tutorial">Lanjutkan</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal hide fade" id="modal-badge">
+    <div class="modal-dialog text-center">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="badge_val">
+          <img src=" " style="width: 70%" class="badge_image">
+          <h4>SELAMAT!</h4>
+          <p>Mendapatkan Badge "<span class="badge_nama"></span>"</p>
+          <button type="button" class="btn btn-primary" value="tambah" id="btn-change-badge">Lanjutkan</button>
         </div>
       </div>
     </div>
@@ -180,6 +198,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
   <script>
     $.widget.bridge('uibutton', $.ui.button)
+
   </script>
   <!-- Bootstrap 4 -->
   <script src="{{ asset('adminlte/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
@@ -204,173 +223,298 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js">
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.js"></script>
-  <script src="//js.pusher.com/3.1/pusher.min.js"></script>
+
+  <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
   @include('sweet::alert')
   <script type="text/javascript">
-    $(document).ready(function(){
-  var notif = $('.dropdown-notif');
-   var notif_Toggle =notif.find('a[data-toggle]');
-   var notif_Count_Element = notif_Toggle.find('i[data-count]');
-   var notificationsCount = parseInt(notif_Count_Element.data('count'));
-   var notifications = notif.find('div.dropdown-menu');
+    $(document).ready(function () {
+            var notif = $('.dropdown-notif');
+            var notif_Toggle = notif.find('a[data-toggle]');
+            var notif_Count_Element = notif_Toggle.find('i[data-count]');
+            var notificationsCount = parseInt(notif_Count_Element.data('count'));
+            var notifications = notif.find('div.dropdown-menu');
 
-   var tutorial = $('.dropdown-tutorial');
-   var tutorial_toggle =tutorial.find('a[data-toggle]');
-   var tutorial_count_element = tutorial_toggle.find('i[data-count]');
-   var tutorialCount = parseInt(tutorial_count_element.data('count'));
-   var tutorials = tutorial.find('div.dropdown-menu');
-  
-   var pusher = new Pusher('9b0938eee923c6556e88', {
-        cluster: 'ap1',
-        encrypted: true
-      });
-      var channel = pusher.subscribe('takkonfirmasi'+$('#mahasiswa_id').val());
-      channel.bind('App\\Events\\TakKonfirmasi', function(data) {
-        var existingNotifications = notifications.html();
-        var newNotificationHtml =  '<a href="javascript:void(0)" data-id="'+data.notif_id+'" class="dropdown-item btn-modal">' +
-                  '<div class="media">' +
-                  '<img src="../../img/'+data.dosen_image+'" alt="User Avatar" class="img-size-50 mr-3 img-circle">' +
-                  '<div class="media-body">' +
-                  '<h3 class="dropdown-item-title">'+ data.dosen_nama +
-                  '<span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>'+
-                  '</h3>' +
-                  '<p class="text-sm">Telah MengACC TAK</p>' +
-                  '<p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> Just Now</p>'+
-                  '</div>' +
-                  '</div>' +
-                  '</a>' +
-                  '<div class="dropdown-divider"></div>';
-                  $('div.dropdown-menu').append(newNotificationHtml);
-        
-                  notificationsCount += 1;
-                  notif_Count_Element.attr('data-count', notificationsCount);
-                  notif.find('.notif-count').text(notificationsCount);
-                  notif.show();
-      });
-   notif.ready(function(){
-    var urlcoba = "{{route('mahasiswa.daftartak.index')}}";
-        $.ajax({
-                url: "{{ route('mahasiswa.notif') }}",
-                type: "GET",
-                dataType : "json",            
-                success: function (data) {
-                  console.log(data);
-                  if(data.tutorial_status=="0"){
-                    $('#tak_score').val(data.score);
-                    tutorial_count_element.attr('data-count', data.jumlah_tutorial);
-                    tutorial.find('.notif-count').text(data.jumlah_tutorial);
-                      var newNotificationHtml =  '<a href="javascript:void(0)" data-id="'+data.tutorial.id+'" class="dropdown-item btn-modal-tutorial">' +
-                      '<div class="media">' +
-                      '<img src="../../img/user.png" alt="User Avatar" class="img-size-50 mr-3 img-circle">' +
-                      '<div class="media-body">' +
-                      '<h3 class="dropdown-item-title">'+ "Dosen Wali" +
-                      '<span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>'+
-                      '</h3>' +
-                      '<p class="text-sm">Telah MengACC TAK</p>' +
-                      '<p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> '+  data.tutorial.updated_at +'</p>'+
-                      '</div>' +
-                      '</div>' +
-                      '</a>' +
-                      '<div class="dropdown-divider"></div>';
-                      $('div.dropdown-menu').append(newNotificationHtml);
-                    
-                  } else {
-                    $('#tak_score').val(data.score);
-                    notif_Count_Element.attr('data-count', data.jumlah);
-                    notif.find('.notif-count').text(data.jumlah);
-                    for (var i = 0; i < data.jumlah; i++) {
-                      var newNotificationHtml =  '<a href="javascript:void(0)" data-id="'+data.notif[i].id+'" class="dropdown-item btn-modal">' +
-                      '<div class="media">' +
-                      '<img src="../../img/'+data.notif[i].dosen_image+'" alt="User Avatar" class="img-size-50 mr-3 img-circle">' +
-                      '<div class="media-body">' +
-                      '<h3 class="dropdown-item-title">'+ data.notif[i].dosen_nama +
-                      '<span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>'+
-                      '</h3>' +
-                      '<p class="text-sm">Telah MengACC TAK</p>' +
-                      '<p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> '+  data.notif[i].updated_at +'</p>'+
-                      '</div>' +
-                      '</div>' +
-                      '</a>' +
-                      '<div class="dropdown-divider"></div>';
-                      $('div.dropdown-menu').append(newNotificationHtml);
-                      }
-                  }
-                }
-              });
-      });
-      $('body').on('click','.btn-modal',function(){
-        var notif_id = $(this).data('id');
-        $('#notif_val').val(notif_id);
-        var url = "{{route('mahasiswa.notif')}}".concat("/" + notif_id +"/detail");
-        console.log(url);
-             $.ajax({
-                      url: url,
-                      type: 'GET',
-                      dataType : "json",
-                      success: function(data){
+            var tutorial = $('.dropdown-tutorial');
+            var tutorial_toggle = tutorial.find('a[data-toggle]');
+            var tutorial_count_element = tutorial_toggle.find('i[data-count]');
+            var tutorialCount = parseInt(tutorial_count_element.data('count'));
+            var tutorials = tutorial.find('div.dropdown-menu');
+
+            var pusher = new Pusher('9b0938eee923c6556e88', {
+                cluster: 'ap1',
+                encrypted: true
+            });
+
+            var channel = pusher.subscribe('takkonfirmasi' + $('#mahasiswa_id').val());
+            channel.bind('App\\Events\\TakKonfirmasi', function (data) {
+                var existingNotifications = notifications.html();
+                var newNotificationHtml = '<a href="javascript:void(0)" data-id="' + data.notif_id +
+                    '" class="dropdown-item btn-modal">' +
+                    '<div class="media">' +
+                    '<img src="../../img/' + data.dosen_image +
+                    '" alt="User Avatar" class="img-size-50 mr-3 img-circle">' +
+                    '<div class="media-body">' +
+                    '<h3 class="dropdown-item-title">' + data.dosen_nama +
+                    '<span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>' +
+                    '</h3>' +
+                    '<p class="text-sm">Telah MengACC TAK</p>' +
+                    '<p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> Just Now</p>' +
+                    '</div>' +
+                    '</div>' +
+                    '</a>' +
+                    '<div class="dropdown-divider"></div>';
+                $('div.dropdown-menu').append(newNotificationHtml);
+
+                notificationsCount += 1;
+                notif_Count_Element.attr('data-count', notificationsCount);
+                notif.find('.notif-count').text(notificationsCount);
+                notif.show();
+            });
+            notif.ready(function () {
+                var urlcoba = "{{route('mahasiswa.daftartak.index')}}";
+                $.ajax({
+                    url: "{{ route('mahasiswa.notif') }}",
+                    type: "GET",
+                    dataType: "json",
+                    success: function (data) {
+                        console.log(data);
+                        if (data.tutorial_status == "0") {
+                            $('#tak_score').val(data.score);
+                            tutorial_count_element.attr('data-count', data.jumlah_tutorial);
+                            tutorial.find('.notif-count').text(data.jumlah_tutorial);
+                            var newNotificationHtml =
+                                '<a href="javascript:void(0)" data-id="' + data.tutorial
+                                .id + '" class="dropdown-item btn-modal-tutorial">' +
+                                '<div class="media">' +
+                                '<img src="../../img/user.png" alt="User Avatar" class="img-size-50 mr-3 img-circle">' +
+                                '<div class="media-body">' +
+                                '<h3 class="dropdown-item-title">' + "Dosen Wali" +
+                                '<span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>' +
+                                '</h3>' +
+                                '<p class="text-sm">Telah MengACC TAK</p>' +
+                                '<p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> ' +
+                                data.tutorial.updated_at + '</p>' +
+                                '</div>' +
+                                '</div>' +
+                                '</a>' +
+                                '<div class="dropdown-divider"></div>';
+                            $('div.dropdown-menu').append(newNotificationHtml);
+
+                        } else {
+                            if (data.jumlah != "0") {
+                              if(data.get_badge!="no"){
+                                
+                                var test =
+                                '<a href="javascript:void(0)" data-id="' + data
+                                        .next_badge
+                                        .id + '" class="dropdown-item btn-badge">' +
+                                    '<div class="media">' +
+                                    '<div class="media-body">' +
+                                    '<h3 class="dropdown-item-title">' + "Notifikasi" +
+                                    '<span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>' +
+                                    '</h3>' +
+                                    '<p class="text-sm">Mendapatkan Badge Baru</p>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</a>' +
+                                    '<div class="dropdown-divider"></div>';
+                                $('div.dropdown-menu').append(test);
+                                $('#tak_score').val(data.score);
+                                $(".badge_image").attr('src', '../' + '../' + 'img/' + data
+                            .next_badge.badge_image);
+                            $('.badge_nama').html(data.next_badge.badge_nama);
+                                notif_Count_Element.attr('data-count', data.jumlah +1);
+                                notif.find('.notif-count').text(data.jumlah +1);
+                                for (var i = 0; i < data.jumlah; i++) {
+                                    var newNotificationHtml =
+                                        '<a href="javascript:void(0)" data-id="' + data
+                                        .notif[i]
+                                        .id + '" class="dropdown-item btn-modal">' +
+                                        '<div class="media">' +
+                                        '<img src="../../img/' + data.notif[i].dosen_image +
+                                        '" alt="User Avatar" class="img-size-50 mr-3 img-circle">' +
+                                        '<div class="media-body">' +
+                                        '<h3 class="dropdown-item-title">' + data.notif[i]
+                                        .dosen_nama +
+                                        '<span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>' +
+                                        '</h3>' +
+                                        '<p class="text-sm">Telah MengACC TAK</p>' +
+                                        '<p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> ' +
+                                        data.notif[i].updated_at + '</p>' +
+                                        '</div>' +
+                                        '</div>' +
+                                        '</a>' +
+                                        '<div class="dropdown-divider"></div>';
+                                    $('div.dropdown-menu').append(newNotificationHtml);
+                                }
+                              } else{
+                                $('#tak_score').val(data.score);
+                                notif_Count_Element.attr('data-count', data.jumlah);
+                                notif.find('.notif-count').text(data.jumlah);
+                                for (var i = 0; i < data.jumlah; i++) {
+                                    var newNotificationHtml =
+                                        '<a href="javascript:void(0)" data-id="' + data
+                                        .notif[i]
+                                        .id + '" class="dropdown-item btn-modal">' +
+                                        '<div class="media">' +
+                                        '<img src="../../img/' + data.notif[i].dosen_image +
+                                        '" alt="User Avatar" class="img-size-50 mr-3 img-circle">' +
+                                        '<div class="media-body">' +
+                                        '<h3 class="dropdown-item-title">' + data.notif[i]
+                                        .dosen_nama +
+                                        '<span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>' +
+                                        '</h3>' +
+                                        '<p class="text-sm">Telah MengACC TAK</p>' +
+                                        '<p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> ' +
+                                        data.notif[i].updated_at + '</p>' +
+                                        '</div>' +
+                                        '</div>' +
+                                        '</a>' +
+                                        '<div class="dropdown-divider"></div>';
+                                    $('div.dropdown-menu').append(newNotificationHtml);
+                                }
+                              }
+                            } else {
+                              if(data.get_badge !="no"){
+                                var test =
+                                    '<a href="javascript:void(0)" data-id="" class="dropdown-item btn-modal-tutorial">' +
+                                    '<div class="media">' +
+                                    
+                                    '<div class="media-body">' +
+                                    '<h3 class="dropdown-item-title">' + "Notifikasi" +
+                                    '<span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>' +
+                                    '</h3>' +
+                                    '<p class="text-sm">Mendapatkan Badge Baru</p>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</a>' +
+                                    '<div class="dropdown-divider"></div>';
+                                $('div.dropdown-menu').append(test);
+                                $(".badge_image").attr('src', '../' + '../' + 'img/' + data
+                            .next_badge.badge_image);
+                            $('.badge_nama').html(data.next_badge.badge_nama);
+                                notificationsCount += 1;
+                                notif_Count_Element.attr('data-count', notificationsCount);
+                                notif.find('.notif-count').text(notificationsCount);
+                              }
+                                
+                            }
+
+                        }
+                    }
+                });
+            });
+            $('body').on('click', '.btn-modal', function () {
+                var notif_id = $(this).data('id');
+                $('#notif_val').val(notif_id);
+                var url = "{{route('mahasiswa.notif')}}".concat("/" + notif_id + "/detail");
+                console.log(url);
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: "json",
+                    success: function (data) {
                         console.log(data);
                         $('#modal-sukses').modal('show');
-                        var text = 'TAK '+data.kegiatantak+' ('+data.partisipasitak+ ') '+
-                        ' Berhasil Terkonfirmasi, Mendapatkan ' +data.skor+ ' Point' ;
+                        var text = 'TAK ' + data.kegiatantak + ' (' + data.partisipasitak +
+                            ') ' +
+                            ' Berhasil Terkonfirmasi, Mendapatkan ' + data.skor + ' Point';
                         $('#notif_text').html(text);
-                      }
-                    });
-        
-      });
-      $('body').on('click','#btn-read',function(){
-        var notif_id =  $('#notif_val').val();
-        var url = "{{route('mahasiswa.notif')}}".concat("/" + notif_id +"/read");
-        console.log(url);
-                 $.ajax({
-                      url: url,
-                      type: 'GET',
-                      dataType : "json",
-                      success: function(data){
+                    }
+                });
+
+            });
+            $('body').on('click', '.btn-badge', function () {
+                var badge_id = $(this).data('id');
+                $('#badge_val').val(badge_id);
+                var url = "{{route('mahasiswa.notif')}}".concat("/" + badge_id + "/detail");
+                console.log(url);
+                $('#modal-badge').modal('show');
+
+            });
+            $('body').on('click', '#btn-change-badge', function () {
+                var badge_id = $('#badge_val').val();
+                var url = "{{route('mahasiswa.notif')}}".concat("/" + badge_id + "/badge");
+                console.log(url);
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: "json",
+                    success: function (data) {
+                       
+                        location.reload();
+                    }
+                });
+
+            });
+            $('body').on('click', '#btn-read', function () {
+                var notif_id = $('#notif_val').val();
+                var url = "{{route('mahasiswa.notif')}}".concat("/" + notif_id + "/read");
+                console.log(url);
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: "json",
+                    success: function (data) {
                         $('#modal-sukses').modal('hide');
                         location.reload();
-                      }
-                    });
-      });
-      $('body').on('click','.btn-modal-tutorial',function(){
-        var tutorial_id = $(this).data('id');
-        $('#tutorial_val').val(tutorial_id);
-        var url = "{{route('mahasiswa.notif')}}".concat("/" + tutorial_id +"/tutorial");
-        console.log(url);
-             $.ajax({
-                      url: url,
-                      type: 'GET',
-                      dataType : "json",
-                      success: function(data){
+                    }
+                });
+            });
+            $('body').on('click', '.btn-modal-tutorial', function () {
+                var tutorial_id = $(this).data('id');
+                $('#tutorial_val').val(tutorial_id);
+                var url = "{{route('mahasiswa.notif')}}".concat("/" + tutorial_id + "/tutorial");
+                console.log(url);
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: "json",
+                    success: function (data) {
                         console.log(data);
                         $('#modal-sukses-tutorial').modal('show');
-                        var text = 'TAK '+data.kegiatantak+' ('+data.partisipasitak+ ') '+
-                        ' Berhasil Terkonfirmasi, Mendapatkan ' +data.skor+ ' Point' ;
+                        var text = 'TAK ' + data.kegiatantak + ' (' + data.partisipasitak +
+                            ') ' +
+                            ' Berhasil Terkonfirmasi, Mendapatkan ' + data.skor + ' Point';
                         $('#notif_text_tutorial').html(text);
-                      }
-                    });
-        
-      });
-      $('#modal-sukses-tutorial').on('hidden.bs.modal', function () {
-          // Load up a new modal...
-          $('#modal-sukses-new').modal('show')
-        })
-        $('body').on('click','#btn-read-tutorial',function(){
-        var tutorial_id =  $('#tutorial_val').val();
-        var url = "{{route('mahasiswa.notif')}}".concat("/" + tutorial_id +"/tutorial/read");
-        console.log(url);
-                 $.ajax({
-                      url: url,
-                      type: 'GET',
-                      dataType : "json",
-                      success: function(data){
+                    }
+                });
+
+            });
+            $('#modal-sukses-tutorial').on('hidden.bs.modal', function () {
+                // Load up a new modal...
+                $('#modal-sukses-new').modal('show')
+            })
+            $('body').on('click', '#btn-read-tutorial', function () {
+                var tutorial_id = $('#tutorial_val').val();
+                var url = "{{route('mahasiswa.notif')}}".concat("/" + tutorial_id + "/tutorial/read");
+                console.log(url);
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: "json",
+                    success: function (data) {
                         $('#modal-sukses').modal('hide');
                         location.reload();
-                      }
-                    });
-      });
+                    }
+                });
+            });
+            $('#modal-sukses-new').ready(function () {
+                $.ajax({
+                    url: "{{ route('mahasiswa.badge.tutorial') }}",
+                    type: "GET",
+                    dataType: "json",
 
-  });
+                    success: function (data) {
+                        $(".tutorial_image").attr('src', '../' + '../' + 'img/' + data
+                            .badge_image);
+                    }
+                });
+            });
+
+        });
+
   </script>
 </body>
 
