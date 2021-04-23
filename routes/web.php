@@ -16,21 +16,28 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('auth.login');
 });
-Route::get('test', function () {
-	event(new App\Events\TakMasuk('Someone'));
-	return "Event has been sent!";
-});
+	Route::post('cekEmail', 'PublicController@cekEmail')->name('cekEmail');
+	Route::post('cekUsername', 'PublicController@cekUsername')->name('cekUsername');
+	Route::post('cekNidn', 'PublicController@cekNidn')->name('cekNidn');
+
+	Route::get('getDosen', 'PublicController@getDosen')->name('getDosen');
+	Route::get('getAngkatan', 'PublicController@getAngkatan')->name('getAngkatan');
+	Route::get('getProdi', 'PublicController@getProdi')->name('getProdi');
+
+	Route::get('tak/getPilar', 'PublicController@getPilarTak')->name('tak.get.pilar');
+	Route::get('tak/getKategori', 'PublicController@getKategoriTak')->name('tak.get.kategori');
+	Route::get('tak/getKegiatan', 'PublicController@getKegiatanTak')->name('tak.get.kegiatan');
+	Route::get('tak/getPartisipasi', 'PublicController@getPartisipasiTak')->name('tak.get.partisipasi');
+
+	Route::get('tak/getPilar/{id?}','PublicController@getPilarTakById')->name('tak.get.pilar.id');
+	Route::get('tak/getKegiatan/{id?}','PublicController@getKegiatanTakById')->name('tak.get.kegiatan.id');
+	Route::get('tak/getPartisipasi/{id?}','PublicController@getPartisipasiTakById')->name('tak.get.partisipasi.id');
+					
 Route::group(['middleware' => ['guest']], function () {  
     Route::namespace('Auth')->group(function(){  
 		Route::get('login', 'LoginController@login')->name('login');
 		Route::post('login', 'LoginController@ceklogin')->name('login');
 		Route::post('login/daftar', 'LoginController@daftar')->name('daftar');
-		Route::post('login/cekEmail', 'LoginController@cekEmail')->name('login.cekEmail');
-		Route::post('login/cekUsername', 'LoginController@cekUsername')->name('login.cekUsername');
-		Route::get('login/cekDosen', 'LoginController@cekDosen')->name('login.cekDosen');
-		Route::get('login/cekAngkatan', 'LoginController@cekAngkatan')->name('login.cekAngkatan');
-		Route::get('login/cekProdi', 'LoginController@cekProdi')->name('login.cekProdi');
-
     });
 });
 
@@ -47,30 +54,12 @@ Route::group(['middleware' => ['auth']], function () {
 				Route::prefix('data')->group(function(){
 					Route::resource('dosen','DosenController',['as'=>'admin'])->except('show');
 					Route::post('dosen/update', 'DosenController@updateDong')->name('admin.dosen.updateDong');
-					Route::post('dosen/cekemail', 'DosenController@cekEmail')->name('admin.dosen.cekEmail');
-					Route::post('dosen/cekusername', 'DosenController@cekUsername')->name('admin.dosen.cekUsername');
-					Route::post('dosen/cekNIDN', 'DosenController@cekNIDN')->name('admin.dosen.cekNIDN');
-
+					
 					Route::resource('mahasiswa','MahasiswaController',['as'=>'admin'])->except('show');
-					Route::post('mahasiswa/cekemail', 'MahasiswaController@cekEmail')->name('admin.mahasiswa.cekEmail');
-					Route::post('mahasiswa/cekusername', 'MahasiswaController@cekUsername')->name('admin.mahasiswa.cekUsername');
-					Route::get('mahasiswa/cekDosen', 'MahasiswaController@cekDosen')->name('admin.mahasiswa.cekDosen');
-					Route::get('mahasiswa/cekAngkatan', 'MahasiswaController@cekAngkatan')->name('admin.mahasiswa.cekAngkatan');
-					Route::get('mahasiswa/cekProdi', 'MahasiswaController@cekProdi')->name('admin.mahasiswa.cekProdi');
-
+					
 
 					Route::resource('tak','TAKController',['as'=>'admin'])->except('show');
 					
-					Route::get('tak/adapilar/{id?}','TAKController@adaPilar')->name('admin.tak.adapilar');
-					Route::get('tak/adakegiatan/{id?}','TAKController@adaKegiatan')->name('admin.tak.adakegiatan');
-					Route::get('tak/adapartisipasi/{id?}','TAKController@adaPartisipasi')->name('admin.tak.adapartisipasi');
-					
-					Route::get('tak/pilartak/cek', 'TAKController@cekPilar')->name('admin.tak.pilartak.cek');
-					Route::get('tak/kategoritak/cek', 'TAKController@cekKategori')->name('admin.tak.kategoritak.cek');
-					Route::get('tak/kegiatantak/cek', 'TAKController@cekKegiatan')->name('admin.tak.kegiatantak.cek');
-					Route::get('tak/partisipasitak/cek', 'TAKController@cekPartisipasi')->name('admin.tak.partisipasitak.cek');
-					
-
 					Route::post('tak/kategoritak/tambah', 'TAKController@tambahKategori')->name('admin.tak.kategoritak.tambah');
 					Route::get('tak/kategoritak','TAKController@tbKategori')->name('admin.tak.kategoritak');
 					Route::get('tak/kategoritak/{id}/edit','TAKController@editKategori')->name('admin.tak.kategoritak.edit');
@@ -118,13 +107,14 @@ Route::group(['middleware' => ['auth']], function () {
 		Route::namespace('Mahasiswa')->group(function(){
 			Route::prefix('mahasiswa')->group(function(){
 				Route::get('/','DashboardController@index')->name('mahasiswa.index');
-				Route::get('notif', 'DashboardController@notif')->name('mahasiswa.notif');
-				Route::get('notif/{id}/detail', 'DashboardController@DetailNotif')->name('mahasiswa.notif.detail');
-				Route::get('notif/{id}/read', 'DashboardController@ReadNotif')->name('mahasiswa.notif.read');
+				Route::get('dashboard', 'DashboardController@isiDashboard')->name('mahasiswa.dashboard');
+				Route::get('dashboard/{id}/detail', 'DashboardController@DetailNotif')->name('mahasiswa.notif.detail');
+				Route::get('dashboard/{id}/read', 'DashboardController@ReadNotif')->name('mahasiswa.notif.read');
+				Route::get('dashboard/{id}/tutorial', 'DashboardController@DetailTutorial')->name('mahasiswa.notif.tutorial');
+				Route::get('dashboard/{id}/tutorial/read', 'DashboardController@ReadTutorial')->name('mahasiswa.notif.tutorial.read');
+				
 				Route::get('status', 'DashboardController@DaftarMenu')->name('mahasiswa.daftarmenu');
-				Route::get('notif/{id}/tutorial', 'DashboardController@DetailTutorial')->name('mahasiswa.notif.tutorial');
-				Route::get('notif/{id}/tutorial/read', 'DashboardController@ReadTutorial')->name('mahasiswa.notif.tutorial.read');
-				Route::get('notif/{id}/badge', 'DashboardController@changeBadge')->name('mahasiswa.notif.badge');
+				Route::get('dashboard/{id}/badge', 'DashboardController@changeBadge')->name('mahasiswa.notif.badge');
 				Route::get('badge/tutorial', 'DashboardController@badgeTutorial')->name('mahasiswa.badge.tutorial');
 				Route::get('badge', 'DashboardController@getBadge')->name('mahasiswa.badge');
 
@@ -136,20 +126,9 @@ Route::group(['middleware' => ['auth']], function () {
 				Route::resource('leaderboard', 'LeaderboardController',['as'=>'mahasiswa'])->only(['index']);
 
 				Route::resource('inputtak','InputtakController',['as'=>'mahasiswa'])->only(['index','store'])->middleware('badge');
-				Route::get('tak/cekKegiatan/{id?}','InputtakController@cekKegiatan')->name('mahasiswa.tak.cekKegiatan');
-				Route::get('tak/cekPilar/{id?}','InputtakController@cekPilar')->name('mahasiswa.tak.cekPilar');
-				Route::get('tak/cekPartisipasi/{id?}','InputtakController@cekPartisipasi')->name('mahasiswa.tak.cekPartisipasi');
 				
 				Route::resource('daftartak','DaftartakController',['as'=>'mahasiswa'])->except('show');
-				Route::get('daftartak/pilartak/cek', 'DaftartakController@cekPilar')->name('mahasiswa.daftartak.pilartak.cek');
-				Route::get('daftartak/kategoritak/cek', 'DaftartakController@cekKategori')->name('mahasiswa.daftartak.kategoritak.cek');
-				Route::get('daftartak/kegiatantak/cek', 'DaftartakController@cekKegiatan')->name('mahasiswa.daftartak.kegiatantak.cek');
-				Route::get('daftartak/partisipasitak/cek', 'DaftartakController@cekPartisipasi')->name('mahasiswa.daftartak.partisipasitak.cek');
 			
-				Route::get('daftartak/adapilar/{id?}','DaftartakController@adaPilar')->name('mahasiswa.daftartak.adapilar');
-				Route::get('daftartak/adakegiatan/{id?}','DaftartakController@adaKegiatan')->name('mahasiswa.daftartak.adakegiatan');
-				Route::get('daftartak/adapartisipasi/{id?}','DaftartakController@adaPartisipasi')->name('mahasiswa.daftartak.adapartisipasi');
-				
 				Route::get('daftartak/{id}/bukti','DaftartakController@getBukti')->name('mahasiswa.bukti');
 				Route::get('daftartak/{fileId}/cetakBukti','DaftartakController@cetakBukti')->name('mahasiswa.cetakBukti');
 				Route::get('daftartak/{id}/editBukti','DaftartakController@editBukti')->name('mahasiswa.editBukti');

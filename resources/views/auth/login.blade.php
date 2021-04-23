@@ -236,10 +236,10 @@
             }
             $('#email_register').blur(function(){
                
-                var email_register = $('#email_register').val();
+                var email = $('#email_register').val();
                 var _token = $('input[name="_token"]').val();
                 var filter = /^([0-9]{8})+\@(st3telkom\.ac\.id|ittelkom-pwt\.ac\.id)+$/;
-                if(!filter.test(email_register))
+                if(!filter.test(email))
                 {
                 $('#cekemail').show();
                 $('#email_ok').hide();
@@ -249,9 +249,9 @@
                 else
                 {
                 $.ajax({
-                url:"{{ route('login.cekEmail') }}",
+                url:"{{ route('cekEmail') }}",
                 method:"POST",
-                data:{email_register:email_register, _token:_token},
+                data:{email:email, _token:_token},
                 success:function(result)
                 {
                 if(result == 'unique')
@@ -276,13 +276,13 @@
             });
             $('#username_register').blur(function(){
                 var error_uname = '';
-                var username_register = $('#username_register').val();
+                var username = $('#username_register').val();
                 var _token = $('input[name="_token"]').val();
                 
                 $.ajax({
-                    url:"{{ route('login.cekUsername') }}",
+                    url:"{{ route('cekUsername') }}",
                     method:"POST",
-                    data:{username_register:username_register, _token:_token},
+                    data:{username:username, _token:_token},
                     success:function(result)
                     {
                     if(result == 'unique')
@@ -304,7 +304,7 @@
             });         
             $('#dosen_id').ready(function(){
                     $.ajax({
-                        url: "{{ route('login.cekDosen') }}",
+                        url: "{{ route('getDosen') }}",
                         type: "GET",
                         dataType : "json",
                         
@@ -318,7 +318,7 @@
             });
             $('#angkatan_id').ready(function(){
                     $.ajax({
-                        url: "{{ route('login.cekAngkatan') }}",
+                        url: "{{ route('getAngkatan') }}",
                         type: "GET",
                         dataType : "json",
                         
@@ -332,7 +332,7 @@
             });
             $('#prodi_id').ready(function(){
                         $.ajax({
-                            url: "{{ route('login.cekProdi') }}",
+                            url: "{{ route('getProdi') }}",
                             type: "GET",
                             dataType : "json",
                             
@@ -358,7 +358,7 @@
                         success: function (data) {
                             console.log(data);
                             $('#form-mahasiswa').trigger("reset");
-                            $('#modal-default').modal('hide');
+                            $('#modaltambah').modal('hide');
                             Command: swal("Sukses", "Berhasil menambahkan Data Mahasiswa", "success");
                             
                         },

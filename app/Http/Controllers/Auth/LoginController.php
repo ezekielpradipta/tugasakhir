@@ -57,40 +57,8 @@ class LoginController extends Controller
             abort(404, 'not found');
         }
     }
-    public function cekEmail(Request $request){
-    	if($request->get('email_register')){
-    		$email_register = $request->get('email_register');
-    		$data =DB::table("users")->where('email',$email_register)->count();
-    			if($data >0){
-    				echo "not_unique";
-    			} else {
-    				echo "unique";
-    			}
-    	}
-    }
-    public function cekUsername(Request $request){
-    	if($request->get('username_register')){
-    		$username_register = $request->get('username_register');
-    		$data =DB::table("users")->where('username',$username_register)->count();
-    			if($data >0){
-    				echo "not_unique";
-    			} else {
-    				echo "unique";
-    			}
-    	}
-    }
-    public function cekDosen(){
-        $dosen =Dosen::where('dosen_status','dosenwali')->pluck('dosen_nama','id');
-        return json_encode($dosen);
-    }
-    public function cekAngkatan(){
-        $angkatan =Angkatan::pluck('angkatan_tahun','id');
-        return json_encode($angkatan);
-    }
-    public function cekProdi(){
-        $prodi =Prodi::pluck('prodi_nama','id');
-        return json_encode($prodi);
-    }
+    
+    
     public function daftar(Request $request){
         $this->validate($request,[
             'mahasiswa_nama'=>['required','min:3'],

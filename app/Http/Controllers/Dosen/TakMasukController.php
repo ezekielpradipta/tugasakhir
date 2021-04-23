@@ -27,19 +27,35 @@ class TakMasukController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $dosen = Auth::user()->dosen->id;
-           
-            $inputtak= DB::table('inputtaks')
-            ->join('mahasiswas','mahasiswas.id','=','inputtaks.mahasiswa_id')
-            ->join('dosens', 'dosens.id', '=', 'mahasiswas.dosen_id')
-            ->join('taks', 'inputtaks.tak_id', '=', 'taks.id') 
-            ->join('kegiatantaks', 'taks.kegiatantak_id', '=', 'kegiatantaks.id')
-            ->join('partisipasitaks','partisipasitaks.id','=','taks.partisipasitak_id') 
-            ->select('inputtaks.id','mahasiswas.mahasiswa_nim','mahasiswas.mahasiswa_nama','kegiatantaks.kegiatantak_nama','partisipasitaks.partisipasitak_nama','taks.tak_score','inputtaks.inputtak_deskripsi','inputtaks.created_at')
-            ->where('dosens.id',$dosen)
-            ->where('inputtaks.inputtak_status','0')
-            ->orderBy('inputtaks.created_at','desc')
-            ->get();
+            $dosen_id = Auth::user()->dosen->id;
+            $dosen = Dosen::find($dosen_id);
+            $dosen_status =$dosen->dosen_status;
+            if($dosen_status =="dosenwali"){
+                $inputtak= DB::table('inputtaks')
+                ->join('mahasiswas','mahasiswas.id','=','inputtaks.mahasiswa_id')
+                ->join('dosens', 'dosens.id', '=', 'mahasiswas.dosen_id')
+                ->join('taks', 'inputtaks.tak_id', '=', 'taks.id') 
+                ->join('kegiatantaks', 'taks.kegiatantak_id', '=', 'kegiatantaks.id')
+                ->join('partisipasitaks','partisipasitaks.id','=','taks.partisipasitak_id') 
+                ->select('inputtaks.id','mahasiswas.mahasiswa_nim','mahasiswas.mahasiswa_nama','kegiatantaks.kegiatantak_nama','partisipasitaks.partisipasitak_nama','taks.tak_score','inputtaks.inputtak_deskripsi','inputtaks.created_at')
+                ->where('dosens.id',$dosen_id)
+                ->where('inputtaks.inputtak_status','0')
+                ->orderBy('inputtaks.created_at','desc')
+                ->get();
+            }else{
+                $inputtak= DB::table('inputtaks')
+                ->join('mahasiswas','mahasiswas.id','=','inputtaks.mahasiswa_id')
+                ->join('dosens', 'dosens.id', '=', 'mahasiswas.dosen_id')
+                ->join('taks', 'inputtaks.tak_id', '=', 'taks.id') 
+                ->join('kegiatantaks', 'taks.kegiatantak_id', '=', 'kegiatantaks.id')
+                ->join('partisipasitaks','partisipasitaks.id','=','taks.partisipasitak_id') 
+                ->select('inputtaks.id','mahasiswas.mahasiswa_nim','mahasiswas.mahasiswa_nama','kegiatantaks.kegiatantak_nama','partisipasitaks.partisipasitak_nama','taks.tak_score','inputtaks.inputtak_deskripsi','inputtaks.created_at')
+               
+                ->where('inputtaks.inputtak_status','0')
+                ->orderBy('inputtaks.created_at','desc')
+                ->get();
+            }
+            
             return Datatables::of($inputtak)
                     ->addIndexColumn()
                     ->addColumn('action',function($inputtak)  {

@@ -254,7 +254,7 @@
             var kategoritak_id = jQuery(this).val();
             $('#kategoritak_id').val(kategoritak_id);
             if (kategoritak_id) {
-                var url = "{{route('mahasiswa.tak.cekPilar')}}".concat("/" + kategoritak_id);
+                var url = "{{route('tak.get.pilar.id')}}".concat("/" + kategoritak_id);
                 console.log(url);
                 jQuery.ajax({
                     url: url,
@@ -294,7 +294,7 @@
             var pilartak_id = jQuery(this).val();
             $('#pilartak_id').val(pilartak_id);
             if (pilartak_id) {
-                var urlPilar = "{{route('mahasiswa.tak.cekKegiatan')}}".concat("/" + pilartak_id);
+                var urlPilar = "{{route('tak.get.kegiatan.id')}}".concat("/" + pilartak_id);
                 console.log(urlPilar);
                 jQuery.ajax({
                     url: urlPilar,
@@ -326,7 +326,7 @@
             var kegiatantak_id = jQuery(this).val();
             $('#kegiatantak_id').val(kegiatantak_id);
             if (kegiatantak_id) {
-                var urlKegiatan = "{{route('mahasiswa.tak.cekPartisipasi')}}".concat("/" +
+                var urlKegiatan = "{{route('tak.get.partisipasi.id')}}".concat("/" +
                     kegiatantak_id);
                 console.log(urlKegiatan);
                 jQuery.ajax({

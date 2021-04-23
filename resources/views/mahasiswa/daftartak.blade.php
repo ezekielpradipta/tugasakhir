@@ -271,7 +271,7 @@
             });
             $('#kategoritak').ready(function(){
                     $.ajax({
-                        url: "{{ route('mahasiswa.daftartak.kategoritak.cek') }}",
+                        url: "{{ route('tak.get.kategori') }}",
                         type: "GET",
                         dataType : "json",
                         
@@ -287,7 +287,7 @@
             $('#kategoritak').change(function(){
                 var kategori_val = $(this).children("option:selected").val();
                 $('#kategori_val').val(kategori_val);
-                var urlcoba = "{{route('mahasiswa.daftartak.adapilar')}}".concat("/" + kategori_val);
+                var urlcoba = "{{route('tak.get.pilar.id')}}".concat("/" + kategori_val);
                     $.ajax({
                         url: urlcoba,
                         type: "GET",
@@ -311,7 +311,7 @@
             $('#pilartak').change(function(){
                 var pilar_val = $(this).children("option:selected").val();
                 $('#pilar_val').val(pilar_val);
-                var urlcoba = "{{route('mahasiswa.daftartak.adakegiatan')}}".concat("/" + pilar_val);
+                var urlcoba = "{{route('tak.get.kegiatan.id')}}".concat("/" + pilar_val);
                     $.ajax({
                         url: urlcoba,
                         type: "GET",
@@ -333,7 +333,7 @@
             $('#kegiatantak').change(function(){
                 var kegiatan_val = $(this).children("option:selected").val();
                 $('#kegiatan_val').val(kegiatan_val);
-                var urlcoba = "{{route('mahasiswa.daftartak.adapartisipasi')}}".concat("/" + kegiatan_val);
+                var urlcoba = "{{route('tak.get.partisipasi.id')}}".concat("/" + kegiatan_val);
                     $.ajax({
                         url: urlcoba,
                         type: "GET",

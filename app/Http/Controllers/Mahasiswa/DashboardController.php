@@ -25,133 +25,44 @@ class DashboardController extends Controller
         ->sum('taks.tak_score');
         return view('mahasiswa.index',compact('score'));
     }
-    public function notif(){
-        $mahasiswa = Auth::user()->mahasiswa->id;
+    public function isiDashboard(){
+        $mahasiswa_id = Auth::user()->mahasiswa->id;
+        $mahasiswa = Mahasiswa::find($mahasiswa_id);
+        $angkatan_id = $mahasiswa->angkatan_id;
+        $prodi_id = $mahasiswa->prodi_id;
+        $badge_id = $mahasiswa->badge_id;
         $notif= DB::table('notif_tak_masuks')
             ->join('mahasiswas','mahasiswas.id','=','notif_tak_masuks.mahasiswa_id')
             ->join('dosens','dosens.id','=','notif_tak_masuks.dosen_id')
             ->join('inputtaks','inputtaks.id','=','notif_tak_masuks.inputtak_id')
             ->select('notif_tak_masuks.id','notif_tak_masuks.updated_at','dosens.dosen_nama','dosens.dosen_image')
-            ->where('mahasiswas.id',$mahasiswa)
+            ->where('mahasiswas.id',$mahasiswa_id)
             ->where('notif_tak_masuks.notif_tak_read','0')
             ->get();
-        $jumlah = $notif->count();
+        $jumlah_notif = $notif->count();
         $total_tak = DB::table('notif_tak_masuks')
         ->join('mahasiswas','mahasiswas.id','=','notif_tak_masuks.mahasiswa_id')
         ->join('inputtaks','inputtaks.id','=','notif_tak_masuks.inputtak_id')
         ->join('taks','taks.id','=','inputtaks.tak_id') 
-        ->where('mahasiswas.id',$mahasiswa)
+        ->where('mahasiswas.id',$mahasiswa_id)
         ->where('notif_tak_masuks.notif_tak_read','1')
         ->sum('taks.tak_score');
-        $mhs = Mahasiswa::find($mahasiswa);
-        $tutorial_status = $mhs->mahasiswa_tutorial_status;
-        $tutorial = DB::table('tutorials')->where('mahasiswa_id',$mahasiswa)
-        ->where('tutorial_status','0')
-        ->first();
-        $mhs_get_badge = $mhs->badge_id;
-        $mhs_badge = Badge::where('id',$mhs_get_badge)->first();
-        $mhs_badge_nama= $mhs_badge->badge_nama;
-        $angkatan = $mhs->angkatan_id;
-        $prodi = $mhs->prodi_id;
-        $tak_kumulatif = DB::table('takkumulatifs')->where('angkatan_id',$angkatan)->where('prodi_id',$prodi)->first();
+        $score= (int)$total_tak;
+        $tutorial_status = $mahasiswa->mahasiswa_tutorial_status;
+        $tutorial = DB::table('tutorials')->where('mahasiswa_id',$mahasiswa_id)->first();
+        $badge= Badge::find($badge_id);
+        if($badge){
+            $badge_nama = $badge->badge_nama;
+            $badge_image= $badge->badge_image;
+        } else{
+            $badge_nama='null';
+            $badge_image='null';
+        }
+        
+        $tak_kumulatif = DB::table('takkumulatifs')->where('angkatan_id',$angkatan_id)->where('prodi_id',$prodi_id)->first();
         $poinGold = $tak_kumulatif->poinminimum;
         $poinBronze = $poinGold/3;
         $poinSilver = $poinBronze *2;
-        $score = (int)$total_tak;
-        if($score>=$poinBronze && $score <$poinSilver && $score <$poinGold){
-            $next_badge= Badge::where('badge_nama','bronze')->first();
-            $next_badge_nama = $next_badge->badge_nama;
-            if($next_badge_nama != $mhs_badge_nama){
-                $get_badge='ganti_badge_bronze';
-            }else{
-                $get_badge='no';
-            }
-            
-        }elseif($score>=$poinSilver && $score <$poinGold){
-            $next_badge= Badge::where('badge_nama','silver')->first();
-            $next_badge_nama = $next_badge->badge_nama;
-            if($next_badge_nama != $mhs_badge_nama){
-                $get_badge='ganti_badge_silver';
-            }else{
-                $get_badge='no';
-            }
-        }elseif($score>=$poinGold){
-            $next_badge= Badge::where('badge_nama','gold')->first();
-            $next_badge_nama = $next_badge->badge_nama;
-            if($next_badge_nama != $mhs_badge_nama){
-                $get_badge='ganti_badge_gold';
-                
-            }else{
-                $get_badge='no';
-            }
-        } else{
-            $next_badge='no';
-            $get_badge='no';
-        }
-       if($tutorial){
-           if($jumlah!=0){
-            return response()->json(['get_badge'=>$get_badge,'next_badge'=>$next_badge,'notif'=>$notif,'jumlah'=>$jumlah,'score'=>$score,'tutorial'=>$tutorial,'tutorial_status'=>$tutorial_status,'jumlah_tutorial'=>1]);
-           } else{
-            return response()->json(['get_badge'=>$get_badge,'next_badge'=>$next_badge,'notif'=>$notif,'jumlah'=>$jumlah,'score'=>$score,'tutorial'=>$tutorial,'tutorial_status'=>$tutorial_status,'jumlah_tutorial'=>1]);
-           }
-        
-       } else{
-        return response()->json(['notif'=>$notif,'jumlah'=>$jumlah,'score'=>$score]);
-       }      
-    }
-    public function DaftarMenu(){
-        $mahasiswa = Auth::user()->mahasiswa->id;
-        $mhs = Mahasiswa::find($mahasiswa);
-        $angkatan = $mhs->angkatan_id;
-        $prodi = $mhs->prodi_id;
-        $tak = DB::table('takkumulatifs')->where('angkatan_id',$angkatan)->where('prodi_id',$prodi)->first();
-        $poinminim = $tak->poinminimum;
-        $score = DB::table('notif_tak_masuks')
-        ->join('mahasiswas','mahasiswas.id','=','notif_tak_masuks.mahasiswa_id')
-        ->join('inputtaks','inputtaks.id','=','notif_tak_masuks.inputtak_id')
-        ->join('taks','taks.id','=','inputtaks.tak_id') 
-        ->where('mahasiswas.id',$mahasiswa)
-        ->where('notif_tak_masuks.notif_tak_read','1')
-        ->sum('taks.tak_score');
-        $intPoint = (int)$poinminim;
-        $intScore = (int)$score;
-        $tutorial_status = $mhs->mahasiswa_tutorial_status;
-        $tutorial = DB::table('tutorials')->where('mahasiswa_id',$mahasiswa)->first();
-        if($tutorial){
-            if($intScore >= $intPoint){
-                return response()->json(['mahasiswa'=>$mhs,'tutorial_status'=>$tutorial_status,'validasi'=>'yes','tutorial'=>'yes','poinminim'=>$intPoint,'score'=>$intScore]);
-            } else{
-                return response()->json(['mahasiswa'=>$mhs,'tutorial_status'=>$tutorial_status,'tutorial'=>'yes','validasi'=>'no','poinminim'=>$intPoint,'score'=>$intScore]);
-            }
-            
-        } else{
-            return response()->json(['mahasiswa'=>$mhs,'tutorial_status'=>$tutorial_status,'tutorial'=>'no','poinminim'=>$intPoint,'score'=>$intScore]);
-        }
-       
-    }
-    public function getBadge(){
-        
-        $mahasiswa = Auth::user()->mahasiswa->id;
-        $mhs = Mahasiswa::find($mahasiswa);
-        $angkatan = $mhs->angkatan_id;
-        $prodi = $mhs->prodi_id;
-        $mahasiswa_badge_id = $mhs->badge_id;
-        $badge = Badge::where('id',$mahasiswa_badge_id)->first();
-        $badge_image= $badge->badge_image;
-        $tak_kumulatif = DB::table('takkumulatifs')->where('angkatan_id',$angkatan)->where('prodi_id',$prodi)->first();
-        $poinGold = $tak_kumulatif->poinminimum;
-        $poinBronze = $poinGold/3;
-        $poinSilver = $poinBronze *2;
-        $total_tak = DB::table('notif_tak_masuks')
-        ->join('mahasiswas','mahasiswas.id','=','notif_tak_masuks.mahasiswa_id')
-        ->join('inputtaks','inputtaks.id','=','notif_tak_masuks.inputtak_id')
-        ->join('taks','taks.id','=','inputtaks.tak_id') 
-        ->where('mahasiswas.id',$mahasiswa)
-        ->where('notif_tak_masuks.notif_tak_read','1')
-        ->sum('taks.tak_score');
-        
-        $mhs_badge_nama= $badge->badge_nama;
-        $score =(int)$total_tak;
         if($score < $poinBronze){
             $next_badge= Badge::where('badge_nama','bronze')->first();
             $next_badge_image = $next_badge->badge_image;
@@ -211,10 +122,64 @@ class DashboardController extends Controller
         } else{
             $get_badge='no';
         }
+        if($tutorial){
+            return response()->json([
+                'badge_nama'=>$badge_nama,
+                'get_badge'=>$get_badge,
+                'badge_image'=>$badge_image,
+                'score'=>$score,
+                'next_badge_max_point'=>$next_badge_max_point,
+                'next_badge_point'=>$next_badge_point,
+                'next_badge_nama'=>$next_badge_nama,
+                'next_badge_image'=>$next_badge_image,
+                'notif'=>$notif,
+                'jumlah_notif'=>$jumlah_notif,
+                'tutorial'=>$tutorial,
+                'tutorial_status'=>$tutorial_status,
+                'jumlah_tutorial'=>1,
+            ]);
+        } else{
+            return response()->json([
+                'score'=>$score,
+                'tutorial_status'=>$tutorial_status,
+                'tutorial'=>'null',
+                'jumlah_tutorial'=>1,
+            ]);
+        }
 
-        return response()->json(['get_badge'=>$get_badge,'badge_image'=>$badge_image,'score'=>$score,'next_badge_max_point'=>$next_badge_max_point,'next_badge_point'=>$next_badge_point,'next_badge_nama'=>$next_badge_nama,'next_badge_image'=>$next_badge_image]);
-        
     }
+    
+    public function DaftarMenu(){
+        $mahasiswa = Auth::user()->mahasiswa->id;
+        $mhs = Mahasiswa::find($mahasiswa);
+        $angkatan = $mhs->angkatan_id;
+        $prodi = $mhs->prodi_id;
+        $tak = DB::table('takkumulatifs')->where('angkatan_id',$angkatan)->where('prodi_id',$prodi)->first();
+        $poinminim = $tak->poinminimum;
+        $score = DB::table('notif_tak_masuks')
+        ->join('mahasiswas','mahasiswas.id','=','notif_tak_masuks.mahasiswa_id')
+        ->join('inputtaks','inputtaks.id','=','notif_tak_masuks.inputtak_id')
+        ->join('taks','taks.id','=','inputtaks.tak_id') 
+        ->where('mahasiswas.id',$mahasiswa)
+        ->where('notif_tak_masuks.notif_tak_read','1')
+        ->sum('taks.tak_score');
+        $intPoint = (int)$poinminim;
+        $intScore = (int)$score;
+        $tutorial_status = $mhs->mahasiswa_tutorial_status;
+        $tutorial = DB::table('tutorials')->where('mahasiswa_id',$mahasiswa)->first();
+        if($tutorial){
+            if($intScore >= $intPoint){
+                return response()->json(['mahasiswa'=>$mhs,'tutorial_status'=>$tutorial_status,'validasi'=>'yes','tutorial'=>'yes','poinminim'=>$intPoint,'score'=>$intScore]);
+            } else{
+                return response()->json(['mahasiswa'=>$mhs,'tutorial_status'=>$tutorial_status,'tutorial'=>'yes','validasi'=>'no','poinminim'=>$intPoint,'score'=>$intScore]);
+            }
+            
+        } else{
+            return response()->json(['mahasiswa'=>$mhs,'tutorial_status'=>$tutorial_status,'tutorial'=>'no','poinminim'=>$intPoint,'score'=>$intScore]);
+        }
+       
+    }
+    
     public function badgeTutorial()
     {
         $badge =Badge::where('badge_nama','tutorial')->first();

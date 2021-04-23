@@ -21,39 +21,6 @@ class DosenController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function cekEmail(Request $request){
-    	if($request->get('email')){
-    		$email = $request->get('email');
-    		$data =DB::table("users")->where('email',$email)->count();
-    			if($data >0){
-    				echo "not_unique";
-    			} else {
-    				echo "unique";
-    			}
-    	}
-    }
-    public function cekUsername(Request $request){
-    	if($request->get('username')){
-    		$username = $request->get('username');
-    		$data =DB::table("users")->where('username',$username)->count();
-    			if($data >0){
-    				echo "not_unique";
-    			} else {
-    				echo "unique";
-    			}
-    	}
-    }
-    public function cekNIDN(Request $request){
-    	if($request->get('nidn')){
-    		$nidn = $request->get('nidn');
-    		$data =DB::table("dosens")->where('nidn',$nidn)->count();
-    			if($data >0){
-    				echo "not_unique";
-    			} else {
-    				echo "unique";
-    			}
-    	}
-    }
     public function index(Request $request)
     {
         if ($request->ajax()) {

@@ -1,5 +1,5 @@
 @php
-  $judul ='Admin'
+$judul ='Admin'
 @endphp
 @extends('layouts.dosen')
 @section('content')
@@ -10,8 +10,8 @@
     <div class="card-header">
       <h3 class="card-title">Edit {{$judul}}</h3>
     </div>
-   
-    <form  method="post" id="formProfile" enctype="multipart/form-data">
+
+    <form method="post" id="formProfile" enctype="multipart/form-data">
       @csrf
       <input type="hidden" name="hidden_image" id="hidden_image">
       <div class="card-body">
@@ -26,8 +26,7 @@
         <div class="form-group">
           <div class="col-sm-6">
             <label for="">Email</label>
-            
-            <input type="email" name="email" class="form-control" id="email" disabled>
+            <input type="email" name="email" class="form-control" id="email">
           </div>
         </div>
         <div class="form-group">
@@ -51,7 +50,7 @@
             <input type="text" name="nidn" class="form-control" id="nidn">
             <label id="nidn_ok" class=" text-success " style="display:none;">NIDN Tersedia</label>
             <label id="nidn_used" class="text-danger" style="display:none;">NIDN Sudah Digunakan</label>
-                
+
           </div>
         </div>
         <div class="form-group">
@@ -66,37 +65,38 @@
             <div class="form-check">
               <input class="form-check-input" type="checkbox" id="gridCheck">
               <label class="form-check-label" for="gridCheck">
-                  Show Password
+                Show Password
               </label>
             </div>
-          </div> 
+          </div>
         </div>
         <div class="form-group">
           <div class="col-sm-6">
             <label for="inputKonfirmasiPassword">Konfirmasi Password</label>
-            <input type="password" name="password_confirmation" class="form-control" id="password_confirmation" placeholder="Konfirmasi Password" autocomplete="new-password">
-       
+            <input type="password" name="password_confirmation" class="form-control" id="password_confirmation"
+              placeholder="Konfirmasi Password" autocomplete="new-password">
+
           </div>
         </div>
         <div class="form-group">
           <div class="col-sm-6">
             <label for="" id="foto">Upload Foto</label>
             <img src="" class="gambar" id="gambar" width="60px" height="">
-           <input type="file" name="dosen_image" class="form-control" id="dosen_image">
+            <input type="file" name="dosen_image" class="form-control" id="dosen_image">
           </div>
         </div>
       </div>
       <div class="card-footer">
-        
-         <button type="button" class="btn btn-primary" value="tambah" id="btn-save">Save data</button>
+
+        <button type="button" class="btn btn-primary" value="tambah" id="btn-save">Save data</button>
       </div>
     </form>
   </div>
 </section>
 @endsection
 @push('scripts')
-    <script>
-      $(document).ready(function(){
+<script>
+  $(document).ready(function(){
         $.ajaxSetup({
             headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -137,13 +137,26 @@
                         error: function (data) {
                           $("#error").show();
                             var error_password = data.responseJSON.errors.password;
+                            var nidn = data.responseJSON.errors.nidn;
+                            var error_nama = data.responseJSON.errors.dosen_nama;
                             if(error_password){
                               for (var i = 0; i < error_password.length; i++) {
                                 var obj = '<li>'+error_password[i]+'</li>';
                                 $('.list_error').append(obj);
                               }
                             }
-                            
+                            if(error_nama){
+                              for (var k = 0; k < error_nama.length; k++) {
+                                var obj2 = '<li>'+error_nama[k]+'</li>';
+                                $('.list_error').append(obj2);
+                              }
+                            }
+                            if(nidn){
+                              for (var k = 0; k < nidn.length; k++) {
+                                var obj2 = '<li>'+nidn[k]+'</li>';
+                                $('.list_error').append(obj2);
+                              }
+                            }
                             Command: swal("Gagal", "Gagal", "error");
                             $('#btn-save').html('Save Changes');
                         }
@@ -215,5 +228,5 @@
                 })
       });
     });
-    </script>
+</script>
 @endpush

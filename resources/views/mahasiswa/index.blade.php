@@ -247,28 +247,7 @@
 
             }
         });
-        $.ajax({
-            url: "{{ route('mahasiswa.badge') }}",
-            type: "GET",
-            dataType: "json",
-            success: function (data) {
-
-                console.log(data);
-                $(".next-badge").attr('src', '../' + '../' + 'img/' + data.next_badge_image );
-                $(".notif-badge").attr('src', '../' + '../' + 'img/' + data.badge_image );
-                $(".score").html(data.score);
-                $(".next_badge_nama").html(data.next_badge_nama);
-                $(".next_badge_point").html(data.next_badge_point);
-                $(".progress-bar").css("width", data.next_badge_max_point+'%');
-                if(data.next_badge_nama=="Selesai"){
-                  $(".selesai").html("Selesai");
-                }
-                if(data.get_badge!="no"){
-                  $(".progress").hide();
-                  $(".selesai").html("Anda Perlu Membuka Notifikasi");
-                }
-            }
-        });
+        
 
     });
 

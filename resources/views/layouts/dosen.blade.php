@@ -87,6 +87,7 @@
               </a>
             </li>
             <li class="nav-header">DATA-DATA</li>
+            @if(Auth::user()->dosen->dosen_status=='dosenwali')
             <li class="nav-item">
               <a href="{{route('dosen.daftarmahasiswa.index')}}" class="nav-link">
                 <i class="nav-icon fas fa-user"></i>
@@ -95,6 +96,7 @@
                 </p>
               </a>
             </li>
+            @endif
             <li class="nav-item">
               <a href="{{route('dosen.takmasuk.index')}}" class="nav-link">
                 <i class="nav-icon fas fa-book"></i>
@@ -103,6 +105,16 @@
                 </p>
               </a>
             </li>
+            @if(Auth::user()->dosen->dosen_status=='kemahasiswaan')
+            <li class="nav-item">
+              <a href="" class="nav-link">
+                <i class="nav-icon fas fa-book"></i>
+                <p>
+                  Validasi TAK
+                </p>
+              </a>
+            </li>
+            @endif
             <li class="nav-item">
               <a href="{{ route('dosen.profile.index') }}" class="nav-link">
                 <i class="nav-icon fas fa-wrench"></i>
@@ -172,7 +184,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
   <script src="https://cdn.datatables.net/plug-ins/1.10.22/dataRender/ellipsis.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.js"></script>
-  <script src="//js.pusher.com/3.1/pusher.min.js"></script>
+  <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
   @include('sweet::alert')
   <script type="text/javascript">
     $(document).ready(function () {
