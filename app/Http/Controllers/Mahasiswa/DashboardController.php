@@ -96,7 +96,7 @@ class DashboardController extends Controller
         if($score>=$poinBronze && $score <$poinSilver && $score <$poinGold){
             $next_badge= Badge::where('badge_nama','bronze')->first();
             $next_badge_nama = $next_badge->badge_nama;
-            if($next_badge_nama != $mhs_badge_nama){
+            if($next_badge_nama != $badge_nama){
                 $get_badge='ganti_badge_bronze';
             }else{
                 $get_badge='no';
@@ -105,7 +105,7 @@ class DashboardController extends Controller
         }elseif($score>=$poinSilver && $score <$poinGold){
             $next_badge= Badge::where('badge_nama','silver')->first();
             $next_badge_nama = $next_badge->badge_nama;
-            if($next_badge_nama != $mhs_badge_nama){
+            if($next_badge_nama != $badge_nama){
                 $get_badge='ganti_badge_silver';
             }else{
                 $get_badge='no';
@@ -113,7 +113,7 @@ class DashboardController extends Controller
         }elseif($score>=$poinGold){
             $next_badge= Badge::where('badge_nama','gold')->first();
             $next_badge_nama = $next_badge->badge_nama;
-            if($next_badge_nama != $mhs_badge_nama){
+            if($next_badge_nama != $badge_nama){
                 $get_badge='ganti_badge_gold';
                 
             }else{
@@ -128,6 +128,7 @@ class DashboardController extends Controller
                 'get_badge'=>$get_badge,
                 'badge_image'=>$badge_image,
                 'score'=>$score,
+                'next_badge'=>$next_badge,
                 'next_badge_max_point'=>$next_badge_max_point,
                 'next_badge_point'=>$next_badge_point,
                 'next_badge_nama'=>$next_badge_nama,

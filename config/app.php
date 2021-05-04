@@ -164,6 +164,7 @@ return [
         Yajra\Datatables\DatatablesServiceProvider::class,
         Madnest\Madzipper\MadzipperServiceProvider::class,
         UxWeb\SweetAlert\SweetAlertServiceProvider::class,
+        Barryvdh\DomPDF\ServiceProvider::class,
         /*
          * Package Service Providers...
          */
@@ -232,6 +233,7 @@ return [
         'Datatables' => Yajra\Datatables\Facades\Datatables::class,
         'Alert' => UxWeb\SweetAlert\SweetAlert::class,
         'Madzipper' => Madnest\Madzipper\Madzipper::class,
+        'PDF' => Barryvdh\DomPDF\Facade::class,
     ],
 
 ];

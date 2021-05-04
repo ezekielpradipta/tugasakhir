@@ -1,5 +1,5 @@
 @php
-$judul ='Admin'
+$judul ='Dosen'
 @endphp
 @extends('layouts.dosen')
 @section('content')
@@ -26,7 +26,8 @@ $judul ='Admin'
         <div class="form-group">
           <div class="col-sm-6">
             <label for="">Email</label>
-            <input type="email" name="email" class="form-control" id="email">
+            <p id="email"></p>
+
           </div>
         </div>
         <div class="form-group">
@@ -96,137 +97,136 @@ $judul ='Admin'
 @endsection
 @push('scripts')
 <script>
-  $(document).ready(function(){
+  $(document).ready(function () {
         $.ajaxSetup({
             headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
         $.ajax({
-                url: "{{ route('dosen.profile.data') }}",
-                type: "GET",
-                dataType : "json",            
-                success: function (data) {
-                  console.log(data);
-                  $("#email").val(data.user.email);
-                  $("#username").val(data.user.username);
-                  $("#dosen_nama").val(data.dosen.dosen_nama);
-                  $("#nidn").val(data.dosen.nidn);
-                  $("#password").val(data.user.password_text);
-                  $("#hidden_image").val(data.dosen.dosen_image);
-                  $("#gambar").attr('src', '../' + '../' + 'img/' + data.dosen.dosen_image );
-                  $("#error").hide();
-                }
+            url: "{{ route('dosen.profile.data') }}",
+            type: "GET",
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                $("#email").html(data.user.email);
+                $("#username").val(data.user.username);
+                $("#dosen_nama").val(data.dosen.dosen_nama);
+                $("#nidn").val(data.dosen.nidn);
+                $("#password").val(data.user.password_text);
+                $("#hidden_image").val(data.dosen.dosen_image);
+                $("#gambar").attr('src', '../' + '../' + 'img/' + data.dosen.dosen_image);
+                $("#error").hide();
+            }
         });
         $('#btn-save').click(function (e) {
-                e.preventDefault();
-                var myForm = $("#formProfile")[0];
-                $(this).html('Sending..');
-                    $.ajax({
-                        data: new FormData(myForm),
-                        url: "{{ route('dosen.profile.store') }}",
-                        type: "POST",
-                        
-                        contentType: false,
-                        processData: false,
-                        success: function (data) {
-                            Command: swal("Sukses", "Berhasil ", "success");
-                            $('#formProfile').trigger("reset");
-                            location.reload();
-                        },
-                        error: function (data) {
-                          $("#error").show();
-                            var error_password = data.responseJSON.errors.password;
-                            var nidn = data.responseJSON.errors.nidn;
-                            var error_nama = data.responseJSON.errors.dosen_nama;
-                            if(error_password){
-                              for (var i = 0; i < error_password.length; i++) {
-                                var obj = '<li>'+error_password[i]+'</li>';
-                                $('.list_error').append(obj);
-                              }
-                            }
-                            if(error_nama){
-                              for (var k = 0; k < error_nama.length; k++) {
-                                var obj2 = '<li>'+error_nama[k]+'</li>';
-                                $('.list_error').append(obj2);
-                              }
-                            }
-                            if(nidn){
-                              for (var k = 0; k < nidn.length; k++) {
-                                var obj2 = '<li>'+nidn[k]+'</li>';
-                                $('.list_error').append(obj2);
-                              }
-                            }
-                            Command: swal("Gagal", "Gagal", "error");
-                            $('#btn-save').html('Save Changes');
+            e.preventDefault();
+            var myForm = $("#formProfile")[0];
+            $(this).html('Sending..');
+            $.ajax({
+                data: new FormData(myForm),
+                url: "{{ route('dosen.profile.store') }}",
+                type: "POST",
+
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    Command: swal("Sukses", "Berhasil ", "success");
+                    $('#formProfile').trigger("reset");
+                    location.reload();
+                },
+                error: function (data) {
+                    $("#error").show();
+                    var error_password = data.responseJSON.errors.password;
+                    var nidn = data.responseJSON.errors.nidn;
+                    var error_nama = data.responseJSON.errors.dosen_nama;
+                    if (error_password) {
+                        for (var i = 0; i < error_password.length; i++) {
+                            var obj = '<li>' + error_password[i] + '</li>';
+                            $('.list_error').append(obj);
                         }
-                    });
-          });
-        $('#gridCheck').click(function(){
-                if($(this).is(':checked')){
-                    $('#password').attr('type','text');
-                }else{
-                    $('#password').attr('type','password');
+                    }
+                    if (error_nama) {
+                        for (var k = 0; k < error_nama.length; k++) {
+                            var obj2 = '<li>' + error_nama[k] + '</li>';
+                            $('.list_error').append(obj2);
+                        }
+                    }
+                    if (nidn) {
+                        for (var k = 0; k < nidn.length; k++) {
+                            var obj2 = '<li>' + nidn[k] + '</li>';
+                            $('.list_error').append(obj2);
+                        }
+                    }
+                    Command: swal("Gagal", "Gagal", "error");
+                    $('#btn-save').html('Save Changes');
                 }
-		    });
-        
-            
-        $('#username').blur(function(){
-                var error_uname = '';
-                var username = $('#username').val();
-                var _token = $('input[name="_token"]').val();
-                
-                $.ajax({
-                    url:"{{ route('admin.dosen.cekUsername') }}",
-                    method:"POST",
-                    data:{username:username, _token:_token},
-                    success:function(result)
-                    {
-                    if(result == 'unique')
-                    {
-                    $('#user_ok').show();
-                    $('#user_used').hide();
-                    
-                    $('#btn-save').attr('disabled', false);
+            });
+        });
+        $('#gridCheck').click(function () {
+            if ($(this).is(':checked')) {
+                $('#password').attr('type', 'text');
+            } else {
+                $('#password').attr('type', 'password');
+            }
+        });
+
+
+        $('#username').blur(function () {
+            var error_uname = '';
+            var username = $('#username').val();
+            var _token = $('input[name="_token"]').val();
+
+            $.ajax({
+                url: "{{ route('cekUsername') }}",
+                method: "POST",
+                data: {
+                    username: username,
+                    _token: _token
+                },
+                success: function (result) {
+                    if (result == 'unique') {
+                        $('#user_ok').show();
+                        $('#user_used').hide();
+
+                        $('#btn-save').attr('disabled', false);
+                    } else {
+                        $('#user_ok').hide();
+                        $('#user_used').show();
+                        $('#btn-save').attr('disabled', 'disabled');
+
                     }
-                    else
-                    {
-                    $('#user_ok').hide();
-                    $('#user_used').show();
-                    $('#btn-save').attr('disabled', 'disabled');
-                   
+                }
+            })
+        });
+        $('#nidn').blur(function () {
+            var error_uname = '';
+            var nidn = $('#nidn').val();
+            var _token = $('input[name="_token"]').val();
+
+            $.ajax({
+                url: "{{ route('cekNidn') }}",
+                method: "POST",
+                data: {
+                    nidn: nidn,
+                    _token: _token
+                },
+                success: function (result) {
+                    if (result == 'unique') {
+                        $('#nidn_ok').show();
+                        $('#nidn_used').hide();
+
+                        $('#btn-save').attr('disabled', false);
+                    } else {
+                        $('#nidn_ok').hide();
+                        $('#nidn_used').show();
+                        $('#btn-save').attr('disabled', 'disabled');
+
                     }
-                    }
-                })
-      });
-      $('#nidn').blur(function(){
-                var error_uname = '';
-                var nidn = $('#nidn').val();
-                var _token = $('input[name="_token"]').val();
-                
-                $.ajax({
-                    url:"{{ route('admin.dosen.cekNIDN') }}",
-                    method:"POST",
-                    data:{nidn:nidn, _token:_token},
-                    success:function(result)
-                    {
-                    if(result == 'unique')
-                    {
-                    $('#nidn_ok').show();
-                    $('#nidn_used').hide();
-                  
-                    $('#btn-save').attr('disabled', false);
-                    }
-                    else
-                    {
-                    $('#nidn_ok').hide();
-                    $('#nidn_used').show();
-                    $('#btn-save').attr('disabled', 'disabled');
-                  
-                    }
-                    }
-                })
-      });
+                }
+            })
+        });
     });
+
 </script>
 @endpush

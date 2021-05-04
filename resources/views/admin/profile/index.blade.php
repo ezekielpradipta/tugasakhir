@@ -161,7 +161,7 @@ $judul ='Admin'
                 $('#btn-save').attr('disabled', 'disabled');
             } else {
                 $.ajax({
-                    url: "{{ route('admin.dosen.cekEmail') }}",
+                    url: "{{ route('cekEmail') }}",
                     method: "POST",
                     data: {
                         email: email,
@@ -192,7 +192,7 @@ $judul ='Admin'
             var _token = $('input[name="_token"]').val();
 
             $.ajax({
-                url: "{{ route('admin.dosen.cekUsername') }}",
+                url: "{{ route('cekUsername') }}",
                 method: "POST",
                 data: {
                     username: username,

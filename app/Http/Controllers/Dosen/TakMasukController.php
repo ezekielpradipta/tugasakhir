@@ -159,22 +159,6 @@ class TakMasukController extends Controller
         ;
         return response()->json(['kategoritaks'=>$kategoritaks, 'inputtaks'=>$inputtaks,'pilartaks'=>$pilartaks,'kegiatantaks'=>$kegiatantaks,'partisipasitaks'=>$partisipasitaks]);
     }
-    public function adaPilar($id){
-        $pilartaks = DB::table("pilartaks")->where("kategoritak_id",$id)->pluck("pilartak_nama","id");
-        return json_encode($pilartaks);
-    }
-    public function adaKegiatan($id){
-        $kegiatantaks = DB::table("kegiatantaks")->where("pilartak_id",$id)->pluck("kegiatantak_nama","id");
-        return json_encode($kegiatantaks);
-    }
-    public function adaPartisipasi($id){
-        $partisipasitaks = DB::table("partisipasitaks")->where("kegiatantak_id",$id)->pluck("partisipasitak_nama","id");
-        return json_encode($partisipasitaks);
-    }
-    public function cekKategori(){
-        $kategoritaks =Kategoritak::pluck('kategoritak_nama','id');
-        return json_encode($kategoritaks);
-    }
     public function store(Request $request){
         $theTAK = Tak::where("kategoritak_id",$request->kategori_val)
         ->where("pilartak_id",$request->pilar_val)->where("kegiatantak_id",$request->kegiatan_val)

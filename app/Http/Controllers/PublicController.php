@@ -51,6 +51,17 @@ class PublicController extends Controller
     			}
     	}
     }
+    public function cekNim(Request $request){
+    	if($request->get('nim')){
+    		$nim = $request->get('nim');
+    		$data =DB::table("mahasiswas")->where('mahasiswa_nim',$nim)->count();
+    			if($data >0){
+    				echo "not_unique";
+    			} else {
+    				echo "unique";
+    			}
+    	}
+    }
     public function getDosen(){
         $dosen =Dosen::where('dosen_status','dosenwali')->pluck('dosen_nama','id');
         return json_encode($dosen);

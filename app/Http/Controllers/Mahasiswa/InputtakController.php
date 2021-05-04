@@ -78,6 +78,9 @@ class InputtakController extends Controller
              }
              $bukti=json_encode($data);
           }
+          else{
+              $bukti = null;
+          }
          $inputtak = Inputtak::create([
             'tak_id'=>$theTAK->id,
             'mahasiswa_id'=>$mahasiswa_id,

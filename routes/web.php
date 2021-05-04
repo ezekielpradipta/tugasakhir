@@ -19,7 +19,7 @@ Route::get('/', function () {
 	Route::post('cekEmail', 'PublicController@cekEmail')->name('cekEmail');
 	Route::post('cekUsername', 'PublicController@cekUsername')->name('cekUsername');
 	Route::post('cekNidn', 'PublicController@cekNidn')->name('cekNidn');
-
+	Route::post('cekNim', 'PublicController@cekNim')->name('cekNim');
 	Route::get('getDosen', 'PublicController@getDosen')->name('getDosen');
 	Route::get('getAngkatan', 'PublicController@getAngkatan')->name('getAngkatan');
 	Route::get('getProdi', 'PublicController@getProdi')->name('getProdi');
@@ -121,14 +121,17 @@ Route::group(['middleware' => ['auth']], function () {
 				Route::resource('tutorial','TutorialController',['as'=>'mahasiswa'])->only(['index','store'])->middleware('tutorial');
 				
 				Route::get('slider', 'TutorialController@slider')->name('mahasiswa.slider');
-				Route::resource('validasi','ValidasiController',['as'=>'mahasiswa'])->only(['index','store']);
-				
+				Route::resource('validasi','ValidasiController',['as'=>'mahasiswa'])->except('show');
+				Route::get('validasi/data', 'ValidasiController@dataAjax')->name('mahasiswa.validasi');
+
 				Route::resource('leaderboard', 'LeaderboardController',['as'=>'mahasiswa'])->only(['index']);
 
 				Route::resource('inputtak','InputtakController',['as'=>'mahasiswa'])->only(['index','store'])->middleware('badge');
 				
 				Route::resource('daftartak','DaftartakController',['as'=>'mahasiswa'])->except('show');
-			
+				Route::resource('profile', 'ProfileController',['as'=>'mahasiswa'])->except('show');
+				Route::get('profile/data', 'ProfileController@getData',['as'=>'mahasiswa'])->name('mahasiswa.profile.data');
+				
 				Route::get('daftartak/{id}/bukti','DaftartakController@getBukti')->name('mahasiswa.bukti');
 				Route::get('daftartak/{fileId}/cetakBukti','DaftartakController@cetakBukti')->name('mahasiswa.cetakBukti');
 				Route::get('daftartak/{id}/editBukti','DaftartakController@editBukti')->name('mahasiswa.editBukti');
@@ -155,10 +158,6 @@ Route::group(['middleware' => ['auth']], function () {
 				Route::get('takmasuk/{id}/bukti','TakMasukController@getBukti')->name('dosen.takmasuk.bukti');
 				Route::get('takmasuk/{fileId}/cetakBukti','TakMasukController@cetakBukti')->name('dosen.takmasuk.cetakBukti');
 				Route::get('takmasuk/{id}/status','TakMasukController@gantiStatus')->name('dosen.takmasuk.status');
-				Route::get('takmasuk/adapilar/{id?}','TakMasukController@adaPilar')->name('dosen.takmasuk.adapilar');
-				Route::get('takmasuk/adakegiatan/{id?}','TakMasukController@adaKegiatan')->name('dosen.takmasuk.adakegiatan');
-				Route::get('takmasuk/adapartisipasi/{id?}','TakMasukController@adaPartisipasi')->name('dosen.takmasuk.adapartisipasi');
-				Route::get('daftartak/kategoritak/cek', 'TakMasukController@cekKategori')->name('dosen.takmasuk.kategoritak.cek');
 				
 				
 			});

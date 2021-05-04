@@ -71,7 +71,7 @@
             </div>
 
 
-            <a href="#" class="btn btn-primary btn-block"><b>Follow</b></a>
+            <a href="{{ route('mahasiswa.profile.index') }}" class="btn btn-primary btn-block"><b>Ubah Pengguna</b></a>
           </div>
           <!-- /.card-body -->
         </div>

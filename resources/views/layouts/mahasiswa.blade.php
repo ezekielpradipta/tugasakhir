@@ -32,6 +32,13 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
     integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css"
+    integrity="sha512-kq3FES+RuuGoBW3a9R2ELYKRywUEQv0wvPTItv3DSGqjpbNtGWVdvT8qwdKkqvPzT93jp8tSF4+oN4IeTEIlQA=="
+    crossorigin="anonymous" />
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
 </head>
 
 <body class="hold-transition layout-top-nav">
@@ -223,9 +230,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js">
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
   @include('sweet::alert')
   <script type="text/javascript">
     $(document).ready(function () {
@@ -308,19 +315,24 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             }
 
                         } else {
-                          $(".next-badge").attr('src', '../' + '../' + 'img/' + data.next_badge_image );
-                          $(".notif-badge").attr('src', '../' + '../' + 'img/' + data.badge_image );
-                          $(".score").html(data.score);
-                          $(".next_badge_nama").html(data.next_badge_nama);
-                          $(".next_badge_point").html(data.next_badge_point);
-                          $(".progress-bar").css("width", data.next_badge_max_point+'%');
-                          if(data.next_badge_nama=="Selesai"){
-                            $(".selesai").html("Selesai");
-                          }
+                            $(".next-badge").attr('src', '../' + '../' + 'img/' + data
+                                .next_badge_image);
+                            $(".notif-badge").attr('src', '../' + '../' + 'img/' + data
+                                .badge_image);
+                            $(".score").html(data.score);
+                            $(".next_badge_nama").html(data.next_badge_nama);
+                            $(".next_badge_point").html(data.next_badge_point);
+                            $(".progress-bar").css("width", data.next_badge_max_point +
+                            '%');
+                            if (data.next_badge_point == "Selesai") {
+                                $(".selesai").html("Selesai");
+                                $(".next_badge_nama").hide();
+                                $(".next_badge_point").hide();
+                            }
                             if (data.jumlah_notif != "0") {
                                 if (data.get_badge != "no") {
-                                  $(".progress").hide();
-                                  $(".selesai").html("Anda Perlu Membuka Notifikasi");
+                                    $(".progress").hide();
+                                    $(".selesai").html("Anda Perlu Membuka Notifikasi");
                                     var test =
                                         '<a href="javascript:void(0)" data-id="' + data
                                         .next_badge
@@ -369,7 +381,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     }
                                 } else {
                                     $('.score').val(data.score);
-                                    notif_Count_Element.attr('data-count', data.jumlah_notif);
+                                    notif_Count_Element.attr('data-count', data
+                                        .jumlah_notif);
                                     notif.find('.notif-count').text(data.jumlah_notif);
                                     for (var i = 0; i < data.jumlah_notif; i++) {
                                         var newNotificationHtml =
@@ -398,8 +411,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 }
                             } else {
                                 if (data.get_badge != "no") {
-                                  $(".progress").hide();
-                                  $(".selesai").html("Anda Perlu Membuka Notifikasi");
+                                    $(".progress").hide();
+                                    $(".selesai").html("Anda Perlu Membuka Notifikasi");
                                     var test =
                                         '<a href="javascript:void(0)" data-id="" class="dropdown-item btn-modal-tutorial">' +
                                         '<div class="media">' +
@@ -433,7 +446,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             $('body').on('click', '.btn-modal', function () {
                 var notif_id = $(this).data('id');
                 $('#notif_val').val(notif_id);
-                var url = "{{route('mahasiswa.dashboard')}}".concat("/" + notif_id +"/detail");
+                var url = "{{route('mahasiswa.dashboard')}}".concat("/" + notif_id + "/detail");
                 console.log(url);
                 $.ajax({
                     url: url,
@@ -513,7 +526,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
             })
             $('body').on('click', '#btn-read-tutorial', function () {
                 var tutorial_id = $('#tutorial_val').val();
-                var url = "{{route('mahasiswa.dashboard')}}".concat("/" + tutorial_id + "/tutorial/read");
+                var url = "{{route('mahasiswa.dashboard')}}".concat("/" + tutorial_id +
+                    "/tutorial/read");
                 console.log(url);
                 $.ajax({
                     url: url,
