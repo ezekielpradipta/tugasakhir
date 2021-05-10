@@ -112,7 +112,8 @@ Route::group(['middleware' => ['auth']], function () {
 				Route::get('dashboard/{id}/read', 'DashboardController@ReadNotif')->name('mahasiswa.notif.read');
 				Route::get('dashboard/{id}/tutorial', 'DashboardController@DetailTutorial')->name('mahasiswa.notif.tutorial');
 				Route::get('dashboard/{id}/tutorial/read', 'DashboardController@ReadTutorial')->name('mahasiswa.notif.tutorial.read');
-				
+				Route::get('dashboard/{id}/cetak','DashboardController@cetak')->name('mahasiswa.cetak');
+
 				Route::get('status', 'DashboardController@DaftarMenu')->name('mahasiswa.daftarmenu');
 				Route::get('dashboard/{id}/badge', 'DashboardController@changeBadge')->name('mahasiswa.notif.badge');
 				Route::get('badge/tutorial', 'DashboardController@badgeTutorial')->name('mahasiswa.badge.tutorial');
@@ -150,10 +151,15 @@ Route::group(['middleware' => ['auth']], function () {
 				Route::get('daftarmahasiswa/{id}/bukti','DaftarMahasiswaController@getBukti')->name('dosen.daftarmahasiswa.tak.bukti');
 				Route::get('daftarmahasiswa/{fileId}/cetakBukti','DaftarMahasiswaController@cetakBukti')->name('dosen.daftarmahasiswa.tak.cetakBukti');
 				Route::get('daftarmahasiswa/{id}/status','DaftarMahasiswaController@gantiStatus')->name('dosen.daftarmahasiswa.tak.status');
+				Route::get('daftarmahasiswa/{id}/validasi','DaftarMahasiswaController@validasi')->name('dosen.daftarmahasiswa.validasi');
+
 				
 				Route::resource('profile', 'ProfileController',['as'=>'dosen'])->except('show');
 				Route::get('profile/data', 'ProfileController@getData',['as'=>'admin'])->name('dosen.profile.data');
 				
+				Route::resource('validasi', 'ValidasiController',['as'=>'dosen'])->except('show');
+				Route::get('validasi/{id}/cek','ValidasiController@validasi')->name('dosen.validasi.cek');
+
 				Route::resource('takmasuk','TakMasukController',['as'=>'dosen'])->except('show');
 				Route::get('takmasuk/{id}/bukti','TakMasukController@getBukti')->name('dosen.takmasuk.bukti');
 				Route::get('takmasuk/{fileId}/cetakBukti','TakMasukController@cetakBukti')->name('dosen.takmasuk.cetakBukti');

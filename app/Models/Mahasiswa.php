@@ -33,6 +33,9 @@ class Mahasiswa extends Model
     public function badge(){
         return $this->hasOne(Badge::class);
     }
+    public function validasi(){
+        return $this->hasOne(ValidasiTak::class);
+    }
     public function getimageURLAttribute()
     {
         return asset($this::USER_PHOTO_URL).'/'.$this->mahasiswa_image;

@@ -12,6 +12,7 @@ $judul = 'Daftar Mahasiswa'
     </div>
     <input type="hidden" id="mahasiswa" class="mahasiswa">
     <div class="card-body">
+
       <table id="dt" class="table table-bordered table-striped">
         <thead>
           <th>No.</th>
@@ -383,7 +384,44 @@ $judul = 'Daftar Mahasiswa'
                             console.log('Error:', data);
                             swal(
                                 'Kesalahan!',
-                                
+                                'warning'
+                            );
+                        }
+
+                    });
+                
+                })
+            });
+            $('body').on('click','.btn-validasi',function(){
+              var mahasiswa_id = $(this).data('id');
+              var url = "{{route('dosen.daftarmahasiswa.index')}}".concat("/" + mahasiswa_id +"/validasi");
+             
+              swal({
+                title: 'Apakah anda yakin?',
+                type: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Lanjut',
+                cancelButtonText: 'Batal'
+                }).then(function() {
+                    $.ajax({
+                        type: "GET",
+                        url: url,
+                        dataType : "json",
+                        success: function (data) {
+                          $('#modal-tak').modal('hide');
+                         
+                            swal(
+                                'Berhasil!',
+                               
+                                'success'
+                            );
+                        },
+                        error: function (data) {
+                            console.log('Error:', data);
+                            swal(
+                                'Kesalahan!',
                                 'warning'
                             );
                         }

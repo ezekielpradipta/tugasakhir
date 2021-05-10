@@ -38,7 +38,7 @@
       <ul class="navbar-nav">
         <li class="nav-item">
           <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-          <a href="javascript:void(0)" class="btn btn-danger" id="btn-coba">test</a>
+
         </li>
       </ul>
 
@@ -107,7 +107,7 @@
             </li>
             @if(Auth::user()->dosen->dosen_status=='kemahasiswaan')
             <li class="nav-item">
-              <a href="" class="nav-link">
+              <a href="{{ route('dosen.validasi.index') }}" class="nav-link">
                 <i class="nav-icon fas fa-book"></i>
                 <p>
                   Validasi TAK
@@ -232,15 +232,19 @@
             
             notif.ready(function () {
                 var urlcoba = "{{route('dosen.takmasuk.index')}}";
+                var urlValidasi = "{{route('dosen.validasi.index')}}";
                 $.ajax({
                     url: "{{ route('dosen.notif') }}",
                     type: "GET",
                     dataType: "json",
                     success: function (data) {
                         console.log(data);
-
-                        notif_Count_Element.attr('data-count', data.jumlah);
-                        notif.find('.notif-count').text(data.jumlah);
+                      var inputtak = data.jumlah;
+                      var validasi = data.validasi.length;
+                      var total = inputtak + validasi;
+                      var number = parseInt(total) || 0;
+                        notif_Count_Element.attr('data-count', number);
+                        notif.find('.notif-count').text(number);
                         for (var i = 0; i < data.jumlah; i++) {
                             if (data.inputtak[i].updated_at == data.inputtak[i]
                                 .created_at) {
@@ -266,6 +270,30 @@
                                 '</a>' +
                                 '<div class="dropdown-divider"></div>';
                             $('div.dropdown-menu').append(newNotificationHtml);
+                            
+                        }
+                        if(data.validasi!=null){
+                          for (var i = 0; i < data.validasi.length; i++) {
+                            var validasi = '<a href="' + urlValidasi +
+                                ' " class="dropdown-item">' +
+                                '<div class="media">' +
+                                '<img src="../../img/' + data.validasi[i].dosen_image +
+                                '" alt="User Avatar" class="img-size-50 mr-3 img-circle">' +
+                                '<div class="media-body">' +
+                                '<h3 class="dropdown-item-title">' + data.validasi[i]
+                                .dosen_nama +
+                                '<span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>' +
+                                '</h3>' +
+                                '<p class="text-sm">' + data.validasi[i].mahasiswa_nama + ' Meminta Request Validasi TAK</p>' +
+                                '<p class="text-sm text-muted"><i class="far fa-clock mr-1"></i> ' +
+                                data.validasi[i].updated_at + '</p>' +
+                                '</div>' +
+                                '</div>' +
+                                '</a>' +
+                                '<div class="dropdown-divider"></div>';
+                            $('div.dropdown-menu').append(validasi);
+                            
+                        }
                         }
                     }
                 });

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\NotifTakMasuk;
 use App\Models\Mahasiswa;
 use App\Models\Dosen;
-
+use PDF;
 use App\Models\Tutorial;
 use App\Models\Badge;
 use Illuminate\Support\Facades\DB;
@@ -168,12 +168,10 @@ class DashboardController extends Controller
         $intScore = (int)$score;
         $tutorial_status = $mhs->mahasiswa_tutorial_status;
         $tutorial = DB::table('tutorials')->where('mahasiswa_id',$mahasiswa)->first();
+        $validasi = DB::table('validasi_taks')->where('mahasiswa_id',$mahasiswa)->first();
+        $validasi_status = $validasi->validasi_status;
         if($tutorial){
-            if($intScore >= $intPoint){
-                return response()->json(['mahasiswa'=>$mhs,'tutorial_status'=>$tutorial_status,'validasi'=>'yes','tutorial'=>'yes','poinminim'=>$intPoint,'score'=>$intScore]);
-            } else{
-                return response()->json(['mahasiswa'=>$mhs,'tutorial_status'=>$tutorial_status,'tutorial'=>'yes','validasi'=>'no','poinminim'=>$intPoint,'score'=>$intScore]);
-            }
+            return response()->json(['mahasiswa'=>$mhs,'tutorial_status'=>$tutorial_status,'validasi'=>$validasi_status,'tutorial'=>'yes','poinminim'=>$intPoint,'score'=>$intScore]);
             
         } else{
             return response()->json(['mahasiswa'=>$mhs,'tutorial_status'=>$tutorial_status,'tutorial'=>'no','poinminim'=>$intPoint,'score'=>$intScore]);
@@ -227,5 +225,12 @@ class DashboardController extends Controller
         $mhs->badge_id = $badge_id;
         $mhs->save();
         return response()->json();
+    }
+    public function cetak($id)
+    {
+        $mahasiswa = Mahasiswa::find($id);
+        $nama = $mahasiswa->mahasiswa_nama;
+        $pdf = PDF::loadView('mahasiswa.cetak', ['nama' => $nama]);
+        return $pdf->download('test'.date('Y-m-d_H-i-s').'.pdf');
     }
 }

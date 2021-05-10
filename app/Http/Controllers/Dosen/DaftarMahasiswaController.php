@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\NotifTakMasuk;
 use App\Models\Mahasiswa;
 use App\Models\Inputtak;
+use App\Models\ValidasiTak;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
@@ -30,8 +31,15 @@ class DaftarMahasiswaController extends Controller
             $mahasiswa = DB::table('mahasiswas')
             ->join('dosens', 'dosens.id', '=', 'mahasiswas.dosen_id')
             ->leftjoin('inputtaks', 'inputtaks.mahasiswa_id', '=', 'mahasiswas.id') 
-            ->leftjoin('taks', 'inputtaks.tak_id', '=', 'taks.id') 
-            ->select('mahasiswas.id','mahasiswas.mahasiswa_nim','mahasiswas.mahasiswa_nama','taks.tak_score',DB::raw('sum(CASE WHEN inputtaks.inputtak_status = "1" THEN taks.tak_score ELSE 0 END)as score'))
+            ->leftjoin('taks', 'inputtaks.tak_id', '=', 'taks.id')
+            ->join('angkatans','angkatans.id','=','mahasiswas.angkatan_id')
+            ->join('prodis','prodis.id','=','mahasiswas.prodi_id')
+            ->leftJoin('takkumulatifs', function($join)
+                         {
+                             $join->on('takkumulatifs.angkatan_id', '=', 'mahasiswas.angkatan_id');
+                             $join->on('takkumulatifs.prodi_id', '=', 'mahasiswas.prodi_id');
+                         })
+            ->select('mahasiswas.id','takkumulatifs.poinminimum','mahasiswas.mahasiswa_nim','mahasiswas.mahasiswa_nama','taks.tak_score',DB::raw('sum(CASE WHEN inputtaks.inputtak_status = "1" THEN taks.tak_score ELSE 0 END)as score'))
             ->where('dosens.id',$dosen)
             
             ->groupBy('mahasiswas.id')
@@ -40,8 +48,16 @@ class DaftarMahasiswaController extends Controller
             return Datatables::of($mahasiswa)
                     ->addIndexColumn()
                     ->addColumn('action',function($mahasiswa)  {
-                        $btn_bukti = ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$mahasiswa->id.'" data-original-title="Show" class="btn btn-success btn-sm show-Tak"><span class="fa fa-eye"></a>';
-                        return $btn_bukti;
+                        if($mahasiswa->score >= $mahasiswa->poinminimum){
+                            $btn_bukti = ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$mahasiswa->id.'" data-original-title="Show" class="btn btn-success btn-sm show-Tak"><span class="fa fa-eye"></a>';
+                            $btn_validasi = ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$mahasiswa->id.'" data-original-title="Show" class="btn btn-primary btn-sm btn-validasi"><span class="fa fa-check"></a>';
+                            
+                            return $btn_bukti.$btn_validasi;
+                        } else{
+                            $btn_bukti = ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$mahasiswa->id.'" data-original-title="Show" class="btn btn-success btn-sm show-Tak"><span class="fa fa-eye"></a>';
+                            return $btn_bukti;
+                        }
+                        
                     })
                     ->rawColumns(['action'])
                     ->make(true);
@@ -52,22 +68,31 @@ class DaftarMahasiswaController extends Controller
     }
 
     public function tbTak(Request $request){
+        
         if($request->ajax()){
             $mahasiswa = $request->mahasiswa;
+            
             $inputtaks = DB::table('inputtaks')->join('taks','taks.id','=','inputtaks.tak_id')
             ->join('kegiatantaks','kegiatantaks.id','=','taks.kegiatantak_id')
             ->join('partisipasitaks','partisipasitaks.id','=','taks.partisipasitak_id')
             ->join ('mahasiswas','mahasiswas.id','=','inputtaks.mahasiswa_id')
-            ->select('inputtaks.id','kegiatantaks.kegiatantak_nama','partisipasitaks.partisipasitak_nama','taks.tak_score','inputtaks.inputtak_deskripsi','inputtaks.inputtak_status')
+            ->join('dosens','dosens.id','=','mahasiswas.dosen_id')
+            ->select('inputtaks.id','kegiatantaks.kegiatantak_nama','dosens.dosen_status','partisipasitaks.partisipasitak_nama','taks.tak_score','inputtaks.inputtak_deskripsi','inputtaks.inputtak_status')
             ->where('mahasiswas.id',$mahasiswa)
             ->where('inputtaks.inputtak_status', '1')->get();
            
             return Datatables::of($inputtaks)
                     ->addIndexColumn()
                     ->addColumn('action', function($inputtaks){
-                           $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$inputtaks->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm btn-edit"><span class="fa fa-eye"></a>';
-                           $btn2= ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$inputtaks->id.'" data-original-title="Status" class="edit btn btn-danger btn-sm btn-status"><span class="fa fa-ban"></span>Batal ACC</a>';
-                            return $btn.$btn2;
+                        if($inputtaks->dosen_status=="dosen_wali"){
+                            $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$inputtaks->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm btn-edit"><span class="fa fa-eye"></a>';
+                            $btn2= ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$inputtaks->id.'" data-original-title="Status" class="edit btn btn-danger btn-sm btn-status"><span class="fa fa-ban"></span>Batal ACC</a>';
+                             return $btn.$btn2;
+                        } else {
+                            $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$inputtaks->id.'" data-original-title="Edit" class="edit btn btn-primary btn-sm btn-edit"><span class="fa fa-eye"></a>';
+                            return $btn;
+                        }
+                           
                     })
                     ->addColumn('bukti', function($inputtaks){
                         $btn_bukti = ' <a href="javascript:void(0)" data-toggle="tooltip"  data-id="'.$inputtaks->id.'" data-original-title="Show" class="btn btn-success btn-sm show-Bukti"><span class="fa fa-image"></a>';
@@ -161,5 +186,18 @@ class DaftarMahasiswaController extends Controller
         $notif = NotifTakMasuk::where('inputtak_id',$id)->delete();
         return response()->json();
     }
-   
+   public function validasi($id){
+    $dosen = Auth::user()->dosen->id;
+    $mahasiswa = Mahasiswa::find($id);
+    $mahasiswa_id = $mahasiswa->id;
+    $validasi = DB::table('validasi_taks')->where('mahasiswa_id',$mahasiswa_id)->first();
+    if(!$validasi){
+        ValidasiTak::create([
+            'dosen_id'=> $dosen,
+            'mahasiswa_id'=>$mahasiswa_id,
+            'validasi_status'=>'0',
+        ]);
+    }
+    return response()->json();
+   }
 }

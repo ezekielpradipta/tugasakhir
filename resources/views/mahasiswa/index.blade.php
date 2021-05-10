@@ -104,20 +104,20 @@
                 style="width: 200px; display:inline-block;">Daftar TAK</a>
             </div>
             <div class="card-body" id="validasi" style="display: none">
-              <a href="{{ route('mahasiswa.validasi.index') }}" class="btn-primary  btn-lg"
-                style="width: 200px; display:inline-block;">TEST</a>
+              <a href="javascript:void(0)" class="btn-primary btn-test  btn-lg"
+                style="width: 200px; display:inline-block;">Request Surat Keterangan</a>
             </div>
             <div class="card-body">
               <a href="{{ route('mahasiswa.leaderboard.index') }}" class="btn-primary btn-lg"
                 style="width: 200px; display:inline-block;">Leaderboard</a>
             </div>
             <div class="card-body">
-              <a class="btn-primary btn-lg" style="width: 200px; display:inline-block;" data-toggle="modal"
-                href="#myModal">Launch Modal</a>
-            </div>
-            <div class="card-body">
               <a href="{{ route('logout') }}" class="btn-primary btn-lg"
                 style="width: 200px; display:inline-block;">Keluar</a>
+            </div>
+            <div class=" card-body text-right">
+              <a class="btn-primary btn-lg" data-toggle="modal" href="#myModal"><span class="fa fa-question-circle"
+                  style="color: white"></span></a>
             </div>
             @endif
           </div>
@@ -205,6 +205,18 @@
 @push('scripts')
 <script type="text/javascript">
   $(document).ready(function () {
+    $('body').on('click','.btn-test',function(){
+              var mahasiswa_id = $("#mahasiswa_id").val();
+              var url = "{{route('mahasiswa.dashboard')}}".concat("/" + mahasiswa_id +"/cetak");
+              console.log(url);
+              $.ajax({
+                      url: url,
+                      type: 'GET',
+                      success: function(response){
+                        window.location = url;
+                      }
+                    });
+            });
         $.ajax({
             url: "{{ route('mahasiswa.daftarmenu') }}",
             type: "GET",
@@ -212,7 +224,7 @@
             success: function (data) {
 
                 console.log(data);
-                if (data.validasi == "yes") {
+                if (data.validasi == "1") {
                     $("#validasi").show();
                 }
 

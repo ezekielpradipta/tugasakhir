@@ -33,6 +33,7 @@ class DashboardController extends Controller
         ->join('dosens', 'dosens.id', '=', 'mahasiswas.dosen_id')
         ->where('dosens.id',$dosen_id)
         ->where('inputtaks.inputtak_status','0')->count();
+        $validasi =0;
         } else{
             $inputtak= DB::table('inputtaks')
             ->join('mahasiswas','mahasiswas.id','=','inputtaks.mahasiswa_id')
@@ -43,8 +44,15 @@ class DashboardController extends Controller
             ->take(10)
             ->get();
             $jumlah = $inputtak->count();
+            $validasi = DB::table('validasi_taks')
+            ->join('mahasiswas','mahasiswas.id','=','validasi_taks.mahasiswa_id')
+            ->join('dosens', 'dosens.id', '=', 'validasi_taks.dosen_id')
+            ->select('validasi_taks.id','mahasiswas.mahasiswa_nama','dosens.dosen_nama','dosens.dosen_image','validasi_taks.updated_at')
+            ->where('validasi_taks.validasi_status','0')
+            ->orderBy('validasi_taks.updated_at','desc')
+            ->get();
         }
         
-        return response()->json(['dosen_status'=>$dosen_status,'inputtak'=>$inputtak,'jumlah'=>$jumlah]);
+        return response()->json(['dosen_status'=>$dosen_status,'inputtak'=>$inputtak,'jumlah'=>$jumlah,'validasi'=>$validasi]);
     }
 }

@@ -181,7 +181,6 @@ class DaftartakController extends Controller
         $images =json_decode($inputtak->inputtak_bukti);
         $nim= $inputtak->mahasiswa->mahasiswa_nim;
         Storage::disk('images')->delete("Bukti-TAK-{$nim}.zip");
-        $files = glob(public_path('img/contoh3.png'));
         $zipper = Madzipper::make(public_path("/img/Bukti-TAK-{$nim}.zip"));
         foreach ($images as $file) {
             $zipper->add(public_path("/img/bukti/{$file}")); // update it by your path
